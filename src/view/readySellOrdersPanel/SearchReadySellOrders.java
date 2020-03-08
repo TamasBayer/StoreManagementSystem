@@ -1,4 +1,4 @@
-package view.readyOrders;
+package view.readySellOrdersPanel;
 
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 
-public class SearchReadyOrders extends JPanel{
+public class SearchReadySellOrders extends JPanel{
 
 	private JLabel searchLabel;
     private ImageIcon search;
@@ -21,7 +21,7 @@ public class SearchReadyOrders extends JPanel{
     private JComboBox searchCombo;
     private JButton searchButton;
     
-    public SearchReadyOrders() {
+    public SearchReadySellOrders() {
     	
     	search = new ImageIcon("D:/MyPrograms/eclipse-workspace/Stock Management/Images/search.png");
 	    searchLabel = new JLabel(search);
@@ -38,7 +38,7 @@ public class SearchReadyOrders extends JPanel{
 	     searchField.setFont(bigFont);
 	   
 	    DefaultComboBoxModel searchModel = new DefaultComboBoxModel();
-	    searchModel.addElement("Order-ID");
+	    searchModel.addElement("Sell Order-ID");
 	    searchModel.addElement("Company name");
 	    searchCombo.setModel(searchModel);
 	    searchCombo.setSelectedIndex(0);

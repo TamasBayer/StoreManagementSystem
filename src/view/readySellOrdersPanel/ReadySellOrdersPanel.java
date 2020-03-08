@@ -1,4 +1,4 @@
-package view.readyOrders;
+package view.readySellOrdersPanel;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -12,26 +12,26 @@ import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
-import view.ordersPanel.OrdersTable;
-import view.ordersPanel.SearchOrders;
+import view.sellOrdersPanel.SearchSellOrders;
+import view.sellOrdersPanel.SellOrdersTable;
 
-public class ReadyOrdersPanel extends JPanel{
+public class ReadySellOrdersPanel extends JPanel{
 
-	private SearchReadyOrders searchReadyOrders;
-    private ReadyOrdersTable table;
+	private SearchReadySellOrders searchReadySellOrders;
+    private ReadySellOrdersTable table;
     private JTextField searchField;
     private JButton searchButton;
     private JComboBox searchCombo;
     private TableRowSorter<DefaultTableModel> rowSorter; 
     
-    public ReadyOrdersPanel() {
+    public ReadySellOrdersPanel() {
     	
-    	table = new ReadyOrdersTable();
-    	searchReadyOrders = new SearchReadyOrders();
-        searchField = searchReadyOrders.getSearchField();
-        searchButton = searchReadyOrders.getSearchButton();
+    	table = new ReadySellOrdersTable();
+    	searchReadySellOrders = new SearchReadySellOrders();
+        searchField = searchReadySellOrders.getSearchField();
+        searchButton = searchReadySellOrders.getSearchButton();
         rowSorter = table.getRowSorter();
-        searchCombo = searchReadyOrders.getSearchCombo();
+        searchCombo = searchReadySellOrders.getSearchCombo();
           
         Border innerBorder = BorderFactory.createLineBorder(Color.GRAY);
         Border outerBorder = BorderFactory.createEmptyBorder(5, 5, 5, 5);
@@ -39,7 +39,7 @@ public class ReadyOrdersPanel extends JPanel{
         
         setLayout(new BorderLayout());
         
-        add(searchReadyOrders, BorderLayout.NORTH);
+        add(searchReadySellOrders, BorderLayout.NORTH);
         add(table, BorderLayout.CENTER);
         
     }
