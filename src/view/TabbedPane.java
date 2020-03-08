@@ -9,11 +9,13 @@ import javax.swing.JTabbedPane;
 
 import view.inventoryPanel.InventoryPanel;
 import view.ordersPanel.OrdersPanel;
+import view.sellOrdersPanel.SellOrdersPanel;
 
 public class TabbedPane extends JPanel {
 	
 	private InventoryPanel iPanel;
 	private OrdersPanel oPanel;
+	private SellOrdersPanel sOPanel;
 
 	public TabbedPane() {
 		
@@ -21,12 +23,13 @@ public class TabbedPane extends JPanel {
 		
 		iPanel = new InventoryPanel();
 		oPanel = new OrdersPanel();
+		sOPanel = new SellOrdersPanel();
 
         // Creates a JTabbedPane with tabs at the bottom.
         JTabbedPane pane = new JTabbedPane(JTabbedPane.LEFT);
         pane.addTab("Inventory", iPanel);
         pane.addTab("Orders", oPanel);
-        pane.addTab("Goods", createPanel("Panel 3"));
+        pane.addTab("Sell orders", sOPanel);
       
 
         this.add(pane, BorderLayout.CENTER);
