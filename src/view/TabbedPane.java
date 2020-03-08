@@ -8,21 +8,24 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
 import view.inventoryPanel.InventoryPanel;
+import view.ordersPanel.OrdersPanel;
 
 public class TabbedPane extends JPanel {
 	
 	private InventoryPanel iPanel;
+	private OrdersPanel oPanel;
 
 	public TabbedPane() {
 		
 		this.setLayout(new BorderLayout());
 		
 		iPanel = new InventoryPanel();
+		oPanel = new OrdersPanel();
 
         // Creates a JTabbedPane with tabs at the bottom.
         JTabbedPane pane = new JTabbedPane(JTabbedPane.LEFT);
         pane.addTab("Inventory", iPanel);
-        pane.addTab("Orders", createPanel("Panel 2"));
+        pane.addTab("Orders", oPanel);
         pane.addTab("Goods", createPanel("Panel 3"));
       
 
