@@ -16,11 +16,10 @@ public class MainFrame extends JFrame {
     public MainFrame(){
         
         super("Login");
-        setSize(400, 300);
-        setMinimumSize( new Dimension(400, 300));
+        
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setVisible(true);
-        setLocationRelativeTo(null);
+        
         
         loginPanel = new LoginPanel();
         loginBtn = loginPanel.getLoginButton();
@@ -28,7 +27,9 @@ public class MainFrame extends JFrame {
         setLayout(new BorderLayout());
 
         add(loginPanel, BorderLayout.CENTER);
-        
+        pack();
+        setResizable(false);
+        setLocationRelativeTo(null);
         loginButtonPressed();
         
     }
@@ -39,13 +40,13 @@ public class MainFrame extends JFrame {
             
             public void actionPerformed(ActionEvent e) {
                 
-            	setSize(1100, 700);
-                setMinimumSize( new Dimension(600, 400));
+            	remove(loginPanel);
+            	
+            	
+            	add(new AppChooserPanel(), BorderLayout.CENTER);
+                pack();
                 setLocationRelativeTo(null);
-                
-                remove(loginPanel);
-                add(new TabbedPane(), BorderLayout.CENTER);
-                
+                setResizable(false);
                 
             }
         });

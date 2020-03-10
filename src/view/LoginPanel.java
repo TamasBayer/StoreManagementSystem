@@ -1,6 +1,7 @@
 package view;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -30,12 +31,13 @@ public class LoginPanel extends JPanel{
     	passwordField = new JTextField(10);
     	loginButton = new JButton("Login");
         
-        
+    	setPreferredSize(new Dimension(300, 200));
         Border innerBorder = BorderFactory.createLineBorder(Color.GRAY);
         Border outerBorder = BorderFactory.createEmptyBorder(5, 5, 5, 5);
         setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
         
         layoutComponents();
+        
     }
     
     
