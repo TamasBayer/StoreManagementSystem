@@ -32,7 +32,21 @@ public class AppChooserPanel extends JPanel{
         layoutComponents();
     }
     
-    public void layoutComponents(){
+    
+    
+    public JButton getMainSystemButton() {
+		return mainSystemButton;
+	}
+
+
+
+	public JButton getStockSystemButton() {
+		return stockSystemButton;
+	}
+
+
+
+	public void layoutComponents(){
         setLayout(new GridBagLayout());
         
         GridBagConstraints gc = new GridBagConstraints();

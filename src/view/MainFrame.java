@@ -12,6 +12,9 @@ public class MainFrame extends JFrame {
     
 	private LoginPanel loginPanel;
 	private JButton loginBtn;
+	private AppChooserPanel appChooserPanel;
+	private JButton mainSystemBtn;
+	private JButton stockSystemBtn;
 
     public MainFrame(){
         
@@ -24,6 +27,10 @@ public class MainFrame extends JFrame {
         loginPanel = new LoginPanel();
         loginBtn = loginPanel.getLoginButton();
         
+        appChooserPanel = new AppChooserPanel();
+        mainSystemBtn = appChooserPanel.getMainSystemButton();
+        stockSystemBtn = appChooserPanel.getStockSystemButton();
+        
         setLayout(new BorderLayout());
 
         add(loginPanel, BorderLayout.CENTER);
@@ -31,6 +38,7 @@ public class MainFrame extends JFrame {
         setResizable(false);
         setLocationRelativeTo(null);
         loginButtonPressed();
+        mainSystemBtnPressed();
         
     }
     
@@ -41,6 +49,45 @@ public class MainFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 
             	remove(loginPanel);
+            	
+            	
+            	add(appChooserPanel, BorderLayout.CENTER);
+                pack();
+                setLocationRelativeTo(null);
+                setResizable(false);
+                
+            }
+        });
+
+    }
+    
+    public void mainSystemBtnPressed(){
+    	mainSystemBtn.addActionListener(new ActionListener(){
+
+            
+            public void actionPerformed(ActionEvent e) {
+                
+            	remove(appChooserPanel);
+            	
+            	
+            	add(new TabbedPane(), BorderLayout.CENTER);
+                pack();
+                setLocationRelativeTo(null);
+                setResizable(true);
+                setMinimumSize(new Dimension(800, 400));
+                
+            }
+        });
+
+    }
+    
+    public void stockSystemBtnPressed(){
+    	stockSystemBtn.addActionListener(new ActionListener(){
+
+            
+            public void actionPerformed(ActionEvent e) {
+                
+            	remove(appChooserPanel);
             	
             	
             	add(new AppChooserPanel(), BorderLayout.CENTER);

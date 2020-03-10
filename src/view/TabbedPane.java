@@ -39,7 +39,7 @@ public class TabbedPane extends JPanel {
         pane.addTab("Ready orders", rOPanel);
         pane.addTab("Ready sell orders", rSOPanel);
       
-
+        setPreferredSize(new Dimension(1100, 700));
         this.add(pane, BorderLayout.CENTER);
 	}
 }
