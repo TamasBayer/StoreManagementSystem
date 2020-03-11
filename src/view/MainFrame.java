@@ -70,7 +70,7 @@ public class MainFrame extends JFrame {
             	remove(appChooserPanel);
             	
             	
-            	add(new TabbedPane(), BorderLayout.CENTER);
+            	add(new TabbedPaneMainSystem(), BorderLayout.CENTER);
                 pack();
                 setLocationRelativeTo(null);
                 setResizable(true);

@@ -1,4 +1,4 @@
-package view.stockInOutPanel;
+package view.stockInOutPanelMS;
 
 public class StockInOutPanel {
 

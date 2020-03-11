@@ -1,4 +1,4 @@
-package view.sellOrdersPanel;
+package view.sellOrdersPanelMS;
 
 import java.awt.BorderLayout;
 

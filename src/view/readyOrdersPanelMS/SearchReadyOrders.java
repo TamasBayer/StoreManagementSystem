@@ -1,4 +1,4 @@
-package view.readyOrdersPanel;
+package view.readyOrdersPanelMS;
 
 import java.awt.FlowLayout;
 import java.awt.Font;

@@ -1,4 +1,4 @@
-package view.readyOrdersPanel;
+package view.readyOrdersPanelMS;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -12,8 +12,8 @@ import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
-import view.ordersPanel.OrdersTable;
-import view.ordersPanel.SearchOrders;
+import view.ordersPanelMS.OrdersTable;
+import view.ordersPanelMS.SearchOrders;
 
 public class ReadyOrdersPanel extends JPanel{
 

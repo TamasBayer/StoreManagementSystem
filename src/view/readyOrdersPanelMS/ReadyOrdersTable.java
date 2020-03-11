@@ -1,4 +1,4 @@
-package view.ordersPanel;
+package view.readyOrdersPanelMS;
 
 import java.awt.BorderLayout;
 
@@ -8,9 +8,9 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
-public class OrdersTable extends JPanel{
-	
-	private JTable ordersTable;
+public class ReadyOrdersTable extends JPanel{
+
+	private JTable readyOrdersTable;
 	private TableRowSorter<DefaultTableModel> rowSorter;
 	private String[] colNames = {"Order-ID", "Company name", "Order datum"};
 	
@@ -35,14 +35,14 @@ public class OrdersTable extends JPanel{
    
     };
     
-    public OrdersTable(){
-    	ordersTable = new JTable(model);
+    public ReadyOrdersTable(){
+    	readyOrdersTable = new JTable(model);
         rowSorter = new TableRowSorter<>(model);
-        ordersTable.setRowSorter(rowSorter);
+        readyOrdersTable.setRowSorter(rowSorter);
         
         setLayout(new BorderLayout());
         
-        add(new JScrollPane(ordersTable), BorderLayout.CENTER);
+        add(new JScrollPane(readyOrdersTable), BorderLayout.CENTER);
     }
     
     public TableRowSorter<DefaultTableModel> getRowSorter() {
@@ -52,5 +52,4 @@ public class OrdersTable extends JPanel{
 	public DefaultTableModel getModel() {
 		return model;
 	}
-
 }

@@ -7,13 +7,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
-import view.inventoryPanel.InventoryPanel;
-import view.ordersPanel.OrdersPanel;
-import view.readyOrdersPanel.ReadyOrdersPanel;
-import view.readySellOrdersPanel.ReadySellOrdersPanel;
-import view.sellOrdersPanel.SellOrdersPanel;
+import view.inventoryPanelMS.InventoryPanel;
+import view.ordersPanelMS.OrdersPanel;
+import view.readyOrdersPanelMS.ReadyOrdersPanel;
+import view.readySellOrdersPanelMS.ReadySellOrdersPanel;
+import view.sellOrdersPanelMS.SellOrdersPanel;
 
-public class TabbedPane extends JPanel {
+public class TabbedPaneMainSystem extends JPanel {
 	
 	private InventoryPanel iPanel;
 	private OrdersPanel oPanel;
@@ -21,7 +21,7 @@ public class TabbedPane extends JPanel {
 	private ReadyOrdersPanel rOPanel;
 	private ReadySellOrdersPanel rSOPanel;
 
-	public TabbedPane() {
+	public TabbedPaneMainSystem() {
 		
 		this.setLayout(new BorderLayout());
 		

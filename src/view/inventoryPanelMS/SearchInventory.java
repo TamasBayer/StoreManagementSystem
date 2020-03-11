@@ -1,4 +1,4 @@
-package view.ordersPanel;
+package view.inventoryPanelMS;
 
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 
-public class SearchOrders extends JPanel{
+public class SearchInventory extends JPanel {
 
 	private JLabel searchLabel;
     private ImageIcon search;
@@ -21,7 +21,7 @@ public class SearchOrders extends JPanel{
     private JComboBox searchCombo;
     private JButton searchButton;
     
-    public SearchOrders() {
+    public SearchInventory() {
     	
     	search = new ImageIcon("D:/MyPrograms/eclipse-workspace/Stock Management/Images/search.png");
 	    searchLabel = new JLabel(search);
@@ -38,8 +38,8 @@ public class SearchOrders extends JPanel{
 	     searchField.setFont(bigFont);
 	   
 	    DefaultComboBoxModel searchModel = new DefaultComboBoxModel();
-	    searchModel.addElement("Order-ID");
-	    searchModel.addElement("Company name");
+	    searchModel.addElement("Goods-ID");
+	    searchModel.addElement("Goods-Name");
 	    searchCombo.setModel(searchModel);
 	    searchCombo.setSelectedIndex(0);
 	    searchCombo.setEditable(false);
@@ -66,4 +66,5 @@ public class SearchOrders extends JPanel{
 	public JComboBox getSearchCombo() {
 		return searchCombo;
 	}
+
 }

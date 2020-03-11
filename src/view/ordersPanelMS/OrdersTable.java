@@ -1,4 +1,4 @@
-package view.readySellOrdersPanel;
+package view.ordersPanelMS;
 
 import java.awt.BorderLayout;
 
@@ -8,11 +8,11 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
-public class ReadySellOrdersTable extends JPanel{
-
-	private JTable readySellOrdersTable;
+public class OrdersTable extends JPanel{
+	
+	private JTable ordersTable;
 	private TableRowSorter<DefaultTableModel> rowSorter;
-	private String[] colNames = {"Sell order-ID", "Company name", "Order datum"};
+	private String[] colNames = {"Order-ID", "Company name", "Order datum"};
 	
 	private DefaultTableModel model = new DefaultTableModel(){
 	    
@@ -35,14 +35,14 @@ public class ReadySellOrdersTable extends JPanel{
    
     };
     
-    public ReadySellOrdersTable(){
-    	readySellOrdersTable = new JTable(model);
+    public OrdersTable(){
+    	ordersTable = new JTable(model);
         rowSorter = new TableRowSorter<>(model);
-        readySellOrdersTable.setRowSorter(rowSorter);
+        ordersTable.setRowSorter(rowSorter);
         
         setLayout(new BorderLayout());
         
-        add(new JScrollPane(readySellOrdersTable), BorderLayout.CENTER);
+        add(new JScrollPane(ordersTable), BorderLayout.CENTER);
     }
     
     public TableRowSorter<DefaultTableModel> getRowSorter() {
@@ -52,4 +52,5 @@ public class ReadySellOrdersTable extends JPanel{
 	public DefaultTableModel getModel() {
 		return model;
 	}
+
 }

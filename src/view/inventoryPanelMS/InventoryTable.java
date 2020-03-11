@@ -1,4 +1,4 @@
-package view.inventoryPanel;
+package view.inventoryPanelMS;
 
 import java.awt.BorderLayout;
 
