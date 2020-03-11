@@ -12,13 +12,17 @@ import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
+import view.classesForPanels.SearchPanel;
+import view.classesForPanels.Table;
 import view.ordersPanelMS.OrdersTable;
 import view.ordersPanelMS.SearchOrders;
 
 public class ReadyOrdersPanel extends JPanel{
-
-	private SearchReadyOrders searchReadyOrders;
-    private ReadyOrdersTable table;
+	
+	private SearchPanel searchReadyOrders;
+	private String[] comboboxEl;
+	private Table table;
+    private String[] columnNames;
     private JTextField searchField;
     private JButton searchButton;
     private JComboBox searchCombo;
@@ -26,8 +30,10 @@ public class ReadyOrdersPanel extends JPanel{
     
     public ReadyOrdersPanel() {
     	
-    	table = new ReadyOrdersTable();
-    	searchReadyOrders = new SearchReadyOrders();
+    	columnNames = new String[] {"Order-ID", "Company name", "Order datum"};
+        table = new Table(columnNames);
+        comboboxEl = new String[] {"Order-ID", "Company name", "Order datum"};
+        searchReadyOrders = new SearchPanel(comboboxEl);
         searchField = searchReadyOrders.getSearchField();
         searchButton = searchReadyOrders.getSearchButton();
         rowSorter = table.getRowSorter();

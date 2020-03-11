@@ -14,11 +14,16 @@ import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
+import view.classesForPanels.SearchPanel;
+import view.classesForPanels.Table;
+
 
 public class InventoryPanelStockS extends JPanel {
 
-	private SearchInventoryStockS searchInventory;
-    private InventoryTableStockS table;
+	private SearchPanel searchInventory;
+	private String[] comboboxEl;
+    private Table table;
+    private String[] columnNames;
     private JTextField searchField;
     private JButton searchButton;
     private JComboBox searchCombo;
@@ -28,8 +33,10 @@ public class InventoryPanelStockS extends JPanel {
     
     public InventoryPanelStockS(){
         
-        table = new InventoryTableStockS();
-        searchInventory = new SearchInventoryStockS();
+    	columnNames = new String[] {"Goods-ID", "Goods-Name", "Quantity in warehouse"};
+        table = new Table(columnNames);
+        comboboxEl = new String[] {"Goods-ID", "Goods-Name"};
+        searchInventory = new SearchPanel(comboboxEl);
         searchField = searchInventory.getSearchField();
         searchButton = searchInventory.getSearchButton();
         rowSorter = table.getRowSorter();
