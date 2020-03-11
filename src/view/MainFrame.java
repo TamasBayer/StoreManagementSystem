@@ -37,8 +37,10 @@ public class MainFrame extends JFrame {
         pack();
         setResizable(false);
         setLocationRelativeTo(null);
+        
         loginButtonPressed();
         mainSystemBtnPressed();
+        stockSystemBtnPressed();
         
     }
     
@@ -90,7 +92,7 @@ public class MainFrame extends JFrame {
             	remove(appChooserPanel);
             	
             	
-            	add(new AppChooserPanel(), BorderLayout.CENTER);
+            	add(new TabbedPaneStockSystem(), BorderLayout.CENTER);
                 pack();
                 setLocationRelativeTo(null);
                 setResizable(false);
