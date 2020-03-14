@@ -1,7 +1,13 @@
 package view.classesForPanels;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -10,9 +16,10 @@ import javax.swing.table.TableRowSorter;
 
 public class Table extends JPanel{
 
-	private JTable inventoryTable;
+	private JTable table;
 	private TableRowSorter<DefaultTableModel> rowSorter;
 	private DefaultTableModel model;
+	JFrame frame = null;
 	
     
     public Table(String[] colNames){
@@ -37,13 +44,13 @@ public class Table extends JPanel{
     	   
     	    };
     	
-        inventoryTable = new JTable(model);
+    	table = new JTable(model);
         rowSorter = new TableRowSorter<>(model);
-        inventoryTable.setRowSorter(rowSorter);
+        table.setRowSorter(rowSorter);
         
         setLayout(new BorderLayout());
         
-        add(new JScrollPane(inventoryTable), BorderLayout.CENTER);
+        add(new JScrollPane(table), BorderLayout.CENTER);
     }
     
     public TableRowSorter<DefaultTableModel> getRowSorter() {
@@ -60,5 +67,41 @@ public class Table extends JPanel{
 		model.insertRow(2,new Object[]{"H1324","Strawberry", "32"});
 		model.insertRow(3,new Object[]{"H1325","Salat", "43"});
 		model.insertRow(4,new Object[]{"H1326","Retek", "2111"});
+	
+		
+		table.addMouseListener(new MouseAdapter() {
+	        public void mouseClicked(MouseEvent e) {
+	           if (e.getClickCount() == 2) {
+
+	        	   
+	              
+	              if (frame == null) {
+		        	   
+		              frame = new JFrame();
+	            	  frame.setVisible(true);
+	            	  frame.setDefaultCloseOperation(frame.DISPOSE_ON_CLOSE);
+	            	  frame.setResizable(true);
+	            	  frame.setSize(new Dimension(400, 400));
+		              
+		              Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		              Point middle = new Point(screenSize.width / 2, screenSize.height / 2);
+		              Point newLocation = new Point(middle.x - (frame.getWidth() / 2), 
+		                                            middle.y - (frame.getHeight() / 2));
+		              frame.setLocation(newLocation);
+		              
+		              frame.addWindowListener(new java.awt.event.WindowAdapter() {
+		  			    @Override
+		  			    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+		  			        frame = null;
+		  			    }
+		  			});
+	  		    } 
+	           }
+	        }
+	     });
+		
+		
 	}
+	
+	
 }

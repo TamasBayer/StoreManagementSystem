@@ -2,11 +2,16 @@ package view.inventoryPanelMS;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
@@ -52,6 +57,7 @@ public class InventoryPanel extends JPanel {
         add(table, BorderLayout.CENTER);
         
         
-        
-    }
+    
+    
+	}
 }
