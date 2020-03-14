@@ -53,4 +53,12 @@ public class Table extends JPanel{
 	public DefaultTableModel getModel() {
 		return model;
 	}
+	
+	public void fillWithData() {
+		model.insertRow(0,new Object[]{"H1322","Apple", "50"});
+		model.insertRow(1,new Object[]{"H1323","Bread", "213"});
+		model.insertRow(2,new Object[]{"H1324","Strawberry", "32"});
+		model.insertRow(3,new Object[]{"H1325","Salat", "43"});
+		model.insertRow(4,new Object[]{"H1326","Retek", "2111"});
+	}
 }

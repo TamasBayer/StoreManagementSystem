@@ -26,11 +26,15 @@ public class InventoryPanel extends JPanel {
     private JButton searchButton;
     private JComboBox searchCombo;
     private TableRowSorter<DefaultTableModel> rowSorter; 
+        
     
     public InventoryPanel() {
     	
     	columnNames = new String[] {"Goods-ID", "Goods-Name", "Quantity in warehouse"};
         table = new Table(columnNames);
+        
+        table.fillWithData();
+        
         comboboxEl = new String[] {"Goods-ID", "Goods-Name"};
         searchInventory = new SearchPanel(comboboxEl);
         searchField = searchInventory.getSearchField();
@@ -46,6 +50,8 @@ public class InventoryPanel extends JPanel {
         
         add(searchInventory, BorderLayout.NORTH);
         add(table, BorderLayout.CENTER);
+        
+        
         
     }
 }
