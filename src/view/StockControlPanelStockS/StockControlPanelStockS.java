@@ -2,6 +2,7 @@ package view.StockControlPanelStockS;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.sql.Connection;
 import java.sql.Statement;
 
@@ -29,16 +30,12 @@ public class StockControlPanelStockS extends JPanel{
     private String[] textFieldsData;
     private Connection conn;
     private Statement createStatement = null;
-    String stockCode1;
-    String stockCode2;
-    String stockCode3;
+    private Cursor cursor;
 
     
     public StockControlPanelStockS(){
     	
-    	stockCode1 = "A01";
-        stockCode2 = "B01";
-        stockCode3 = "C01";
+    	
         
         controlPane = new ControlPaneStockS();
         stockControl = new StockControlButtonsStockS();
@@ -58,7 +55,9 @@ public class StockControlPanelStockS extends JPanel{
         add(stockControl, BorderLayout.NORTH);
         add(controlPane, BorderLayout.CENTER);
         
-        
+        Cursor cursor = new Cursor(Cursor.HAND_CURSOR);
+        okBtn.setCursor(cursor);
+        cancelBtn.setCursor(cursor);
 
     }
 }

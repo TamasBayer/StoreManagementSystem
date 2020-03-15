@@ -13,7 +13,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
 import view.classesForPanels.SearchPanel;
-import view.classesForPanels.Table;
+import view.classesForPanels.TableModel;
 import view.ordersPanelMS.OrdersTable;
 import view.ordersPanelMS.SearchOrders;
 
@@ -21,7 +21,7 @@ public class SellOrdersPanel extends JPanel{
 
 	private SearchPanel searchSellOrders;
 	private String[] comboboxEl;
-	private Table table;
+	private TableModel table;
     private String[] columnNames;
     private JTextField searchField;
     private JButton searchButton;
@@ -31,7 +31,7 @@ public class SellOrdersPanel extends JPanel{
     public SellOrdersPanel() {
     	
     	columnNames = new String[] {"Sell order-ID", "Company name", "Order datum"};
-        table = new Table(columnNames);
+        table = new TableModel(columnNames);
         comboboxEl = new String[] {"Sell order-ID", "Company name", "Order datum"};
         searchSellOrders = new SearchPanel(comboboxEl);
         searchField = searchSellOrders.getSearchField();

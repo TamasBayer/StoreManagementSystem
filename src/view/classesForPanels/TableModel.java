@@ -1,6 +1,7 @@
 package view.classesForPanels;
 
 import java.awt.BorderLayout;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Toolkit;
@@ -14,7 +15,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
-public class Table extends JPanel{
+public class TableModel extends JPanel{
 
 	private JTable table;
 	private TableRowSorter<DefaultTableModel> rowSorter;
@@ -22,7 +23,7 @@ public class Table extends JPanel{
 	JFrame frame = null;
 	
     
-    public Table(String[] colNames){
+    public TableModel(String[] colNames){
     	
     	 model = new DefaultTableModel(){
          
@@ -51,16 +52,12 @@ public class Table extends JPanel{
         setLayout(new BorderLayout());
         
         add(new JScrollPane(table), BorderLayout.CENTER);
+        
+        Cursor cursor = new Cursor(Cursor.HAND_CURSOR);
+        table.setCursor(cursor);
     }
     
-    public TableRowSorter<DefaultTableModel> getRowSorter() {
-		return rowSorter;
-	}
 
-	public DefaultTableModel getModel() {
-		return model;
-	}
-	
 	public void fillWithData() {
 		model.insertRow(0,new Object[]{"H1322","Apple", "50"});
 		model.insertRow(1,new Object[]{"H1323","Bread", "213"});
@@ -69,6 +66,10 @@ public class Table extends JPanel{
 		model.insertRow(4,new Object[]{"H1326","Retek", "2111"});
 	
 		
+		
+	}
+	
+	public void newInformationFrameIfClicked(JPanel infoPanel) {
 		table.addMouseListener(new MouseAdapter() {
 	        public void mouseClicked(MouseEvent e) {
 	           if (e.getClickCount() == 2) {
@@ -78,10 +79,14 @@ public class Table extends JPanel{
 	              if (frame == null) {
 		        	   
 		              frame = new JFrame();
+		              
+		              frame.setLayout(new BorderLayout());
+
+		              frame.add(infoPanel, BorderLayout.CENTER);
 	            	  frame.setVisible(true);
 	            	  frame.setDefaultCloseOperation(frame.DISPOSE_ON_CLOSE);
 	            	  frame.setResizable(true);
-	            	  frame.setSize(new Dimension(400, 400));
+	            	  frame.pack();
 		              
 		              Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		              Point middle = new Point(screenSize.width / 2, screenSize.height / 2);
@@ -95,12 +100,20 @@ public class Table extends JPanel{
 		  			        frame = null;
 		  			    }
 		  			});
-	  		    } 
+	  		    } else {
+	  		    	frame.setVisible(true);
+	  		    }
 	           }
 	        }
 	     });
-		
-		
+	}
+
+    public TableRowSorter<DefaultTableModel> getRowSorter() {
+		return rowSorter;
+	}
+
+	public DefaultTableModel getModel() {
+		return model;
 	}
 	
 	

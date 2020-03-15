@@ -1,6 +1,7 @@
 package view;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -16,6 +17,7 @@ public class AppChooserPanel extends JPanel{
 	
     private JButton mainSystemButton;
     private JButton stockSystemButton;
+    private Cursor cursor;
     
         
     public AppChooserPanel(){
@@ -30,6 +32,10 @@ public class AppChooserPanel extends JPanel{
         setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
         
         layoutComponents();
+        
+        cursor = new Cursor(Cursor.HAND_CURSOR);
+        mainSystemButton.setCursor(cursor);
+        stockSystemButton.setCursor(cursor);
     }
     
     

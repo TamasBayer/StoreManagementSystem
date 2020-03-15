@@ -1,6 +1,7 @@
 package view;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -20,6 +21,7 @@ public class LoginPanel extends JPanel{
     private JLabel passwordLabel;
     private JTextField passwordField;
     private JButton loginButton;
+    private Cursor cursor;
     
     String[] textFields;
         
@@ -37,6 +39,9 @@ public class LoginPanel extends JPanel{
         setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
         
         layoutComponents();
+        
+        cursor = new Cursor(Cursor.HAND_CURSOR);
+        loginButton.setCursor(cursor);
         
     }
     

@@ -18,25 +18,26 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
 import view.classesForPanels.SearchPanel;
-import view.classesForPanels.Table;
+import view.classesForPanels.TableModel;
 
 
 public class InventoryPanel extends JPanel {
 
 	private SearchPanel searchInventory;
 	private String[] comboboxEl;
-	private Table table;
+	private TableModel table;
     private String[] columnNames;
     private JTextField searchField;
     private JButton searchButton;
     private JComboBox searchCombo;
     private TableRowSorter<DefaultTableModel> rowSorter; 
-        
+    private GoodsInfoPanel gIPanel;
+    
     
     public InventoryPanel() {
     	
     	columnNames = new String[] {"Goods-ID", "Goods-Name", "Quantity in warehouse"};
-        table = new Table(columnNames);
+        table = new TableModel(columnNames);
         
         table.fillWithData();
         
@@ -46,6 +47,7 @@ public class InventoryPanel extends JPanel {
         searchButton = searchInventory.getSearchButton();
         rowSorter = table.getRowSorter();
         searchCombo = searchInventory.getSearchCombo();
+        gIPanel = new GoodsInfoPanel();
           
         Border innerBorder = BorderFactory.createLineBorder(Color.GRAY);
         Border outerBorder = BorderFactory.createEmptyBorder(5, 5, 5, 5);
@@ -56,7 +58,7 @@ public class InventoryPanel extends JPanel {
         add(searchInventory, BorderLayout.NORTH);
         add(table, BorderLayout.CENTER);
         
-        
+        table.newInformationFrameIfClicked(gIPanel);
     
     
 	}

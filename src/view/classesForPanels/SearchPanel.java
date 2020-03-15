@@ -1,5 +1,6 @@
 package view.classesForPanels;
 
+import java.awt.Cursor;
 import java.awt.FlowLayout;
 import java.awt.Font;
 
@@ -20,6 +21,7 @@ public class SearchPanel extends JPanel{
     private JTextField searchField;
     private JComboBox searchCombo;
     private JButton searchButton;
+    private Cursor cursor;
     
     public SearchPanel(String[] comboboxElements) {
     	
@@ -51,6 +53,10 @@ public class SearchPanel extends JPanel{
 	    add(searchField);
 	    add(searchCombo);
 	    add(searchButton);
+	    
+	    cursor = new Cursor(Cursor.HAND_CURSOR);
+	    searchButton.setCursor(cursor);
+	    searchCombo.setCursor(cursor);
 	      
     }
     
