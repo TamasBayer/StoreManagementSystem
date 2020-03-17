@@ -123,7 +123,7 @@ public class ControlPaneStockS extends JPanel{
 	        gc.anchor = GridBagConstraints.LINE_START;
 	        add(quantityField, gc);
 	        
-	        /////////// Third row /////////////////
+	        /////////// Fourth row /////////////////
 	        gc.gridy++;
 	        
 	        gc.weightx = 1;

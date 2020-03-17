@@ -108,7 +108,7 @@ public class LoginPanel extends JPanel{
         gc.anchor = GridBagConstraints.LINE_START;
         add(passwordField, gc);
         
-        /////////// Second row /////////////////
+        /////////// Third row /////////////////
         
 	    gc.gridy++;
 	      

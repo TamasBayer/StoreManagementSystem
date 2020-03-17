@@ -15,7 +15,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
-public class TableModel extends JPanel{
+public class Table extends JPanel{
 
 	private JTable table;
 	private TableRowSorter<DefaultTableModel> rowSorter;
@@ -23,7 +23,7 @@ public class TableModel extends JPanel{
 	JFrame frame = null;
 	
     
-    public TableModel(String[] colNames){
+    public Table(String[] colNames){
     	
     	 model = new DefaultTableModel(){
          
