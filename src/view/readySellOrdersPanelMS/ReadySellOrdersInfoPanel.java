@@ -25,28 +25,18 @@ public class ReadySellOrdersInfoPanel extends JPanel{
 	private JTextField companyNameField;
 	private JLabel sellOrderDatumLabel;
 	private JTextField sellOrderDatumField;
-	private JPanel sellOrderTableFlowLayout;
 	
 	private Table sellOrdersTable;
 	private String[] sellOrdersColumnNames;
-	private JButton bookButton;
-	private JButton editButton;
-	
+
 	
 	public ReadySellOrdersInfoPanel() {
 		setPreferredSize(new Dimension(1000,600));
 		
 		sellOrdersColumnNames = new String[] {"Item-ID", "Item-Name", "Sold quantity"};
 		sellOrdersTable = new Table(sellOrdersColumnNames);
-		bookButton = new JButton("");
-		editButton = new JButton("Edit Order");
-		sellOrderTableFlowLayout = new JPanel();
 		
 		sellOrdersTable.fillWithData();
-		
-		Cursor cursor = new Cursor(Cursor.HAND_CURSOR);
-		bookButton.setCursor(cursor);
-		editButton.setCursor(cursor);
 		
 		choosedSellOrderPanel = new JPanel();
 		sellOrderIDLabel = new JLabel("Sell Order-ID:");
@@ -81,16 +71,7 @@ public class ReadySellOrdersInfoPanel extends JPanel{
 	    Border innerBorderOrder = BorderFactory.createLineBorder(Color.GRAY);
         Border outerBorderOrder = BorderFactory.createEmptyBorder(5, 5, 5, 5);
         choosedSellOrderPanel.setBorder(BorderFactory.createCompoundBorder(outerBorderOrder, innerBorderOrder));
-        
-        FlowLayout OrderPanelButtonsLayout = new FlowLayout();
-        sellOrderTableFlowLayout.setLayout(OrderPanelButtonsLayout);
-        sellOrderTableFlowLayout.add(bookButton);
-        sellOrderTableFlowLayout.add(editButton);
-        
-        Border innerBorderButtons = BorderFactory.createLineBorder(Color.GRAY);
-        Border outerBorderButtons = BorderFactory.createEmptyBorder(5, 5, 5, 5);
-        sellOrderTableFlowLayout.setBorder(BorderFactory.createCompoundBorder(outerBorderButtons, innerBorderButtons));
-        
+ 
         
         c.gridx = 0;
         c.gridy = 0;
@@ -103,15 +84,6 @@ public class ReadySellOrdersInfoPanel extends JPanel{
         
         c.gridx = 0;
         c.gridy = 1;
-        c.gridheight = 1;
-        c.gridwidth = 1;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.weighty = 0;
-        c.weightx = 1;
-        add(sellOrderTableFlowLayout, c);
-        
-        c.gridx = 0;
-        c.gridy = 2;
         c.gridheight = 1;
         c.gridwidth = 1;
         c.fill = GridBagConstraints.BOTH;

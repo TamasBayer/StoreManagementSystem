@@ -2,8 +2,11 @@ package view.sellOrdersPanelMS;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
@@ -30,6 +33,10 @@ public class SellOrdersPanel extends JPanel{
     private TableRowSorter<DefaultTableModel> rowSorter; 
     private SellOrdersInfoPanel infoPanel;
     
+    private JPanel topButtonsPanel;
+    private JButton addOrder;
+    private JButton editOrder;
+    
     public SellOrdersPanel() {
     	
     	columnNames = new String[] {"Sell order-ID", "Company name", "Order datum"};
@@ -42,15 +49,31 @@ public class SellOrdersPanel extends JPanel{
         searchCombo = searchSellOrders.getSearchCombo();
         
         infoPanel = new SellOrdersInfoPanel();
+        
+        topButtonsPanel = new JPanel();
+        addOrder = new JButton("Add order");
+        editOrder = new JButton("Edit order");
+        
+        topButtonsPanel.setPreferredSize(new Dimension(50, 50));
+        searchSellOrders.setPreferredSize(new Dimension(50, 50));
+        
+        FlowLayout ItemPanelLayout = new FlowLayout();
+        topButtonsPanel.setLayout(ItemPanelLayout);
+        topButtonsPanel.add(addOrder);
+        topButtonsPanel.add(editOrder);
+	    Border innerBorderItem = BorderFactory.createLineBorder(Color.GRAY);
+        Border outerBorderItem = BorderFactory.createEmptyBorder(5, 5, 5, 5);
+        topButtonsPanel.setBorder(BorderFactory.createCompoundBorder(outerBorderItem, innerBorderItem));
           
         Border innerBorder = BorderFactory.createLineBorder(Color.GRAY);
         Border outerBorder = BorderFactory.createEmptyBorder(5, 5, 5, 5);
         setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
         
-        setLayout(new BorderLayout());
+        setLayout(new BoxLayout (this, BoxLayout.Y_AXIS));
         
-        add(searchSellOrders, BorderLayout.NORTH);
-        add(table, BorderLayout.CENTER);
+        add(topButtonsPanel);
+        add(searchSellOrders);
+        add(table);
         
         table.fillWithData();
         table.newInformationFrameIfClicked(infoPanel);

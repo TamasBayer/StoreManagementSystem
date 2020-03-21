@@ -87,7 +87,7 @@ public class OrdersInfoPanel extends JPanel {
         FlowLayout OrderPanelButtonsLayout = new FlowLayout();
         orderTableFlowLayout.setLayout(OrderPanelButtonsLayout);
         orderTableFlowLayout.add(bookButton);
-        orderTableFlowLayout.add(editButton);
+  //      orderTableFlowLayout.add(editButton);
         
         Border innerBorderButtons = BorderFactory.createLineBorder(Color.GRAY);
         Border outerBorderButtons = BorderFactory.createEmptyBorder(5, 5, 5, 5);

@@ -18,7 +18,7 @@ public class MainFrame extends JFrame {
 
     public MainFrame(){
         
-        super("Login");
+        super("Store Management");
         
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setVisible(true);

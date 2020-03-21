@@ -1,6 +1,8 @@
 package view.classesForPanels;
 
+import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 
@@ -31,8 +33,7 @@ public class SearchPanel extends JPanel{
 	    searchCombo = new JComboBox();
 	    searchButton = new JButton("Search");
 	    
-	    
-	    Border innerBorder = BorderFactory.createTitledBorder("Search");
+	    Border innerBorder = BorderFactory.createLineBorder(Color.GRAY);
 	    Border outerBorder = BorderFactory.createEmptyBorder(5, 5, 5, 5);
 	    setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
 	    

@@ -1,5 +1,6 @@
 package view.StockControlPanelStockS;
 
+import java.awt.Color;
 import java.awt.FlowLayout;
 
 import javax.swing.BorderFactory;
@@ -18,7 +19,7 @@ public class StockControlButtonsStockS extends JPanel{
         cancelButton = new JButton("Cancel");
         
         
-        Border innerBorder = BorderFactory.createTitledBorder("Control");
+        Border innerBorder = BorderFactory.createLineBorder(Color.GRAY);
         Border outerBorder = BorderFactory.createEmptyBorder(5, 5, 5, 5);
         setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
         

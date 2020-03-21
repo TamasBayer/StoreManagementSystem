@@ -25,12 +25,9 @@ public class ReadyOrdersInfoPanel extends JPanel{
 	private JTextField companyNameField;
 	private JLabel orderDatumLabel;
 	private JTextField orderDatumField;
-	private JPanel orderTableFlowLayout;
 	
 	private Table ordersTable;
 	private String[] ordersColumnNames;
-	private JButton bookButton;
-	private JButton editButton;
 	
 	
 	public ReadyOrdersInfoPanel() {
@@ -38,15 +35,9 @@ public class ReadyOrdersInfoPanel extends JPanel{
 		
 		ordersColumnNames = new String[] {"Item-ID", "Item-Name", "Ordered quantity"};
 		ordersTable = new Table(ordersColumnNames);
-		bookButton = new JButton("Book");
-		editButton = new JButton("Edit Order");
-		orderTableFlowLayout = new JPanel();
 		
 		ordersTable.fillWithData();
 		
-		Cursor cursor = new Cursor(Cursor.HAND_CURSOR);
-		bookButton.setCursor(cursor);
-		editButton.setCursor(cursor);
 		
 		choosedOrderPanel = new JPanel();
 		orderIDLabel = new JLabel("Order-ID:");
@@ -82,15 +73,6 @@ public class ReadyOrdersInfoPanel extends JPanel{
         Border outerBorderOrder = BorderFactory.createEmptyBorder(5, 5, 5, 5);
         choosedOrderPanel.setBorder(BorderFactory.createCompoundBorder(outerBorderOrder, innerBorderOrder));
         
-        FlowLayout OrderPanelButtonsLayout = new FlowLayout();
-        orderTableFlowLayout.setLayout(OrderPanelButtonsLayout);
-        orderTableFlowLayout.add(bookButton);
-        orderTableFlowLayout.add(editButton);
-        
-        Border innerBorderButtons = BorderFactory.createLineBorder(Color.GRAY);
-        Border outerBorderButtons = BorderFactory.createEmptyBorder(5, 5, 5, 5);
-        orderTableFlowLayout.setBorder(BorderFactory.createCompoundBorder(outerBorderButtons, innerBorderButtons));
-        
         
         c.gridx = 0;
         c.gridy = 0;
@@ -100,15 +82,6 @@ public class ReadyOrdersInfoPanel extends JPanel{
         c.weighty = 0;
         c.weightx = 1;
         add(choosedOrderPanel, c);
-        
-        c.gridx = 0;
-        c.gridy = 1;
-        c.gridheight = 1;
-        c.gridwidth = 1;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.weighty = 0;
-        c.weightx = 1;
-        add(orderTableFlowLayout, c);
         
         c.gridx = 0;
         c.gridy = 2;

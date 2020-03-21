@@ -84,8 +84,8 @@ public class SellOrdersInfoPanel extends JPanel{
         
         FlowLayout OrderPanelButtonsLayout = new FlowLayout();
         sellOrderTableFlowLayout.setLayout(OrderPanelButtonsLayout);
-        sellOrderTableFlowLayout.add(bookButton);
-        sellOrderTableFlowLayout.add(editButton);
+     //   sellOrderTableFlowLayout.add(bookButton);
+     //   sellOrderTableFlowLayout.add(editButton);
         
         Border innerBorderButtons = BorderFactory.createLineBorder(Color.GRAY);
         Border outerBorderButtons = BorderFactory.createEmptyBorder(5, 5, 5, 5);
@@ -100,7 +100,7 @@ public class SellOrdersInfoPanel extends JPanel{
         c.weighty = 0;
         c.weightx = 1;
         add(choosedSellOrderPanel, c);
-        
+ /*       
         c.gridx = 0;
         c.gridy = 1;
         c.gridheight = 1;
@@ -109,9 +109,9 @@ public class SellOrdersInfoPanel extends JPanel{
         c.weighty = 0;
         c.weightx = 1;
         add(sellOrderTableFlowLayout, c);
-        
+*/        
         c.gridx = 0;
-        c.gridy = 2;
+        c.gridy = 1;
         c.gridheight = 1;
         c.gridwidth = 1;
         c.fill = GridBagConstraints.BOTH;
