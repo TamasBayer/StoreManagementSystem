@@ -5,6 +5,8 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -38,10 +40,15 @@ public class Table extends JPanel{
     		   }
     		   
     		   @Override
-    		    public boolean isCellEditable(int row, int column) {
-    		       
-    		       return false;
-    		    }
+    		   public boolean isCellEditable(int row, int col) {
+    		        switch (col) {
+    		        	case 4:
+    		        	case 5:
+    		                return true;
+    		            default:
+    		                return false;
+    		         }
+    		   }
     	   
     	    };
     	
@@ -53,8 +60,9 @@ public class Table extends JPanel{
         
         add(new JScrollPane(table), BorderLayout.CENTER);
         
-        Cursor cursor = new Cursor(Cursor.HAND_CURSOR);
-        table.setCursor(cursor);
+        
+        
+        differentCursor();
     }
     
 
@@ -106,6 +114,21 @@ public class Table extends JPanel{
 	           }
 	        }
 	     });
+	}
+	
+	public void differentCursor(){
+    	table.addMouseMotionListener(new MouseAdapter() {
+            public void mouseMoved(MouseEvent e) {
+            	Point pt = e.getPoint();
+            	if(table.columnAtPoint(pt) > 3) {
+            		Cursor cursor = new Cursor(Cursor.TEXT_CURSOR);
+            		table.setCursor(cursor);
+            	} else {
+            		Cursor cursor = new Cursor(Cursor.HAND_CURSOR);
+                    table.setCursor(cursor);
+            	}
+            }
+        });
 	}
 
     public TableRowSorter<DefaultTableModel> getRowSorter() {

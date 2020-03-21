@@ -27,6 +27,7 @@ public class OrdersPanel extends JPanel{
     private JButton searchButton;
     private JComboBox searchCombo;
     private TableRowSorter<DefaultTableModel> rowSorter; 
+    private OrdersInfoPanel infoPanel;
     
     public OrdersPanel() {
     	
@@ -38,6 +39,8 @@ public class OrdersPanel extends JPanel{
         searchButton = searchOrders.getSearchButton();
         rowSorter = table.getRowSorter();
         searchCombo = searchOrders.getSearchCombo();
+        
+        infoPanel = new OrdersInfoPanel();
           
         Border innerBorder = BorderFactory.createLineBorder(Color.GRAY);
         Border outerBorder = BorderFactory.createEmptyBorder(5, 5, 5, 5);
@@ -47,6 +50,9 @@ public class OrdersPanel extends JPanel{
         
         add(searchOrders, BorderLayout.NORTH);
         add(table, BorderLayout.CENTER);
+        
+        table.fillWithData();
+        table.newInformationFrameIfClicked(infoPanel);
         
     }
 }

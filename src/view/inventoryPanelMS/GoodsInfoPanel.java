@@ -36,6 +36,7 @@ public class GoodsInfoPanel extends JPanel{
 	
 	public GoodsInfoPanel() {
 		setPreferredSize(new Dimension(500,500));
+		setMinimumSize(new Dimension(500,500));
 		
 		choosedItemPanel = new JPanel();
 		itemIDLabel = new JLabel("Item-ID:");
