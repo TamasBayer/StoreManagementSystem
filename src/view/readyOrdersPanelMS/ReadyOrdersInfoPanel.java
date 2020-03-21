@@ -1,4 +1,4 @@
-package view.ordersPanelMS;
+package view.readyOrdersPanelMS;
 
 import java.awt.Color;
 import java.awt.Cursor;
@@ -6,7 +6,6 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -17,9 +16,8 @@ import javax.swing.border.Border;
 
 import view.classesForPanels.Table;
 
-public class OrdersInfoPanel extends JPanel {
+public class ReadyOrdersInfoPanel extends JPanel{
 
-	
 	private JPanel choosedOrderPanel;
 	private JLabel orderIDLabel;
 	private JTextField orderIDField;
@@ -35,10 +33,10 @@ public class OrdersInfoPanel extends JPanel {
 	private JButton editButton;
 	
 	
-	public OrdersInfoPanel() {
+	public ReadyOrdersInfoPanel() {
 		setPreferredSize(new Dimension(1000,600));
 		
-		ordersColumnNames = new String[] {"Item-ID", "Item-Name", "Ordered quantity", "Already in storage", "Current deliverd quantity", "Stock"};
+		ordersColumnNames = new String[] {"Item-ID", "Item-Name", "Ordered quantity"};
 		ordersTable = new Table(ordersColumnNames);
 		bookButton = new JButton("Book");
 		editButton = new JButton("Edit Order");
@@ -121,5 +119,4 @@ public class OrdersInfoPanel extends JPanel {
         c.weightx = 1;
         add(ordersTable, c);
 	}
-	
 }

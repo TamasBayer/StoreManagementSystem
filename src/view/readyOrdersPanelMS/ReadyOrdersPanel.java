@@ -16,6 +16,7 @@ import view.classesForPanels.SearchPanel;
 import view.classesForPanels.Table;
 import view.ordersPanelMS.OrdersTable;
 import view.ordersPanelMS.SearchOrders;
+import view.sellOrdersPanelMS.SellOrdersInfoPanel;
 
 public class ReadyOrdersPanel extends JPanel{
 	
@@ -27,6 +28,7 @@ public class ReadyOrdersPanel extends JPanel{
     private JButton searchButton;
     private JComboBox searchCombo;
     private TableRowSorter<DefaultTableModel> rowSorter; 
+    private ReadyOrdersInfoPanel infoPanel;
     
     public ReadyOrdersPanel() {
     	
@@ -38,6 +40,8 @@ public class ReadyOrdersPanel extends JPanel{
         searchButton = searchReadyOrders.getSearchButton();
         rowSorter = table.getRowSorter();
         searchCombo = searchReadyOrders.getSearchCombo();
+        
+        infoPanel = new ReadyOrdersInfoPanel();
           
         Border innerBorder = BorderFactory.createLineBorder(Color.GRAY);
         Border outerBorder = BorderFactory.createEmptyBorder(5, 5, 5, 5);
@@ -47,6 +51,9 @@ public class ReadyOrdersPanel extends JPanel{
         
         add(searchReadyOrders, BorderLayout.NORTH);
         add(table, BorderLayout.CENTER);
+        
+        table.fillWithData();
+        table.newInformationFrameIfClicked(infoPanel);
         
     }
 }
