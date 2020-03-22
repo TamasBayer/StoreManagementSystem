@@ -10,11 +10,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.DefaultCellEditor;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 
 public class Table extends JPanel{
@@ -24,45 +27,106 @@ public class Table extends JPanel{
 	private DefaultTableModel model;
 	JFrame frame = null;
 	
+	public Table(String[] colNames){
+    	
+   	 model = new DefaultTableModel(){
+        
+   		   @Override
+   		   public String getColumnName(int column) {
+   		       return colNames[column];
+   		   }
+   		
+   		   @Override
+   		   public int getColumnCount() {
+   		       return colNames.length;
+   		   }
+   		   
+   		   @Override
+   		   public boolean isCellEditable(int row, int col) {
+   	   
+   		       return false;
+   	    }
+   	    
+   	 };
+   	
+   	table = new JTable(model);
+       rowSorter = new TableRowSorter<>(model);
+       table.setRowSorter(rowSorter);
+       
+       setLayout(new BorderLayout());
+       
+       add(new JScrollPane(table), BorderLayout.CENTER);
+       
+       
+       differentCursor();
+      
+   }
     
-    public Table(String[] colNames){
+    public Table(String[] colNames, String panelNames){
     	
-    	 model = new DefaultTableModel(){
-         
-    		   @Override
-    		   public String getColumnName(int column) {
-    		       return colNames[column];
-    		   }
-    		
-    		   @Override
-    		   public int getColumnCount() {
-    		       return colNames.length;
-    		   }
-    		   
-    		   @Override
-    		   public boolean isCellEditable(int row, int col) {
-    		        switch (col) {
-    		        	case 4:
-    		        	case 5:
-    		                return true;
-    		            default:
-    		                return false;
-    		         }
-    		   }
-    	   
-    	    };
+   	 model = new DefaultTableModel(){
+        
+   		   @Override
+   		   public String getColumnName(int column) {
+   		       return colNames[column];
+   		   }
+   		
+   		   @Override
+   		   public int getColumnCount() {
+   		       return colNames.length;
+   		   }
+   		   
+   		   @Override
+   		   public boolean isCellEditable(int row, int col) {
+   		       switch(panelNames) {
+   		       	case "OrdersInfoPanel":
+   		       		switch (col) {
+   		        	case 4:
+   		        	case 5:
+   		                return true;
+   		            default:
+   		                return false;
+   		         }
+   		       	case "AddItemOrOrderPanel":
+   		       		switch (col) {
+   		        	case 0:
+   		        	case 2:
+   		                return true;
+   		            default:
+   		                return false;
+   		       	}
+   		       
+   		   }
+   	   
+   		       return false;
+   	    }
+   	    
+   	 };
+   	
+   	table = new JTable(model);
+       rowSorter = new TableRowSorter<>(model);
+       table.setRowSorter(rowSorter);
+       
+       setLayout(new BorderLayout());
+       
+       add(new JScrollPane(table), BorderLayout.CENTER);
+       
+       
+       differentCursor();
+      
+   }
+    
+    public void comboboxColumn() {
+    	TableColumn sportColumn = table.getColumnModel().getColumn(0);
     	
-    	table = new JTable(model);
-        rowSorter = new TableRowSorter<>(model);
-        table.setRowSorter(rowSorter);
-        
-        setLayout(new BorderLayout());
-        
-        add(new JScrollPane(table), BorderLayout.CENTER);
-        
-        
-        
-        differentCursor();
+    	JComboBox comboBox = new JComboBox();
+    	comboBox.addItem("");
+    	comboBox.addItem("H1322");
+    	comboBox.addItem("H1323");
+    	comboBox.addItem("H1324");
+    	comboBox.addItem("H1325");
+    	comboBox.addItem("H1326");
+    	sportColumn.setCellEditor(new DefaultCellEditor(comboBox));
     }
     
 
@@ -93,6 +157,22 @@ public class Table extends JPanel{
 		model.insertRow(12,new Object[]{"","",""});
 		model.insertRow(13,new Object[]{"","",""});
 		model.insertRow(14,new Object[]{"","",""});
+		model.insertRow(15,new Object[]{"","",""});
+		model.insertRow(16,new Object[]{"","",""});
+		model.insertRow(17,new Object[]{"","",""});
+		model.insertRow(18,new Object[]{"","",""});
+		model.insertRow(19,new Object[]{"","",""});
+		model.insertRow(20,new Object[]{"","",""});
+		model.insertRow(21,new Object[]{"","",""});
+		model.insertRow(22,new Object[]{"","",""});
+		model.insertRow(23,new Object[]{"","",""});
+		model.insertRow(24,new Object[]{"","",""});
+		model.insertRow(25,new Object[]{"","",""});
+		model.insertRow(26,new Object[]{"","",""});
+		model.insertRow(27,new Object[]{"","",""});
+		model.insertRow(28,new Object[]{"","",""});
+		model.insertRow(29,new Object[]{"","",""});
+		model.insertRow(30,new Object[]{"","",""});
 	}
 	
 	public void newInformationFrameIfClicked(JPanel infoPanel) {
@@ -148,6 +228,7 @@ public class Table extends JPanel{
             }
         });
 	}
+	
 
     public TableRowSorter<DefaultTableModel> getRowSorter() {
 		return rowSorter;

@@ -132,11 +132,12 @@ public class AddItemOrOrderPanel extends JPanel {
 		setPreferredSize(new Dimension(1000,600));
 		
 		ordersColumnNames = new String[] {"Item-ID", "Item-Name", "Ordered quantity"};
-		ordersTable = new Table(ordersColumnNames);
+		ordersTable = new Table(ordersColumnNames, "AddItemOrOrderPanel");
 		addOrderButton = new JButton("Add");
 		orderTableFlowLayout = new JPanel();
 		
 		ordersTable.fillWithEmptyRows();
+		ordersTable.comboboxColumn();
 		
 		Cursor cursor = new Cursor(Cursor.HAND_CURSOR);
 		addOrderButton.setCursor(cursor);
@@ -210,11 +211,12 @@ public class AddItemOrOrderPanel extends JPanel {
 		setPreferredSize(new Dimension(1000,600));
 		
 		ordersColumnNames = new String[] {"Item-ID", "Item-Name", "Sold quantity"};
-		ordersTable = new Table(ordersColumnNames);
+		ordersTable = new Table(ordersColumnNames, "AddItemOrOrderPanel");
 		addOrderButton = new JButton("Add");
 		orderTableFlowLayout = new JPanel();
 		
 		ordersTable.fillWithEmptyRows();
+		ordersTable.comboboxColumn();
 		
 		Cursor cursor = new Cursor(Cursor.HAND_CURSOR);
 		addOrderButton.setCursor(cursor);
