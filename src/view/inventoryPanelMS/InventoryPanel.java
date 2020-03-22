@@ -2,8 +2,13 @@ package view.inventoryPanelMS;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -19,6 +24,7 @@ import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
+import view.classesForPanels.AddItemOrOrderPanel;
 import view.classesForPanels.SearchPanel;
 import view.classesForPanels.Table;
 
@@ -36,8 +42,13 @@ public class InventoryPanel extends JPanel {
     private GoodsInfoPanel gIPanel;
     
     private JPanel topButtonsPanel;
-    private JButton addItem;
-    private JButton editItem;
+    private JButton addItemBtn;
+    private JButton editItemBtn;
+    
+    private JFrame addItemFrame;
+    private AddItemOrOrderPanel AddItemPanel;
+    
+    private Cursor cursor;
     
     public InventoryPanel() {
     	
@@ -55,16 +66,20 @@ public class InventoryPanel extends JPanel {
         gIPanel = new GoodsInfoPanel();
         
         topButtonsPanel = new JPanel();
-        addItem = new JButton("Add item");
-        editItem = new JButton("Edit item");
+        addItemBtn = new JButton("Add item");
+        editItemBtn = new JButton("Edit item");
+        
+        cursor = new Cursor(Cursor.HAND_CURSOR);
+        addItemBtn.setCursor(cursor);
+        editItemBtn.setCursor(cursor);
         
         topButtonsPanel.setPreferredSize(new Dimension(50, 50));
         searchInventory.setPreferredSize(new Dimension(50, 50));
         
         FlowLayout ItemPanelLayout = new FlowLayout();
         topButtonsPanel.setLayout(ItemPanelLayout);
-        topButtonsPanel.add(addItem);
-        topButtonsPanel.add(editItem);
+        topButtonsPanel.add(addItemBtn);
+        topButtonsPanel.add(editItemBtn);
 	    Border innerBorderItem = BorderFactory.createLineBorder(Color.GRAY);
         Border outerBorderItem = BorderFactory.createEmptyBorder(5, 5, 5, 5);
         topButtonsPanel.setBorder(BorderFactory.createCompoundBorder(outerBorderItem, innerBorderItem));
@@ -80,7 +95,48 @@ public class InventoryPanel extends JPanel {
         add(table);
         
         table.newInformationFrameIfClicked(gIPanel);
-    
-    
+        
+        addItemButtonPressed();
+        
 	}
+    
+    public void addItemButtonPressed(){
+    	addItemBtn.addActionListener(new ActionListener(){
+
+            
+            public void actionPerformed(ActionEvent e) {
+            	
+            	AddItemPanel = new AddItemOrOrderPanel();
+                AddItemPanel.layoutComponentsAddItem();	
+            	
+        	if (addItemFrame == null) {
+	        	   
+        		  addItemFrame = new JFrame();
+	              
+        		  addItemFrame.setLayout(new BorderLayout());
+
+        		  addItemFrame.add(AddItemPanel, BorderLayout.CENTER);
+        		  addItemFrame.setVisible(true);
+        		  addItemFrame.setDefaultCloseOperation(addItemFrame.DISPOSE_ON_CLOSE);
+        		  addItemFrame.setResizable(false);
+        		  addItemFrame.pack();
+	              
+	              Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+	              Point middle = new Point(screenSize.width / 2, screenSize.height / 2);
+	              Point newLocation = new Point(middle.x - (addItemFrame.getWidth() / 2), 
+	                                            middle.y - (addItemFrame.getHeight() / 2));
+	              addItemFrame.setLocation(newLocation);
+	              
+	              addItemFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+	  			    @Override
+	  			    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+	  			    	addItemFrame = null;
+	  			    }
+	  			});
+  		    } else {
+  		    	addItemFrame.setVisible(true);
+  		    }
+           }
+     });
+   }
 }

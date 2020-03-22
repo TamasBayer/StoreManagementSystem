@@ -77,6 +77,24 @@ public class Table extends JPanel{
 		
 	}
 	
+	public void fillWithEmptyRows() {
+		model.insertRow(0,new Object[]{"","",""});
+		model.insertRow(1,new Object[]{"","",""});
+		model.insertRow(2,new Object[]{"","",""});
+		model.insertRow(3,new Object[]{"","",""});
+		model.insertRow(4,new Object[]{"","",""});
+		model.insertRow(5,new Object[]{"","",""});
+		model.insertRow(6,new Object[]{"","",""});
+		model.insertRow(7,new Object[]{"","",""});
+		model.insertRow(8,new Object[]{"","",""});
+		model.insertRow(9,new Object[]{"","",""});
+		model.insertRow(10,new Object[]{"","",""});
+		model.insertRow(11,new Object[]{"","",""});
+		model.insertRow(12,new Object[]{"","",""});
+		model.insertRow(13,new Object[]{"","",""});
+		model.insertRow(14,new Object[]{"","",""});
+	}
+	
 	public void newInformationFrameIfClicked(JPanel infoPanel) {
 		table.addMouseListener(new MouseAdapter() {
 	        public void mouseClicked(MouseEvent e) {
