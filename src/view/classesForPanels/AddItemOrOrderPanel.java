@@ -285,4 +285,14 @@ public class AddItemOrOrderPanel extends JPanel {
         c.weightx = 1;
         add(orderTableFlowLayout, c);
 	}
+
+	public JTextField getNewItemIDField() {
+		return newItemIDField;
+	}
+
+	public JTextField getNewItemNameField() {
+		return newItemNameField;
+	}
+	
+	
 }

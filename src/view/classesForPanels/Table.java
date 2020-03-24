@@ -116,6 +116,7 @@ public class Table extends JPanel{
       
    }
     
+    
     public void comboboxColumn() {
     	TableColumn sportColumn = table.getColumnModel().getColumn(0);
     	
@@ -237,6 +238,11 @@ public class Table extends JPanel{
 	public DefaultTableModel getModel() {
 		return model;
 	}
+
+	public JTable getTable() {
+		return table;
+	}
+	
 	
 	
 }
