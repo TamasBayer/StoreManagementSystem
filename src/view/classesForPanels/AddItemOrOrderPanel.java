@@ -137,7 +137,7 @@ public class AddItemOrOrderPanel extends JPanel {
 		orderTableFlowLayout = new JPanel();
 		
 		ordersTable.fillWithEmptyRows();
-		ordersTable.comboboxColumn();
+		ordersTable.comboBoxColumnItemID();
 		
 		Cursor cursor = new Cursor(Cursor.HAND_CURSOR);
 		addOrderButton.setCursor(cursor);
@@ -216,7 +216,7 @@ public class AddItemOrOrderPanel extends JPanel {
 		orderTableFlowLayout = new JPanel();
 		
 		ordersTable.fillWithEmptyRows();
-		ordersTable.comboboxColumn();
+		ordersTable.comboBoxColumnItemID();
 		
 		Cursor cursor = new Cursor(Cursor.HAND_CURSOR);
 		addOrderButton.setCursor(cursor);

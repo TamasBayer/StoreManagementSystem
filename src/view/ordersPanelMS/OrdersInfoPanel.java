@@ -64,7 +64,7 @@ public class OrdersInfoPanel extends JPanel {
 		
 		GridBagLayout();
 		
-		ordersTable.comboboxColumn();
+		ordersTable.comboBoxColumnItemID();
 	}
 	
 	private void GridBagLayout() {   

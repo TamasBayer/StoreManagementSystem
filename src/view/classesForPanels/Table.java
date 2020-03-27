@@ -95,6 +95,16 @@ public class Table extends JPanel{
    		            default:
    		                return false;
    		       	}
+   		       	case "StockInOutPanel":
+		       		switch (col) {
+		        	case 0:
+		        	case 1:
+		        	case 3:
+		        	case 4:
+		                return true;
+		            default:
+		                return false;
+		       	}
    		       
    		   }
    	   
@@ -117,8 +127,8 @@ public class Table extends JPanel{
    }
     
     
-    public void comboboxColumn() {
-    	TableColumn sportColumn = table.getColumnModel().getColumn(0);
+    public void comboBoxColumnItemID() {
+    	TableColumn firstColumn = table.getColumnModel().getColumn(0);
     	
     	JComboBox comboBox = new JComboBox();
     	comboBox.addItem("");
@@ -127,7 +137,29 @@ public class Table extends JPanel{
     	comboBox.addItem("H1324");
     	comboBox.addItem("H1325");
     	comboBox.addItem("H1326");
-    	sportColumn.setCellEditor(new DefaultCellEditor(comboBox));
+    	firstColumn.setCellEditor(new DefaultCellEditor(comboBox));
+    }
+    
+    public void comboBoxColumnInOutPanel() {
+    	TableColumn firstColumn = table.getColumnModel().getColumn(0);
+
+    	
+    	JComboBox comboBoxInOut = new JComboBox();
+    	comboBoxInOut.addItem("");
+    	comboBoxInOut.addItem("In");
+    	comboBoxInOut.addItem("Out");
+    	firstColumn.setCellEditor(new DefaultCellEditor(comboBoxInOut));
+    	
+    	TableColumn secondColumn = table.getColumnModel().getColumn(1);
+    	
+    	JComboBox comboBoxItemName = new JComboBox();
+    	comboBoxItemName.addItem("");
+    	comboBoxItemName.addItem("H1322");
+    	comboBoxItemName.addItem("H1323");
+    	comboBoxItemName.addItem("H1324");
+    	comboBoxItemName.addItem("H1325");
+    	comboBoxItemName.addItem("H1326");
+    	secondColumn.setCellEditor(new DefaultCellEditor(comboBoxItemName));
     }
     
 

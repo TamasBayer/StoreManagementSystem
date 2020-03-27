@@ -190,10 +190,6 @@ public class MainFrame extends JFrame {
         changeApp.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent ev){
                 
-                int action = JOptionPane.showConfirmDialog(MainFrame.this,
-                              "Do you really want to log out?",
-                              "ComfirmExit", JOptionPane.OK_CANCEL_OPTION);
-                if(action == JOptionPane.OK_OPTION){
                 	if(choosedPanel == 1) {
                 		remove(tabbedPaneMainSystem);
                 	} else {
@@ -212,7 +208,7 @@ public class MainFrame extends JFrame {
                     }
                     
                 
-                }
+                
             }
         });
         

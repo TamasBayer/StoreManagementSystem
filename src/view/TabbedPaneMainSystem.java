@@ -12,6 +12,7 @@ import view.ordersPanelMS.OrdersPanel;
 import view.readyOrdersPanelMS.ReadyOrdersPanel;
 import view.readySellOrdersPanelMS.ReadySellOrdersPanel;
 import view.sellOrdersPanelMS.SellOrdersPanel;
+import view.stockInOutPanelMS.StockInOutPanel;
 
 public class TabbedPaneMainSystem extends JPanel {
 	
@@ -20,6 +21,7 @@ public class TabbedPaneMainSystem extends JPanel {
 	private SellOrdersPanel sOPanel;
 	private ReadyOrdersPanel rOPanel;
 	private ReadySellOrdersPanel rSOPanel;
+	private StockInOutPanel sIOPanel;
 
 	public TabbedPaneMainSystem() {
 		
@@ -30,6 +32,7 @@ public class TabbedPaneMainSystem extends JPanel {
 		sOPanel = new SellOrdersPanel();
 		rOPanel = new ReadyOrdersPanel();
 		rSOPanel = new ReadySellOrdersPanel();
+		sIOPanel = new StockInOutPanel();
 
         // Creates a JTabbedPane with tabs at the bottom.
         JTabbedPane pane = new JTabbedPane(JTabbedPane.LEFT);
@@ -38,7 +41,8 @@ public class TabbedPaneMainSystem extends JPanel {
         pane.addTab("Sell orders", sOPanel);
         pane.addTab("Ready orders", rOPanel);
         pane.addTab("Ready sell orders", rSOPanel);
-      
+        pane.addTab("Stock In-Out", sIOPanel);
+        
         setPreferredSize(new Dimension(1100, 700));
         this.add(pane, BorderLayout.CENTER);
 	}
