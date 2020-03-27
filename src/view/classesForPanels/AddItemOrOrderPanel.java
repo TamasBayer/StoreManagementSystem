@@ -293,6 +293,14 @@ public class AddItemOrOrderPanel extends JPanel {
 	public JTextField getNewItemNameField() {
 		return newItemNameField;
 	}
+
+	public JTextField getCompanyNameField() {
+		return companyNameField;
+	}
+
+	public JTextField getOrderDatumField() {
+		return orderDatumField;
+	}
 	
 	
 }

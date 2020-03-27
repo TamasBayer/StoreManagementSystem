@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Frame;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -17,6 +18,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -24,6 +26,7 @@ import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
+import view.MainFrame;
 import view.classesForPanels.AddItemOrOrderPanel;
 import view.classesForPanels.SearchPanel;
 import view.classesForPanels.Table;
@@ -79,6 +82,7 @@ public class InventoryPanel extends JPanel {
         cursor = new Cursor(Cursor.HAND_CURSOR);
         addItemBtn.setCursor(cursor);
         editItemBtn.setCursor(cursor);
+        deleteItemBtn.setCursor(cursor);
         
         topButtonsPanel.setPreferredSize(new Dimension(50, 50));
         searchInventory.setPreferredSize(new Dimension(50, 50));
@@ -186,9 +190,17 @@ public class InventoryPanel extends JPanel {
     private void deleteButtonPressed() {
     	deleteItemBtn.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
-                int row = jTable.getSelectedRow();
+            	
+            	int action = JOptionPane.showConfirmDialog(InventoryPanel.this,
+                        "Do you really want to delete this Item?",
+                        "ComfirmExit", JOptionPane.OK_CANCEL_OPTION);
+            	if(action == JOptionPane.OK_OPTION && jTable.getSelectionModel().isSelectionEmpty() == false) {
+            		
+            		int row = jTable.getSelectedRow();
+                    
+                    table.getModel().removeRow(jTable.getSelectedRow());
+            	}
                 
-                table.getModel().removeRow(jTable.getSelectedRow());
                 
                  }
         });
