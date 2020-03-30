@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -41,8 +42,8 @@ public class OrderPickingPanel extends JPanel {
     private JTextField itemIDField;
     private JLabel itemNameLabel;
     private JTextField itemNameField;
-    private JLabel itemNeedQuantityLabel;
-    private JTextField itemNeedQuantityField;
+    private JLabel itemNeededQuantityLabel;
+    private JTextField itemNeededQuantityField;
     private JLabel itemBookQuantityFromStockLabel;
     private JTextField itemBookQuantityFromStockField;
     private JLabel itemStockLabel;
@@ -51,6 +52,8 @@ public class OrderPickingPanel extends JPanel {
     private FlowLayout buttonsFlowL;
     private JButton bookBtn;
     private JButton orderBackBtn;
+    private JButton nextButton;
+    private JTextField allDifferentItemsField;
     private JButton StockBtn;
     
     private JPanel StockPanel;
@@ -115,24 +118,38 @@ public class OrderPickingPanel extends JPanel {
         itemIDField = new JTextField(10);
         itemNameLabel = new JLabel("Item name:");
         itemNameField = new JTextField(10);
-        itemNeedQuantityLabel = new JLabel("Need quantity:");
-        itemNeedQuantityField = new JTextField(10);
+        itemNeededQuantityLabel = new JLabel("Needed quantity:");
+        itemNeededQuantityField = new JTextField(10);
         itemStockLabel = new JLabel("Stock:");
         itemStockField = new JTextField(10);
         itemBookQuantityFromStockLabel = new JLabel("Quantity from stock:");
         itemBookQuantityFromStockField = new JTextField(10);
         
+        itemIDField.setEditable(false);
+        itemNameField.setEditable(false);
+        itemNeededQuantityField.setEditable(false);
+        
+        
         buttonsPanel = new JPanel();
         buttonsFlowL = new FlowLayout(FlowLayout.RIGHT);
+        allDifferentItemsField = new JTextField(3);
+        nextButton = new JButton("Next item");
         bookBtn = new JButton("Book");
         orderBackBtn = new JButton("Back");
         StockBtn = new JButton("Stock");
-	    
+        
+        
+        Font bigFont = allDifferentItemsField.getFont().deriveFont(Font.PLAIN, 15f);
+        allDifferentItemsField.setFont(bigFont);
+	    allDifferentItemsField.setEditable(false);
+        
         // FlowLayout //
         
         buttonsPanel.setLayout(buttonsFlowL);
 	      
         buttonsPanel.setPreferredSize(new Dimension(40,40));
+        buttonsPanel.add(allDifferentItemsField);
+        buttonsPanel.add(nextButton);
         buttonsPanel.add(StockBtn);
         buttonsPanel.add(bookBtn);
         buttonsPanel.add(orderBackBtn);
@@ -218,12 +235,12 @@ public class OrderPickingPanel extends JPanel {
         gc.gridx = 0;
         gc.insets = new Insets(0, 0 , 0, 5);
         gc.anchor = GridBagConstraints.LINE_END;
-        orderControlPanel.add(itemNeedQuantityLabel, gc);
+        orderControlPanel.add(itemNeededQuantityLabel, gc);
         
         gc.gridx = 1;
         gc.insets = new Insets(0, 0, 0, 0);
         gc.anchor = GridBagConstraints.LINE_START;
-        orderControlPanel.add(itemNeedQuantityField, gc);
+        orderControlPanel.add(itemNeededQuantityField, gc);
         
         /////////// Fourth row /////////////////
         gc.gridy++;
