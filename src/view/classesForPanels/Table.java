@@ -58,7 +58,7 @@ public class Table extends JPanel{
        add(new JScrollPane(table), BorderLayout.CENTER);
        
        
-       differentCursor();
+       differentCursor("");
       
    }
     
@@ -122,7 +122,7 @@ public class Table extends JPanel{
        add(new JScrollPane(table), BorderLayout.CENTER);
        
        
-       differentCursor();
+       differentCursor(panelNames);
       
    }
     
@@ -247,17 +247,38 @@ public class Table extends JPanel{
 	     });
 	}
 	
-	public void differentCursor(){
+	public void differentCursor(String panelNames){
     	table.addMouseMotionListener(new MouseAdapter() {
             public void mouseMoved(MouseEvent e) {
             	Point pt = e.getPoint();
-            	if(table.columnAtPoint(pt) > 3) {
-            		Cursor cursor = new Cursor(Cursor.TEXT_CURSOR);
-            		table.setCursor(cursor);
+            	
+            	if(panelNames == "OrdersInfoPanel") {
+            		if(table.columnAtPoint(pt) > 3) {
+            			Cursor cursor = new Cursor(Cursor.TEXT_CURSOR);
+                		table.setCursor(cursor);
+            		} else {
+            			Cursor cursor = new Cursor(Cursor.DEFAULT_CURSOR);
+                		table.setCursor(cursor);
+            		}
+            	} else if(panelNames == "StockInOutPanel") {
+            		if(table.columnAtPoint(pt) > 2) {
+            			Cursor cursor = new Cursor(Cursor.TEXT_CURSOR);
+                		table.setCursor(cursor);
+            		} else if(table.columnAtPoint(pt) < 2){
+            			Cursor cursor = new Cursor(Cursor.HAND_CURSOR);
+                		table.setCursor(cursor);
+            		} else {
+            			Cursor cursor = new Cursor(Cursor.DEFAULT_CURSOR);
+                		table.setCursor(cursor);
+            		}
+            	} else if(panelNames == "Default") {
+                		Cursor cursor = new Cursor(Cursor.DEFAULT_CURSOR);
+                		table.setCursor(cursor);
             	} else {
             		Cursor cursor = new Cursor(Cursor.HAND_CURSOR);
                     table.setCursor(cursor);
             	}
+            	
             }
         });
 	}

@@ -2,6 +2,7 @@ package view.pickingForOrdersPanelStockS;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -65,6 +66,8 @@ public class OrderPickingPanel extends JPanel {
     
     private JButton button;
     
+    private Cursor cursor;
+    
     public OrderPickingPanel() {
 			
     	
@@ -96,6 +99,8 @@ public class OrderPickingPanel extends JPanel {
          });
             
             buttonPanel.add(button);
+            cursor = new Cursor(Cursor.HAND_CURSOR);
+            button.setCursor(cursor);
             
         }
         scrollPane.setViewportView(buttonPanel);
@@ -142,6 +147,12 @@ public class OrderPickingPanel extends JPanel {
         Font bigFont = allDifferentItemsField.getFont().deriveFont(Font.PLAIN, 15f);
         allDifferentItemsField.setFont(bigFont);
 	    allDifferentItemsField.setEditable(false);
+	    
+	    cursor = new Cursor(Cursor.HAND_CURSOR);
+	    nextButton.setCursor(cursor);
+	    bookBtn.setCursor(cursor);
+	    orderBackBtn.setCursor(cursor);
+	    StockBtn.setCursor(cursor);
         
         // FlowLayout //
         
@@ -289,6 +300,9 @@ public class OrderPickingPanel extends JPanel {
         stockBackBtn = new JButton("Back"); 
         backBtnPanel = new JPanel();
         backBtnFlowL = new FlowLayout(FlowLayout.RIGHT);
+        
+        cursor = new Cursor(Cursor.HAND_CURSOR);
+        stockBackBtn.setCursor(cursor);
         
 		 // FlowLayout //
         
