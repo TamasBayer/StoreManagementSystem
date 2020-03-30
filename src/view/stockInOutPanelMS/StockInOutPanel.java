@@ -27,7 +27,7 @@ public class StockInOutPanel extends JPanel {
 
 		setPreferredSize(new Dimension(1000,600));
 		
-		ordersColumnNames = new String[] {"In or Out", "Item-ID", "Item-Name", "Quantity", "Stock"};
+		ordersColumnNames = new String[] {"In or Out", "Item-ID", "Item name", "Quantity", "Stock"};
 		ordersTable = new Table(ordersColumnNames, "StockInOutPanel");
 		addOrderButton = new JButton("Book");
 		orderTableFlowLayout = new JPanel();

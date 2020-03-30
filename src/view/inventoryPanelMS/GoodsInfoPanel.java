@@ -40,7 +40,7 @@ public class GoodsInfoPanel extends JPanel{
 		
 		choosedItemPanel = new JPanel();
 		itemIDLabel = new JLabel("Item-ID:");
-		itemNameLabel = new JLabel("Item-Name:");
+		itemNameLabel = new JLabel("Item name:");
 		itemIDTextField = new JTextField(10);
 		itemNameTextField = new JTextField(10);
 		itemIDTextField.setEditable(false);

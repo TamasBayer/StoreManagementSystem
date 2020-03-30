@@ -33,7 +33,7 @@ public class ReadySellOrdersInfoPanel extends JPanel{
 	public ReadySellOrdersInfoPanel() {
 		setPreferredSize(new Dimension(1000,600));
 		
-		sellOrdersColumnNames = new String[] {"Item-ID", "Item-Name", "Sold quantity"};
+		sellOrdersColumnNames = new String[] {"Item-ID", "Item name", "Sold quantity"};
 		sellOrdersTable = new Table(sellOrdersColumnNames);
 		
 		sellOrdersTable.fillWithData();

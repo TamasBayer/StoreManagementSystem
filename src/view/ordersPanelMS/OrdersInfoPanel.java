@@ -38,7 +38,7 @@ public class OrdersInfoPanel extends JPanel {
 	public OrdersInfoPanel() {
 		setPreferredSize(new Dimension(1000,600));
 		
-		ordersColumnNames = new String[] {"Item-ID", "Item-Name", "Ordered quantity", "Already in storage", "Current deliverd quantity", "Stock"};
+		ordersColumnNames = new String[] {"Item-ID", "Item name", "Ordered quantity", "Already in storage", "Current deliverd quantity", "Stock"};
 		ordersTable = new Table(ordersColumnNames, "OrdersInfoPanel");
 		bookButton = new JButton("Book");
 		editButton = new JButton("Edit Order");

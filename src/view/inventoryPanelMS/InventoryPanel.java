@@ -61,12 +61,12 @@ public class InventoryPanel extends JPanel {
     
     public InventoryPanel() {
     	
-    	columnNames = new String[] {"Goods-ID", "Goods-Name", "Quantity in warehouse"};
+    	columnNames = new String[] {"Item-ID", "Item name", "Quantity in warehouse"};
         table = new Table(columnNames);
         
         table.fillWithData();
         
-        comboboxEl = new String[] {"Goods-ID", "Goods-Name"};
+        comboboxEl = new String[] {"Item-ID", "Item name"};
         searchInventory = new SearchPanel(comboboxEl);
         searchField = searchInventory.getSearchField();
         searchButton = searchInventory.getSearchButton();
@@ -77,7 +77,7 @@ public class InventoryPanel extends JPanel {
         topButtonsPanel = new JPanel();
         addItemBtn = new JButton("Add item");
         editItemBtn = new JButton("Edit item");
-        deleteItemBtn = new JButton("Delete Item");
+        deleteItemBtn = new JButton("Delete item");
         
         cursor = new Cursor(Cursor.HAND_CURSOR);
         addItemBtn.setCursor(cursor);

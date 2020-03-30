@@ -31,9 +31,9 @@ public class StockPanelStockS extends JPanel{
     
     public StockPanelStockS(){
     	
-    	columnNames = new String[] {"Stock code", "Goods-ID", "Goods-Name", "Quantity in Stock"};
+    	columnNames = new String[] {"Stock code", "Item-ID", "Item name", "Quantity in Stock"};
         table = new Table(columnNames);
-        comboboxEl = new String[] {"Stock code", "Goods-ID", "Goods-Name"};
+        comboboxEl = new String[] {"Stock code", "Item-ID", "Item name"};
     	searchStock = new SearchPanel(comboboxEl);
         searchField = searchStock.getSearchField();
         searchButton = searchStock.getSearchButton();

@@ -36,7 +36,7 @@ public class SellOrdersInfoPanel extends JPanel{
 	public SellOrdersInfoPanel() {
 		setPreferredSize(new Dimension(1000,600));
 		
-		sellOrdersColumnNames = new String[] {"Item-ID", "Item-Name", "Sold quantity", "Already picked quantity"};
+		sellOrdersColumnNames = new String[] {"Item-ID", "Item name", "Sold quantity", "Already picked quantity"};
 		sellOrdersTable = new Table(sellOrdersColumnNames);
 		bookButton = new JButton("");
 		editButton = new JButton("Edit Order");

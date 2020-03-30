@@ -25,7 +25,7 @@ public class ControlPaneStockS extends JPanel{
 	        
 	    public ControlPaneStockS(){
 	        
-	        goodsIDLabel = new JLabel("Goods-ID"); 
+	        goodsIDLabel = new JLabel("Item-ID"); 
 	        goodsIDField = new JTextField(10);
 	        goodsFromStockLabel = new JLabel("From");
 	        goodsFromStockField = new JTextField(10);

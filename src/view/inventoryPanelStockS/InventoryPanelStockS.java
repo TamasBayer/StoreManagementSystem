@@ -33,9 +33,9 @@ public class InventoryPanelStockS extends JPanel {
     
     public InventoryPanelStockS(){
         
-    	columnNames = new String[] {"Goods-ID", "Goods-Name", "Quantity in warehouse"};
+    	columnNames = new String[] {"Item-ID", "Item name", "Quantity in warehouse"};
         table = new Table(columnNames);
-        comboboxEl = new String[] {"Goods-ID", "Goods-Name"};
+        comboboxEl = new String[] {"Item-ID", "Item name"};
         searchInventory = new SearchPanel(comboboxEl);
         searchField = searchInventory.getSearchField();
         searchButton = searchInventory.getSearchButton();
