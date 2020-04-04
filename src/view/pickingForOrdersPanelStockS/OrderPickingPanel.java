@@ -54,6 +54,7 @@ public class OrderPickingPanel extends JPanel {
     private JButton bookBtn;
     private JButton orderBackBtn;
     private JButton nextButton;
+    private JButton prevButton;
     private JTextField allDifferentItemsField;
     private JButton StockBtn;
     
@@ -138,6 +139,7 @@ public class OrderPickingPanel extends JPanel {
         buttonsPanel = new JPanel();
         buttonsFlowL = new FlowLayout(FlowLayout.RIGHT);
         allDifferentItemsField = new JTextField(3);
+        prevButton = new JButton("Prev item");
         nextButton = new JButton("Next item");
         bookBtn = new JButton("Book");
         orderBackBtn = new JButton("Back");
@@ -149,6 +151,7 @@ public class OrderPickingPanel extends JPanel {
 	    allDifferentItemsField.setEditable(false);
 	    
 	    cursor = new Cursor(Cursor.HAND_CURSOR);
+	    prevButton.setCursor(cursor);
 	    nextButton.setCursor(cursor);
 	    bookBtn.setCursor(cursor);
 	    orderBackBtn.setCursor(cursor);
@@ -160,6 +163,7 @@ public class OrderPickingPanel extends JPanel {
 	      
         buttonsPanel.setPreferredSize(new Dimension(40,40));
         buttonsPanel.add(allDifferentItemsField);
+        buttonsPanel.add(prevButton);
         buttonsPanel.add(nextButton);
         buttonsPanel.add(StockBtn);
         buttonsPanel.add(bookBtn);
