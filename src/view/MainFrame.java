@@ -16,6 +16,8 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
+import model.DB;
+
 public class MainFrame extends JFrame {
     
 	private LoginPanel loginPanel;
@@ -30,6 +32,8 @@ public class MainFrame extends JFrame {
 	private JFrame testFrame;
 	
 	private int choosedPanel;
+	
+	private DB db;
 
     public MainFrame(){
         
@@ -38,6 +42,7 @@ public class MainFrame extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setVisible(true);
         
+        db = new DB();
         
         loginPanel = new LoginPanel();
         loginBtn = loginPanel.getLoginButton();
