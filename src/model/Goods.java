@@ -2,38 +2,38 @@ package model;
 
 public class Goods {
 
-	private int goodsID;
-	private String goodsName;
-	private int goodsQuantity;
+	private int itemID;
+	private String itemName;
+	private int itemQuantity;
 	
-	public Goods(int gID, String gName, int gQuantity) {
-		this.goodsID = gID;
-		this.goodsName = gName;
-		this.goodsQuantity = gQuantity;
+	public Goods(int iID, String iName, int iQuantity) {
+		this.itemID = iID;
+		this.itemName = iName;
+		this.itemQuantity = iQuantity;
 	}
 
-	public int getGoodsID() {
-		return goodsID;
+	public int getItemID() {
+		return itemID;
 	}
 
-	public void setGoodsID(int goodsID) {
-		this.goodsID = goodsID;
+	public void setItemID(int itemID) {
+		this.itemID = itemID;
 	}
 
-	public String getGoodsName() {
-		return goodsName;
+	public String getItemName() {
+		return itemName;
 	}
 
-	public void setGoodsName(String goodsName) {
-		this.goodsName = goodsName;
+	public void setItemName(String itemName) {
+		this.itemName = itemName;
 	}
 
-	public int getGoodsQuantity() {
-		return goodsQuantity;
+	public int getItemQuantity() {
+		return itemQuantity;
 	}
 
-	public void setGoodsQuantity(int goodsQuantity) {
-		this.goodsQuantity = goodsQuantity;
+	public void setItemQuantity(int itemQuantity) {
+		this.itemQuantity = itemQuantity;
 	}
 	
 	
