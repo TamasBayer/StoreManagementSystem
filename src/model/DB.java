@@ -49,7 +49,7 @@ public class DB {
            
             
             try {
-                ResultSet rs = dbmd.getTables(null, "APP", "Users", null);
+                ResultSet rs = dbmd.getTables(null, "APP", "USERS", null);
                 if (!rs.next()){
                     createStatement.execute("CREATE TABLE Users(userName varchar(20) PRIMARY KEY, userPassword varchar(20))");
                     createStatement.execute("CREATE TABLE Goods(itemID int PRIMARY KEY, itemName varchar(20))");
@@ -78,4 +78,8 @@ public class DB {
             }
             
        }
+    
+    public Connection getConn() {
+		return conn;
+	}
 }
