@@ -3,9 +3,11 @@ package model;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 public class DB {
 
@@ -78,6 +80,21 @@ public class DB {
             }
             
        }
+    
+    public void addUser(Users user){
+        try {
+              String sql = "INSERT INTO Users VALUES (?,?)";
+              PreparedStatement preparedStatement = conn.prepareStatement(sql);
+              preparedStatement.setString(1, user.getUserName());
+              preparedStatement.setString(2, user.getUserPassword());
+
+              preparedStatement.execute();
+        } catch (SQLException ex) {
+            System.out.println("Valami baj van az User hozzáadásakor");
+            System.out.println(""+ex);
+        }
+}
+    
     
     public Connection getConn() {
 		return conn;

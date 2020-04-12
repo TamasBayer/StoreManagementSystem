@@ -6,11 +6,15 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 
@@ -19,7 +23,7 @@ public class LoginPanel extends JPanel{
 	private JLabel userNameLabel;
     private JTextField userNameField;
     private JLabel passwordLabel;
-    private JTextField passwordField;
+    private JPasswordField passwordField;
     private JButton loginButton;
     private Cursor cursor;
     
@@ -30,7 +34,7 @@ public class LoginPanel extends JPanel{
     	userNameLabel = new JLabel("User name:"); 
     	userNameField = new JTextField(10);
     	passwordLabel = new JLabel("Password: ");
-    	passwordField = new JTextField(10);
+    	passwordField = new JPasswordField(10);
     	loginButton = new JButton("Login");
         
     	setPreferredSize(new Dimension(300, 200));
@@ -51,17 +55,24 @@ public class LoginPanel extends JPanel{
         textFields = null;
         
         
-      if(!userNameField.getText().isEmpty() && !passwordField.getText().isEmpty() && !passwordField.getText().isEmpty() && !passwordField.getText().isEmpty()){
-        textFields = new String[4];
+      if(!userNameField.getText().isEmpty() && passwordField.getPassword().length != 0 && passwordField.getPassword().length != 0 && passwordField.getPassword().length != 0){
+        textFields = new String[2];
+        
+        char[] password = passwordField.getPassword();
+        String passwordString = new String(password);
           
         textFields[0] = userNameField.getText();
-        textFields[1] = passwordField.getText();
-
-        
+        textFields[1] = passwordString;
       } 
           
         return textFields;
     } 
+    
+    public void clearTextFields() {
+    	userNameField.setText("");
+    	passwordField.setText("");
+    	textFields = null;
+    }
     
     public JButton getLoginButton() {
 		return loginButton;

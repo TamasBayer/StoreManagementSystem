@@ -7,6 +7,11 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -17,6 +22,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
 import model.DB;
+import model.Users;
 
 public class MainFrame extends JFrame {
     
@@ -34,6 +40,9 @@ public class MainFrame extends JFrame {
 	private int choosedPanel;
 	
 	private DB db;
+	
+	private Connection conn;
+	private Statement createStatement = null;
 
     public MainFrame(){
         
@@ -41,9 +50,7 @@ public class MainFrame extends JFrame {
         
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setVisible(true);
-        
-        db = new DB();
-        
+		
         loginPanel = new LoginPanel();
         loginBtn = loginPanel.getLoginButton();
         
@@ -54,6 +61,12 @@ public class MainFrame extends JFrame {
         tabbedPaneMainSystem = new TabbedPaneMainSystem();
         tabbedPaneStockSystem = new TabbedPaneStockSystem();
         
+        
+		////////////Set DB Connection for all Panel ////////////
+				
+		db = new DB();
+		conn = db.getConn();
+
         setLayout(new BorderLayout());
 
         add(loginPanel, BorderLayout.CENTER);
@@ -69,19 +82,74 @@ public class MainFrame extends JFrame {
         
     }
     
+    public void loadCreateStatement() {
+
+		
+		if (conn != null && createStatement == null){
+	        try {
+	             createStatement = conn.createStatement();
+	        } catch (SQLException ex) {
+	            System.out.println("Error with createStatement");
+	            System.out.println(" "+ex);
+
+	        }
+		}
+	        
+	}
+    
+    private Boolean checkUser(){
+    	String[] textFieldData = loginPanel.getTextFields();
+    	
+    	String userPassword = "";
+    	
+    	if(textFieldData != null) {
+    		String sql = "SELECT userPassword FROM Users WHERE userName='"+ textFieldData[0] +"'";
+    		try {
+            	loadCreateStatement();
+                ResultSet rs = createStatement.executeQuery(sql);
+                
+                if (rs.next()) {
+                	userPassword = rs.getString("userPassword");
+                    
+                }
+                
+                
+                if(userPassword.equals(textFieldData[1])) {
+                	return true;
+                } else {
+                	System.out.println("Incorrect password or user name");
+                }
+           
+            } catch (SQLException ex) {
+                System.out.println("Error with login");
+                System.out.println(" "+ex);
+                }    
+    	} else {
+    		System.out.println("Please give your user name and password");
+    	}
+        
+        return false;
+}
+    
     public void loginButtonPressed(){
     	loginBtn.addActionListener(new ActionListener(){
 
             
             public void actionPerformed(ActionEvent e) {
                 
-            	remove(loginPanel);
+            	Boolean correctUserData = checkUser();
             	
+            	if(correctUserData == true) {
+            		remove(loginPanel);
+                	
+                	add(appChooserPanel, BorderLayout.CENTER);
+                    pack();
+                    setLocationRelativeTo(null);
+                    setResizable(false);
+                    
+                    loginPanel.clearTextFields();
+            	}
             	
-            	add(appChooserPanel, BorderLayout.CENTER);
-                pack();
-                setLocationRelativeTo(null);
-                setResizable(false);
                 
             }
         });
