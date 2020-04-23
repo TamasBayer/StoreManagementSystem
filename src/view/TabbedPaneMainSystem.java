@@ -2,6 +2,8 @@ package view;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.sql.Connection;
+import java.sql.Statement;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -22,8 +24,10 @@ public class TabbedPaneMainSystem extends JPanel {
 	private ReadyOrdersPanel rOPanel;
 	private ReadySellOrdersPanel rSOPanel;
 	private StockInOutPanel sIOPanel;
+	
+	private Connection conn;
 
-	public TabbedPaneMainSystem() {
+	public TabbedPaneMainSystem(Connection getConn) {
 		
 		this.setLayout(new BorderLayout());
 		
@@ -45,5 +49,15 @@ public class TabbedPaneMainSystem extends JPanel {
         
         setPreferredSize(new Dimension(1100, 700));
         this.add(pane, BorderLayout.CENTER);
+        
+        //// setConn ////
+        
+        this.conn = getConn;
+        iPanel.setConn(conn);
+        iPanel.fillTableWithData();
+	}
+	
+	public void setConn(Connection conn) {
+		this.conn = conn;
 	}
 }

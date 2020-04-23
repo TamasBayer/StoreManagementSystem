@@ -12,6 +12,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -26,6 +32,8 @@ import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
+import model.Goods;
+import model.Users;
 import view.MainFrame;
 import view.classesForPanels.AddItemOrOrderPanel;
 import view.classesForPanels.SearchPanel;
@@ -59,12 +67,15 @@ public class InventoryPanel extends JPanel {
     private JTextField itemID;
     private JTextField itemName;
     
+    private Connection conn;
+    private Statement createStatement = null;
+    
+    private int itemPanelNumber;
+    
     public InventoryPanel() {
     	
     	columnNames = new String[] {"Item-ID", "Item name", "Quantity in warehouse"};
         table = new Table(columnNames);
-        
-        table.fillWithData();
         
         comboboxEl = new String[] {"Item-ID", "Item name"};
         searchInventory = new SearchPanel(comboboxEl);
@@ -117,9 +128,66 @@ public class InventoryPanel extends JPanel {
         
         jTable = table.getTable();
         
-        
-        
 	}
+    
+    public void setConn(Connection conn) {
+		this.conn = conn;
+	}
+    
+    public void loadCreateStatement() {
+
+		
+		if (conn != null && createStatement == null){
+	        try {
+	             createStatement = conn.createStatement();
+	        } catch (SQLException ex) {
+	            System.out.println("Error with createStatement");
+	            System.out.println(" "+ex);
+
+	        }
+		}
+	        
+	}
+    
+    public ArrayList<Goods> getAllGoods(){
+       // String sql = "SELECT Goods.itemID, Goods.itemName, SUM (Inventory.itemQuantity) AS QuantityInWarehause FROM Goods, Inventory WHERE Goods.itemID=Inventory.itemID GROUP BY Goods.itemID, Goods.itemName";
+    	String sql = "SELECT * FROM Goods";
+    	ArrayList<Goods> goods = null;
+        loadCreateStatement();
+        try {
+            ResultSet rs = createStatement.executeQuery(sql);
+            goods = new ArrayList<>();
+
+        while (rs.next()){
+        	Goods actualItem = new Goods(rs.getInt("itemID"), rs.getString("itemName"), 0);
+        	goods.add(actualItem);
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error with getAllGoods");
+            System.out.println(" "+ex);
+            }    
+        
+         return goods;
+}
+    
+    public void fillTableWithData(){
+		
+		for (int i = table.getModel().getRowCount() - 1; i > -1; i--) {
+			table.getModel().removeRow(i);
+	     }
+	        
+		ArrayList<Goods> list = getAllGoods();
+	       Object rowData[] = new Object[3];
+	       for(int i = 0; i < list.size(); i++ ){
+	           rowData[0] = list.get(i).getItemID();
+	           rowData[1] = list.get(i).getItemName();
+	           rowData[2] = list.get(i).getItemQuantity();
+	           
+	           table.getModel().addRow(rowData);
+	           }; 
+	    }
+    
+    
     
     private void openItemFrame() {
     	
@@ -128,6 +196,8 @@ public class InventoryPanel extends JPanel {
         itemPanel.layoutComponentsAddItem();	
         itemID = itemPanel.getNewItemIDField();
         itemName = itemPanel.getNewItemNameField();
+        
+        JButton itemPanelAddBtn = itemPanel.getAddItemButton();
         
 	if (itemFrame == null) {
     	   
@@ -156,16 +226,76 @@ public class InventoryPanel extends JPanel {
 	    } else {
 	    	itemFrame.setVisible(true);
 	    }
+	
+	
+		itemPanelAddBtn.addActionListener(new ActionListener(){
+	
+	            
+	            public void actionPerformed(ActionEvent e) {
+	                
+	            	if(itemPanelNumber == 1) {
+	            		if(itemName.getText().length() > 2) {
+		            		
+		            		try {
+		                        String sql = "INSERT INTO Goods (itemName) VALUES ('" + itemName.getText() +"')";
+		                        PreparedStatement preparedStatement = conn.prepareStatement(sql);
+
+		                        preparedStatement.execute();
+		                        
+		                  } catch (SQLException ex) {
+		                      System.out.println("Valami baj van az Item hozzáadásakor");
+		                      System.out.println(""+ex);
+		                  }
+		            		
+		            		fillTableWithData();
+		            		itemFrame.dispose(); 
+		            		itemFrame = null;
+		          		            		
+		            	} else {
+		            		System.out.println("Correct item name missing.");
+		            	} 
+	            	} else if(itemPanelNumber == 2) {
+	            		if(itemName.getText().length() > 2) {
+		            		
+		            		try {
+		            			int idToInt = Integer.parseInt(itemID.getText());
+		            			
+		                        String sql = "Update Goods SET itemName = '" + itemName.getText() +"' WHERE itemID = " + idToInt + "";
+		                       
+		                        PreparedStatement preparedStatement = conn.prepareStatement(sql);
+
+		                        preparedStatement.execute();
+		                        
+		                  } catch (SQLException ex) {
+		                      System.out.println("Valami baj van az Item megváltoztatásakor");
+		                      System.out.println(""+ex);
+		                  }
+		          
+		            		fillTableWithData();
+		            		itemFrame.dispose(); 
+		            		itemFrame = null;
+		            	} else {
+		            		System.out.println("Correct item name missing.");
+		            	} 
+	        		}
+	            	
+	            	
+	            	
+	            }
+		
+	
+	    });
     }
+    
     
     public void addItemButtonPressed(){
     	addItemBtn.addActionListener(new ActionListener(){
 
             
-            public void actionPerformed(ActionEvent e) {
-            	
+            public void actionPerformed(ActionEvent e) {        	
+            	itemPanelNumber = 1;
             	openItemFrame();
-           }
+            }
      });
    }
     
@@ -176,6 +306,7 @@ public class InventoryPanel extends JPanel {
             	
             	if(jTable.getSelectionModel().isSelectionEmpty() == false) {
             		openItemFrame();
+            		itemPanelNumber = 2;
                 	
                 	itemID.setText(table.getModel().getValueAt(row, 0).toString());
                 	itemName.setText(table.getModel().getValueAt(row, 1).toString());
@@ -198,7 +329,20 @@ public class InventoryPanel extends JPanel {
             		
             		int row = jTable.getSelectedRow();
                     
-                    table.getModel().removeRow(jTable.getSelectedRow());
+                    
+                    int idToInt = Integer.parseInt(table.getModel().getValueAt(row, 0).toString());
+                    table.getModel().removeRow(row);
+                    try {
+                        String sql = "DELETE FROM Goods WHERE itemID = " + idToInt + "";
+                        PreparedStatement preparedStatement = conn.prepareStatement(sql);
+
+                        preparedStatement.execute();
+                        
+                  } catch (SQLException ex) {
+                      System.out.println("Valami baj van az Item törlésekor");
+                      System.out.println(""+ex);
+                  } 
+          
             	}
                 
                 

@@ -51,10 +51,10 @@ public class DB {
            
             
             try {
-                ResultSet rs = dbmd.getTables(null, "APP", "USERS", null);
+                ResultSet rs = dbmd.getTables(null, "APP", "INVENTORY", null);
                 if (!rs.next()){
                     createStatement.execute("CREATE TABLE Users(userName varchar(20) PRIMARY KEY, userPassword varchar(20))");
-                    createStatement.execute("CREATE TABLE Goods(itemID int PRIMARY KEY, itemName varchar(20))");
+                    createStatement.execute("CREATE TABLE Goods(itemID INT not null primary key GENERATED ALWAYS AS IDENTITY (START WITH 1000, INCREMENT BY 1), itemName varchar(20))");
                     createStatement.execute("CREATE TABLE SellOrders(sellOrderID int PRIMARY KEY, soldFor varchar(20), sellOrderDatum varchar(20))");
                     createStatement.execute("CREATE TABLE SoldGoods(sellOrderID int REFERENCES SellOrders(sellOrderID), soldItemID int REFERENCES Goods(itemID), itemName varchar(20), soldQuantity int NOT NULL, pickedQuantity int)");
                     createStatement.execute("CREATE TABLE ReadySellOrders(sellOrderID int PRIMARY KEY, soldFor varchar(20), sellOrderDatum varchar(20))");
@@ -62,17 +62,10 @@ public class DB {
                     createStatement.execute("CREATE TABLE OrderedGoods(orderID int REFERENCES Orders(orderID), orderedItemID int REFERENCES Goods(itemID), itemName varchar(20), orderedQuantity int NOT NULL, shippedQuantity int)");
                     createStatement.execute("CREATE TABLE ReadyOrders(orderID int PRIMARY KEY, orderedFrom varchar(20), orderDatum varchar(20))");
                     
-                    //// Create Stocks Table ////
-                    createStatement.execute("CREATE TABLE Stock1(itemID int REFERENCES Goods(itemID), itemName varchar(20), itemQuantity int)");
-                    createStatement.execute("CREATE TABLE Stock2(itemID int REFERENCES Goods(itemID), itemName varchar(20), itemQuantity int)");
-                    createStatement.execute("CREATE TABLE Stock3(itemID int REFERENCES Goods(itemID), itemName varchar(20), itemQuantity int)");
-                    createStatement.execute("CREATE TABLE Stock4(itemID int REFERENCES Goods(itemID), itemName varchar(20), itemQuantity int)");
-                    createStatement.execute("CREATE TABLE Stock5(itemID int REFERENCES Goods(itemID), itemName varchar(20), itemQuantity int)");
-                    createStatement.execute("CREATE TABLE Stock6(itemID int REFERENCES Goods(itemID), itemName varchar(20), itemQuantity int)");
-                    createStatement.execute("CREATE TABLE Stock7(itemID int REFERENCES Goods(itemID), itemName varchar(20), itemQuantity int)");
-                    createStatement.execute("CREATE TABLE Stock8(itemID int REFERENCES Goods(itemID), itemName varchar(20), itemQuantity int)");
-                    createStatement.execute("CREATE TABLE Stock9(itemID int REFERENCES Goods(itemID), itemName varchar(20), itemQuantity int)");
-                    createStatement.execute("CREATE TABLE Stock10(itemID int REFERENCES Goods(itemID), itemName varchar(20), itemQuantity int)");
+                    //// Create Stocks Tables ////
+                    createStatement.execute("CREATE TABLE StockNames(stockName varchar(10) PRIMARY KEY)");
+                    createStatement.execute("CREATE TABLE Inventory(stockName varchar(10) REFERENCES StockNames(stockName), itemID int REFERENCES Goods(itemID), itemName varchar(20), itemQuantity int)");
+                    
                 }
             } catch (SQLException ex) {
                 System.out.println("Error with resultTable");
@@ -99,4 +92,25 @@ public class DB {
     public Connection getConn() {
 		return conn;
 	}
+    
+    
+    
+    public ArrayList<Goods> getAllGoods(){
+        String sql = "SELECT Goods.itemID, Goods.itemName, SUM (Inventory.itemQuantity) AS QuantityInWarehause FROM Goods, Inventory WHERE Goods.itemID=Inventory.itemID GROUP BY Goods.itemID, Goods.itemName";
+        ArrayList<Goods> goods = null;
+        try {
+            ResultSet rs = createStatement.executeQuery(sql);
+            goods = new ArrayList<>();
+
+        while (rs.next()){
+        	Goods actualItem = new Goods(rs.getInt("itemID"), rs.getString("itemName"), rs.getInt("QuantityInWarehause"));
+        	goods.add(actualItem);
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error with getAllGoods");
+            System.out.println(" "+ex);
+            }    
+
+         return goods;
+}
 }

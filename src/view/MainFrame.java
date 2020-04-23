@@ -50,6 +50,11 @@ public class MainFrame extends JFrame {
         
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setVisible(true);
+        
+		////////////Set DB Connection for all Panel ////////////
+				
+			db = new DB();
+			conn = db.getConn();
 		
         loginPanel = new LoginPanel();
         loginBtn = loginPanel.getLoginButton();
@@ -58,15 +63,10 @@ public class MainFrame extends JFrame {
         mainSystemBtn = appChooserPanel.getMainSystemButton();
         stockSystemBtn = appChooserPanel.getStockSystemButton();
         
-        tabbedPaneMainSystem = new TabbedPaneMainSystem();
+        tabbedPaneMainSystem = new TabbedPaneMainSystem(conn);
         tabbedPaneStockSystem = new TabbedPaneStockSystem();
         
         
-		////////////Set DB Connection for all Panel ////////////
-				
-		db = new DB();
-		conn = db.getConn();
-
         setLayout(new BorderLayout());
 
         add(loginPanel, BorderLayout.CENTER);

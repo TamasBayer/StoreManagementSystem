@@ -49,7 +49,7 @@ public class AddItemOrOrderPanel extends JPanel {
 		newItemNameField = new JTextField(10);
 		addItemButton = new JButton("Add");
 		
-		addButtonPressed();
+//		addButtonPressed();
 		
 		newItemIDField.setEditable(false);
 		
@@ -116,7 +116,7 @@ public class AddItemOrOrderPanel extends JPanel {
         
      }
 	
-	public void addButtonPressed(){
+/*	public void addButtonPressed(){
 		addItemButton.addActionListener(new ActionListener(){
 
             
@@ -126,7 +126,7 @@ public class AddItemOrOrderPanel extends JPanel {
             }
         });
 
-    }
+    }        */
 	
 	public void layoutComponentsAddOrder() {
 		setPreferredSize(new Dimension(1000,600));
@@ -301,6 +301,13 @@ public class AddItemOrOrderPanel extends JPanel {
 	public JTextField getOrderDatumField() {
 		return orderDatumField;
 	}
-	
+
+	public JButton getAddItemButton() {
+		return addItemButton;
+	}
+
+	public JButton getAddOrderButton() {
+		return addOrderButton;
+	}
 	
 }
