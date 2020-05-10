@@ -120,4 +120,22 @@ public class SellOrdersInfoPanel extends JPanel{
         add(sellOrdersTable, c);
 	}
 
+	public JTextField getSellOrderIDField() {
+		return sellOrderIDField;
+	}
+
+	public JTextField getCompanyNameField() {
+		return companyNameField;
+	}
+
+	public JTextField getSellOrderDatumField() {
+		return sellOrderDatumField;
+	}
+
+	public Table getSellOrdersTable() {
+		return sellOrdersTable;
+	}
+	
+	
+
 }

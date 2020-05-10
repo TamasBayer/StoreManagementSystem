@@ -58,6 +58,9 @@ public class TabbedPaneMainSystem extends JPanel {
         
         oPanel.setConn(conn);
         oPanel.fillTableWithData();
+        
+        sOPanel.setConn(conn);
+        sOPanel.fillTableWithData();
 	}
 	
 	public void setConn(Connection conn) {
