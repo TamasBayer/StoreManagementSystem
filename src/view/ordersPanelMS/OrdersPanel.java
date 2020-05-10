@@ -9,6 +9,16 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -19,10 +29,16 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.RowFilter;
 import javax.swing.border.Border;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
+import model.Goods;
+import model.OrderedGoods;
+import model.Orders;
 import view.classesForPanels.AddItemOrOrderPanel;
 import view.classesForPanels.SearchPanel;
 import view.classesForPanels.Table;
@@ -41,21 +57,35 @@ public class OrdersPanel extends JPanel{
     private JComboBox searchCombo;
     private TableRowSorter<DefaultTableModel> rowSorter; 
     private OrdersInfoPanel infoPanel;
+    private Table infoPanelTable;
+    private JTextField infoPanelOrderIDField;
+    private JTextField infoPanelCompanyNField;
+    private JTextField infoPanelOrderDField;
     
     private JPanel topButtonsPanel;
     private JButton addOrderBtn;
     private JButton editOrderBtn;
     private JButton deleteOrderBtn;
     
-    private JFrame addOrderFrame;
-    private AddItemOrOrderPanel AddOrderPanel;
+    private JFrame orderFrame;
+    private AddItemOrOrderPanel orderPanel;
     
     private Cursor cursor;
     
     private JTable jTable;
+
+
+    private JTable jTableAddOrder;
     
+    private JTextField orderIDField;
     private JTextField companyNameField;
     private JTextField orderDatumField;
+    private Table orderPanelTable;
+    
+    private Connection conn;
+    private Statement createStatement = null;
+    
+    private int itemPanelNumber;
     
     public OrdersPanel() {
     	
@@ -69,6 +99,8 @@ public class OrdersPanel extends JPanel{
         searchCombo = searchOrders.getSearchCombo();
         
         infoPanel = new OrdersInfoPanel();
+        infoPanelTable = infoPanel.getOrdersTable();
+        
         
         topButtonsPanel = new JPanel();
         addOrderBtn = new JButton("Add order");
@@ -110,49 +142,510 @@ public class OrdersPanel extends JPanel{
         addOrderButtonPressed();
         editOrderButtonPressed();
         deleteButtonPressed();
+        newOrdersInfoPanelTable();
+        search();
     }
+    
+    public void setConn(Connection conn) {
+		this.conn = conn;
+	}
+    
+    public void loadCreateStatement() {
+
+		
+		if (conn != null && createStatement == null){
+	        try {
+	             createStatement = conn.createStatement();
+	        } catch (SQLException ex) {
+	            System.out.println("Error with createStatement");
+	            System.out.println(" "+ex);
+
+	        }
+		}
+	        
+	}
+    
+    public ArrayList<Orders> getAllOrders(){
+     	String sql = "SELECT * FROM Orders";
+     	ArrayList<Orders> orders = null;
+         loadCreateStatement();
+         try {
+             ResultSet rs = createStatement.executeQuery(sql);
+             orders = new ArrayList<>();
+
+         while (rs.next()){
+         	Orders actualOrder = new Orders(rs.getInt("orderID"), rs.getString("orderedFrom"), rs.getString("orderDatum"));
+         	orders.add(actualOrder);
+             }
+         } catch (SQLException ex) {
+             System.out.println("Error with getAllOrders");
+             System.out.println(" "+ex);
+             }    
+         
+          return orders;
+ }
+    public ArrayList<OrderedGoods> getOrderedItems(int orderID){
+     	String sql = "SELECT * FROM OrderedGoods WHERE orderID="+ orderID +"";
+     	ArrayList<OrderedGoods> orderedGoods = null;
+         loadCreateStatement();
+         try {
+             ResultSet rs = createStatement.executeQuery(sql);
+             orderedGoods = new ArrayList<>();
+
+         while (rs.next()){
+        	OrderedGoods actualOrderedItem = new OrderedGoods(rs.getInt("orderID"), rs.getInt("orderedItemID"), rs.getString("itemName"), rs.getInt("orderedQuantity"), rs.getInt("shippedQuantity"));
+         	orderedGoods.add(actualOrderedItem);
+             }
+         } catch (SQLException ex) {
+             System.out.println("Error with getAllOrders");
+             System.out.println(" "+ex);
+             }    
+         
+          return orderedGoods;
+ }
+    
+    public void newOrdersInfoPanelTable() {
+    	jTable.addMouseListener(new MouseAdapter() {
+	        public void mouseClicked(MouseEvent e) {
+	           if (e.getClickCount() == 2) {
+	        	   infoPanelOrderIDField = infoPanel.getOrderIDField();
+	        	   infoPanelCompanyNField = infoPanel.getCompanyNameField();
+	        	   infoPanelOrderDField = infoPanel.getOrderDatumField();
+	        	   
+	        	   int row = jTable.getSelectedRow();
+	          
+	        	   int orderID = Integer.parseInt(table.getModel().getValueAt(row, 0).toString());
+	        	   
+	        	   infoPanelOrderIDField.setText(table.getModel().getValueAt(row, 0).toString());
+	        	   infoPanelCompanyNField.setText(table.getModel().getValueAt(row, 1).toString());
+	        	   infoPanelOrderDField.setText(table.getModel().getValueAt(row, 2).toString());
+	        	   
+	        	   for (int i = infoPanelTable.getModel().getRowCount() - 1; i > -1; i--) {
+	        		   infoPanelTable.getModel().removeRow(i);
+	       	     }
+	       	        
+	       		ArrayList<OrderedGoods> list = getOrderedItems(orderID);
+	       	       Object rowData[] = new Object[4];
+	       	       for(int i = 0; i < list.size(); i++ ){
+	       	           rowData[0] = list.get(i).getOrderedItemID();
+	       	           rowData[1] = list.get(i).getOrderedItemName();
+	       	           rowData[2] = list.get(i).getOrderedItemQuantity();
+	       	           rowData[3] = list.get(i).getShippedQuantity();
+	       	           
+	       	           infoPanelTable.getModel().addRow(rowData);
+	       	           }; 
+	              
+	              
+	           }
+	        }
+	     });
+	}
+    
+    public void fillTableWithData(){
+		
+		for (int i = table.getModel().getRowCount() - 1; i > -1; i--) {
+			table.getModel().removeRow(i);
+	     }
+	        
+		ArrayList<Orders> list = getAllOrders();
+	       Object rowData[] = new Object[3];
+	       for(int i = 0; i < list.size(); i++ ){
+	           rowData[0] = list.get(i).getOrderID();
+	           rowData[1] = list.get(i).getOrderedFrom();
+	           rowData[2] = list.get(i).getOrderDatum();
+	           
+	           table.getModel().addRow(rowData);
+	           }; 
+	    }
+    
+    public ArrayList<Goods> getAllGoods(){
+        // String sql = "SELECT Goods.itemID, Goods.itemName, SUM (Inventory.itemQuantity) AS QuantityInWarehause FROM Goods, Inventory WHERE Goods.itemID=Inventory.itemID GROUP BY Goods.itemID, Goods.itemName";
+     	String sql = "SELECT * FROM Goods";
+     	ArrayList<Goods> goods = null;
+         loadCreateStatement();
+         try {
+             ResultSet rs = createStatement.executeQuery(sql);
+             goods = new ArrayList<>();
+
+         while (rs.next()){
+         	Goods actualItem = new Goods(rs.getInt("itemID"), rs.getString("itemName"), 0);
+         	goods.add(actualItem);
+             }
+         } catch (SQLException ex) {
+             System.out.println("Error with getAllGoods");
+             System.out.println(" "+ex);
+             }    
+         
+          return goods;
+ }
     
     public void openOrderFrame() {
     	
-    	AddOrderPanel = new AddItemOrOrderPanel();
-    	AddOrderPanel.layoutComponentsAddOrder();
-    	companyNameField = AddOrderPanel.getCompanyNameField();
-    	orderDatumField = AddOrderPanel.getOrderDatumField();
+    	orderPanel = new AddItemOrOrderPanel();
+    	orderPanel.layoutComponentsAddOrder(getAllGoods());
+    	orderIDField = orderPanel.getOrderIDField();
+    	companyNameField = orderPanel.getCompanyNameField();
+    	orderDatumField = orderPanel.getOrderDatumField();
+    	orderPanelTable = orderPanel.getOrdersTable();
     	
-	if (addOrderFrame == null) {
+    	JButton orderPanelAddBtn = orderPanel.getAddOrderButton();
+    	jTableAddOrder = orderPanelTable.getTable();
+    	
+	if (orderFrame == null) {
     	   
-		  addOrderFrame = new JFrame();
+		  orderFrame = new JFrame();
           
-		  addOrderFrame.setLayout(new BorderLayout());
+		  orderFrame.setLayout(new BorderLayout());
 
-		  addOrderFrame.add(AddOrderPanel, BorderLayout.CENTER);
-		  addOrderFrame.setVisible(true);
-		  addOrderFrame.setDefaultCloseOperation(addOrderFrame.DISPOSE_ON_CLOSE);
-		  addOrderFrame.setResizable(true);
-		  addOrderFrame.pack();
+		  orderFrame.add(orderPanel, BorderLayout.CENTER);
+		  orderFrame.setVisible(true);
+		  orderFrame.setDefaultCloseOperation(orderFrame.DISPOSE_ON_CLOSE);
+		  orderFrame.setResizable(true);
+		  orderFrame.pack();
           
           Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
           Point middle = new Point(screenSize.width / 2, screenSize.height / 2);
-          Point newLocation = new Point(middle.x - (addOrderFrame.getWidth() / 2), 
-                                        middle.y - (addOrderFrame.getHeight() / 2));
-          addOrderFrame.setLocation(newLocation);
+          Point newLocation = new Point(middle.x - (orderFrame.getWidth() / 2), 
+                                        middle.y - (orderFrame.getHeight() / 2));
+          orderFrame.setLocation(newLocation);
           
-          addOrderFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+          orderFrame.addWindowListener(new java.awt.event.WindowAdapter() {
 			    @Override
 			    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-			    	addOrderFrame = null;
+			    	orderFrame = null;
 			    }
 			});
 	    } else {
-	    	addOrderFrame.setVisible(true);
+	    	orderFrame.setVisible(true);
 	    }
+	
+	
+	
+		orderPanelTable.getModel().addTableModelListener(new TableModelListener() {
+		        public void tableChanged(TableModelEvent e) {
+		            int row = e.getFirstRow();
+		            int column = e.getColumn();
+		            if (e.getType() == TableModelEvent.UPDATE && column == 0) {
+		            	
+		               
+		               
+		               String itemID = orderPanelTable.getModel().getValueAt(row, 0).toString();
+		               
+		            if(itemID != "") {
+		            	 String sql = "SELECT itemName FROM Goods WHERE itemID="+ Integer.parseInt(itemID) +"";
+				       		try {
+				               	loadCreateStatement();
+				                ResultSet rs = createStatement.executeQuery(sql);
+
+				                if (rs.next()) {
+				                	jTableAddOrder.setValueAt(rs.getString("itemName"), row, 1);
+				                    
+				                }
+				                
+				                   
+				              
+				               } catch (SQLException ex) {
+				                   System.out.println("Error with setItemName");
+				                   System.out.println(" "+ex);
+				                   } 
+		            } else {
+		            	jTableAddOrder.setValueAt("", row, 1);
+		            }
+		               
+		        }
+		    }
+		
+		});
+	
+		orderPanelAddBtn.addActionListener(new ActionListener(){
+			
+	        
+	        public void actionPerformed(ActionEvent e) {
+	            
+	        	if (jTableAddOrder.isEditing())
+	        		jTableAddOrder.getCellEditor().stopCellEditing();
+	        	
+	        	ArrayList<OrderedGoods> orderedGoodsArray = null;
+	        	ArrayList<OrderedGoods> orderedGoodsArrayFromDB = null;
+	        	int orderID = 0;
+	        	int orderedItemID;
+	        	String itemName;
+	        	int orderedQuantity;
+	        	int shippedQuantity;
+	        	
+	        	int missingError = 0;
+	        	
+	        	Boolean alreadyInArray = false;
+	        	
+	        	String regex = "\\d+";
+	        	
+	        	
+	        	
+	        		if(companyNameField.getText().length() > 2 && orderDatumField.getText().length() > 8) {
+	            		
+	            		try {
+	            			
+	            			orderedGoodsArray = new ArrayList<>();
+
+	                        for(int row=0; row < 31; row++) {
+	                        	
+	                        	if(orderPanelTable.getModel().getValueAt(row, 0).toString() != "") {
+	                        		if(orderPanelTable.getModel().getValueAt(row, 2).toString().matches(regex)) {
+	                        			orderedItemID = Integer.parseInt(orderPanelTable.getModel().getValueAt(row, 0).toString());
+	                    	        	itemName = orderPanelTable.getModel().getValueAt(row, 1).toString();
+	                    	        	orderedQuantity = Integer.parseInt(orderPanelTable.getModel().getValueAt(row, 2).toString());
+	                    	        	shippedQuantity = 0;
+	                    	        	System.out.println("lefutok 1");
+	                    	        	alreadyInArray = false;
+	                    	        	
+	                    	        	for(OrderedGoods orderedGoods : orderedGoodsArray) {
+	                    	        	    if(orderedGoods!=null && orderedItemID == orderedGoods.getOrderedItemID()) {
+	                    	        	    	
+	                    	        	    	orderedGoods.setOrderedItemQuantity(orderedGoods.getOrderedItemQuantity() + orderedQuantity);
+	                    	        	    	alreadyInArray = true;
+	                    	        	    	System.out.println("lefutok 2");
+	                    	        	        break;
+	                    	        	    } 
+	                    	        	}
+	                    	        	if(alreadyInArray == false) {
+	                    	        		OrderedGoods actualOrder = new OrderedGoods(orderID, orderedItemID, itemName, orderedQuantity, shippedQuantity);
+			                        		orderedGoodsArray.add(actualOrder);
+			                        		System.out.println("lefutok 3");
+	                    	        	}
+		                        		
+	                        		} else {
+	                        			System.out.println("Ordered item quantity missing or not 0 or a positive number");
+	                        			missingError = 1;
+	                        			row = 31;
+	                        		}
+	                    	        	
+	                        	} 
+	                        		
+	                        	
+	                        	
+		                        	
+	                        }
+	                        
+	                        
+	                        
+	                        if(missingError == 0 && itemPanelNumber == 1) {
+	                        	
+	                        	int orderedGoodsArrayLength = orderedGoodsArray.size();
+	                        	if(orderedGoodsArrayLength > 0) {
+	                        		String sql = "INSERT INTO Orders (orderedFrom, orderDatum) VALUES ('" + companyNameField.getText() +"', '" + orderDatumField.getText() +"')";
+			                        PreparedStatement preparedStatement = conn.prepareStatement(sql);
+			
+			                        preparedStatement.execute();
+			                        
+
+			                        String sqlgetOrderID = "SELECT MAX(OrderID) AS LastOrderID FROM Orders";
+			                        ResultSet rs = createStatement.executeQuery(sqlgetOrderID);
+			                        
+			                        if (rs.next()) {
+			                        	orderID = rs.getInt("LastOrderID");
+			                            
+			                        }
+		                        	
+		                        	for(int i=0; i < orderedGoodsArrayLength; i++) {
+			                        	
+			                        	
+			                        	
+			                        	sql = "INSERT INTO OrderedGoods VALUES (?,?,?,?,?)";
+				                        preparedStatement = conn.prepareStatement(sql);
+				                        preparedStatement.setInt(1, orderID);
+				                        preparedStatement.setInt(2, orderedGoodsArray.get(i).getOrderedItemID());
+				                        preparedStatement.setString(3, orderedGoodsArray.get(i).getOrderedItemName());
+				                        preparedStatement.setInt(4, orderedGoodsArray.get(i).getOrderedItemQuantity());
+				                        preparedStatement.setInt(5, orderedGoodsArray.get(i).getShippedQuantity());
+				                        preparedStatement.execute();
+			                        }
+			                        
+			                        fillTableWithData();
+				            		orderFrame.dispose(); 
+				            		orderFrame = null;
+	                        	} else {
+	                        		System.out.println("Please add min one item to the Order");
+	                        	}
+	                        	
+	                        }
+	                        
+	                        if(missingError == 0 && itemPanelNumber == 2) {
+	                        	
+	                        	System.out.println("Edit lefut 1");
+	                        	
+	                        	orderedGoodsArrayFromDB = new ArrayList<>();
+	                        	orderID = Integer.parseInt(orderIDField.getText());
+	                        			
+	                        	System.out.println(orderID);
+	                        		
+	                        		String sql = "SELECT * FROM OrderedGoods WHERE orderID="+ orderID +"";
+			                        ResultSet rs = createStatement.executeQuery(sql);
+			                        
+			                        while (rs.next()) {
+			                        	OrderedGoods actualOrderFromDB = new OrderedGoods(rs.getInt("orderID"), rs.getInt("orderedItemID"), rs.getString("itemName"), rs.getInt("orderedQuantity"), rs.getInt("shippedQuantity"));
+			                        	orderedGoodsArrayFromDB.add(actualOrderFromDB);
+			                        	
+			                        	System.out.println(orderedGoodsArrayFromDB.size() + " FromDB Size");
+			                        	}
+			                        
+			                        System.out.println(orderedGoodsArrayFromDB.size() + " FromDB Size outside");
+			                        
+			                        ArrayList<OrderedGoods> orderedGoodsToInsert = new ArrayList<>();
+			                        ArrayList<OrderedGoods> orderedGoodsToUpdate = new ArrayList<>();
+			                        ArrayList<OrderedGoods> orderedGoodsToDelet = new ArrayList<>();
+			                        
+			                        Boolean itemFound = false;
+			                        
+			                        int forCount = 0;
+			                        
+			                        
+			                        for(int i=0; i < orderedGoodsArray.size(); i++) {
+			                        	
+			                        	if(itemFound == true) {
+			                        		i--;
+			                        		itemFound = false;
+			                        	}
+			                        	
+			                        	for(int fromDB=0; fromDB < orderedGoodsArrayFromDB.size(); fromDB++) {
+			                        		
+			                        		
+		                        			System.out.println("Ez az forCount: " + forCount);
+		                        			forCount++;
+			                        		
+			                        		if(itemFound == true) {
+			                        			
+			                        			itemFound = false;
+			                        			System.out.println("Ez az i: " + i);
+			                        			System.out.println("Ez az fromDB: " + fromDB);
+			                        			System.out.println("Ez az orderedFromDB: " + orderedGoodsArrayFromDB.size());
+			                        			System.out.println("Ez az orderedArray: " + orderedGoodsArray.size());
+			                        			
+			                        		}
+			                        		if(orderedGoodsArray.get(i).getOrderedItemID() == orderedGoodsArrayFromDB.get(fromDB).getOrderedItemID()) {
+			                        			orderedGoodsToUpdate.add(orderedGoodsArray.get(i));
+			                        			orderedGoodsArray.remove(i);			                        			
+			                        			orderedGoodsArrayFromDB.remove(fromDB);
+			                        			itemFound = true;
+			                        			fromDB--;
+			                        			
+			                        			System.out.println("Lefut remove from arrays");
+			                        		} 
+			                        		System.out.println("Lefut remove from arrays után 1");
+			                        	}
+			                        	System.out.println("Lefut remove from arrays után 2");
+			                        }
+			                       
+			                        orderedGoodsToDelet.addAll(orderedGoodsArrayFromDB);			                        
+			                        
+			                        orderedGoodsToInsert.addAll(orderedGoodsArray);
+
+			                        
+			                        System.out.println(orderedGoodsArrayFromDB.size() + " 0");
+			                        System.out.println(orderedGoodsArray.size() + " 0.1");
+			                        
+			                        System.out.println(orderedGoodsToDelet.size() + " 1");
+			                        System.out.println(orderedGoodsToUpdate.size() + " 2");
+			                        System.out.println(orderedGoodsToInsert.size() + " 3");
+			                        
+			                        for(int i=0; i < orderedGoodsToDelet.size(); i++) {
+				                        
+		                        		sql = "DELETE FROM OrderedGoods WHERE orderID="+ orderID +" AND orderedItemID="+ orderedGoodsToDelet.get(i).getOrderedItemID() +"";
+		                        		PreparedStatement preparedStatement = conn.prepareStatement(sql);
+		                    		
+				                        preparedStatement.execute();
+				                        
+				                        System.out.println("Edit lefut delete");
+			                        }
+	                        		
+			                        for(int i=0; i < orderedGoodsToInsert.size(); i++) {
+			                        
+	                        		sql = "INSERT INTO OrderedGoods VALUES (?,?,?,?,?) ";
+	                        		PreparedStatement preparedStatement = conn.prepareStatement(sql);
+	                    			
+		                        	
+			                        preparedStatement = conn.prepareStatement(sql);
+			                        preparedStatement.setInt(1, orderID);
+			                        preparedStatement.setInt(2, orderedGoodsArray.get(i).getOrderedItemID());
+			                        preparedStatement.setString(3, orderedGoodsArray.get(i).getOrderedItemName());
+			                        preparedStatement.setInt(4, orderedGoodsArray.get(i).getOrderedItemQuantity());
+			                        preparedStatement.setInt(5, orderedGoodsArray.get(i).getShippedQuantity());
+			                        preparedStatement.execute();
+			                        
+			                        System.out.println("Edit lefut insert");
+		                        }
+			                        
+			                        for(int i=0; i < orderedGoodsToUpdate.size(); i++) {
+				                        
+		                        		sql = "UPDATE OrderedGoods SET orderedQuantity="+ orderedGoodsToUpdate.get(i).getOrderedItemQuantity() +" WHERE orderID="+ orderID +" AND orderedItemID="+ orderedGoodsToUpdate.get(i).getOrderedItemID() +"";
+		                        		PreparedStatement preparedStatement = conn.prepareStatement(sql);
+		                    		
+				                        preparedStatement.execute();
+				                        
+				                        System.out.println("Edit lefut update");
+			                        }
+	                        	fillTableWithData();
+			            		orderFrame.dispose(); 
+			            		orderFrame = null;
+	                        }
+	                        
+	                  } catch (SQLException ex) {
+	                      System.out.println("Valami baj van az Item hozzáadásakor");
+	                      System.out.println(""+ex);
+	                  }
+	            		
+	            		
+	          		            		
+	            	} else {
+	            		System.out.println("Correct order info missing.");
+	            	} 
+	        	
+	        	
+	        	
+	        	
+	        }
+
+
+});
+    	
     }
+    
+    public void fillTableWithDataEditButton(){
+    	
+    	int row = jTable.getSelectedRow();
+    	int orderID = Integer.parseInt(table.getModel().getValueAt(row, 0).toString());
+    	
+		for (int i = orderPanelTable.getModel().getRowCount() - 1; i > -1; i--) {
+			orderPanelTable.getModel().removeRow(i);
+	     }
+	    
+		
+		
+		ArrayList<OrderedGoods> list = getOrderedItems(orderID);
+	       Object rowData[] = new Object[4];
+	       for(int i = 0; i < list.size(); i++ ){
+	           rowData[0] = list.get(i).getOrderedItemID();
+	           rowData[1] = list.get(i).getOrderedItemName();
+	           rowData[2] = list.get(i).getOrderedItemQuantity();
+	           rowData[3] = list.get(i).getShippedQuantity();
+	           
+	           orderPanelTable.getModel().addRow(rowData);
+	           }; 
+	       
+	           if(list.size() < 31) {
+	        	  int emptyRows = 31 - list.size();
+	        	  
+	        	  for(int i=0; i < emptyRows; i++) {
+	        		  orderPanelTable.getModel().addRow(new Object[]{"","",""});
+	        	  }
+	           }
+	    }
     
     public void addOrderButtonPressed(){
     	addOrderBtn.addActionListener(new ActionListener(){
 
             
             public void actionPerformed(ActionEvent e) {
+            	itemPanelNumber = 1;
             	openOrderFrame();
             	
            }
@@ -165,12 +658,15 @@ public class OrdersPanel extends JPanel{
             
             public void actionPerformed(ActionEvent e) {
             	
-            	
+
 				int row = jTable.getSelectedRow();
             	
             	if(jTable.getSelectionModel().isSelectionEmpty() == false) {
+            		itemPanelNumber = 2;
             		openOrderFrame();
-                	
+                	fillTableWithDataEditButton();
+            		
+            		orderIDField.setText((table.getModel().getValueAt(row, 0).toString()));
             		companyNameField.setText(table.getModel().getValueAt(row, 1).toString());
                 	orderDatumField.setText(table.getModel().getValueAt(row, 2).toString());
             	} else {
@@ -190,12 +686,86 @@ public class OrdersPanel extends JPanel{
             	if(action == JOptionPane.OK_OPTION && jTable.getSelectionModel().isSelectionEmpty() == false) {
             		
             		int row = jTable.getSelectedRow();
+                                       
                     
-                    table.getModel().removeRow(jTable.getSelectedRow());
+                    int idToInt = Integer.parseInt(table.getModel().getValueAt(row, 0).toString());
+                    System.out.println(idToInt);
+                    try {
+                        String sql = "DELETE FROM OrderedGoods WHERE orderID = "+ idToInt +"";
+                        
+                        PreparedStatement preparedStatement = conn.prepareStatement(sql);
+
+                        preparedStatement.execute();
+                        
+                  } catch (SQLException ex) {
+                      System.out.println("Valami baj van az Order törlésekor");
+                      System.out.println(""+ex);
+                  } 
+                    
+                    try {
+                        String sql = "DELETE FROM Orders WHERE orderID = "+ idToInt +"";
+                        
+                        PreparedStatement preparedStatement = conn.prepareStatement(sql);
+
+                        preparedStatement.execute();
+                        
+                        
+                  } catch (SQLException ex) {
+                      System.out.println("Valami baj van az Order törlésekor");
+                      System.out.println(""+ex);
+                      System.out.println();
+                  } 
+                    
+                    table.getModel().removeRow(row);
             	}
                 
                  }
         });
+    }
+    
+   /* public Orders getOrder(int id){
+        String sql = "SELECT * FROM Orders WHERE orderID= "+ id +"";
+        Orders order = null;
+         loadCreateStatement();
+         try {
+             ResultSet rs = createStatement.executeQuery(sql);
+
+         while (rs.next()){
+        	 order = new Orders(rs.getInt("orderID"), "", "");
+         	
+             }
+         } catch (SQLException ex) {
+             System.out.println("Error with getAllGoods");
+             System.out.println(" "+ex);
+             }    
+         
+          return order;
+ }      */
+    
+    private void search() {
+    	
+    	searchButton.addActionListener(new ActionListener (){
+            
+            public void actionPerformed(ActionEvent e) {
+                String text = searchField.getText();
+
+                if (text.trim().length() == 0) {
+                    rowSorter.setRowFilter(null);
+                } else {
+                    rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text, searchCombo.getSelectedIndex()));
+                }
+                    
+            }
+            
+        });
+    	
+    	searchField.addKeyListener(new KeyAdapter() {
+	         public void keyPressed(KeyEvent e) {
+	             if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+	               searchButton.doClick();
+	            }
+	         }
+	      });
     }
     
 }

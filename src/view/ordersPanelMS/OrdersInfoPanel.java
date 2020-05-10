@@ -44,7 +44,6 @@ public class OrdersInfoPanel extends JPanel {
 		editButton = new JButton("Edit Order");
 		orderTableFlowLayout = new JPanel();
 		
-		ordersTable.fillWithData();
 		
 		Cursor cursor = new Cursor(Cursor.HAND_CURSOR);
 		bookButton.setCursor(cursor);
@@ -122,6 +121,22 @@ public class OrdersInfoPanel extends JPanel {
         c.weighty = 4;
         c.weightx = 1;
         add(ordersTable, c);
+	}
+
+	public JTextField getOrderIDField() {
+		return orderIDField;
+	}
+
+	public JTextField getCompanyNameField() {
+		return companyNameField;
+	}
+
+	public JTextField getOrderDatumField() {
+		return orderDatumField;
+	}
+
+	public Table getOrdersTable() {
+		return ordersTable;
 	}
 	
 }

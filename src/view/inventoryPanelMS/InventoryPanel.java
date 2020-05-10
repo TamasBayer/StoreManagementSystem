@@ -309,8 +309,9 @@ public class InventoryPanel extends JPanel {
             	int row = jTable.getSelectedRow();
             	
             	if(jTable.getSelectionModel().isSelectionEmpty() == false) {
-            		openItemFrame();
             		itemPanelNumber = 2;
+            		openItemFrame();
+            		
                 	
                 	itemID.setText(table.getModel().getValueAt(row, 0).toString());
                 	itemName.setText(table.getModel().getValueAt(row, 1).toString());
@@ -364,7 +365,7 @@ public class InventoryPanel extends JPanel {
                 if (text.trim().length() == 0) {
                     rowSorter.setRowFilter(null);
                 } else {
-                    rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text.replaceAll("\\s+",""), searchCombo.getSelectedIndex()));
+                    rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text, searchCombo.getSelectedIndex()));
                 }
                     
             }

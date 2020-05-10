@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
@@ -19,6 +20,9 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
+
+import model.Goods;
+import model.Orders;
 
 public class Table extends JPanel{
 
@@ -127,16 +131,29 @@ public class Table extends JPanel{
    }
     
     
+    public void comboBoxColumnItemID(ArrayList<Goods> goods) {
+    	TableColumn firstColumn = table.getColumnModel().getColumn(0);
+    	
+    	JComboBox comboBox = new JComboBox();
+    	comboBox.addItem("");
+    	for(int i=0; i < goods.size(); i++) {
+    		comboBox.addItem(goods.get(i).getItemID());
+    	}
+    	
+    	
+    	firstColumn.setCellEditor(new DefaultCellEditor(comboBox));
+    }
+    
     public void comboBoxColumnItemID() {
     	TableColumn firstColumn = table.getColumnModel().getColumn(0);
     	
     	JComboBox comboBox = new JComboBox();
     	comboBox.addItem("");
-    	comboBox.addItem("H1322");
-    	comboBox.addItem("H1323");
-    	comboBox.addItem("H1324");
-    	comboBox.addItem("H1325");
-    	comboBox.addItem("H1326");
+    	comboBox.addItem("1005");
+    	comboBox.addItem("1323");
+    	comboBox.addItem("1324");
+    	comboBox.addItem("1325");
+    	comboBox.addItem("1326");
     	firstColumn.setCellEditor(new DefaultCellEditor(comboBox));
     }
     
@@ -154,21 +171,21 @@ public class Table extends JPanel{
     	
     	JComboBox comboBoxItemName = new JComboBox();
     	comboBoxItemName.addItem("");
-    	comboBoxItemName.addItem("H1322");
-    	comboBoxItemName.addItem("H1323");
-    	comboBoxItemName.addItem("H1324");
-    	comboBoxItemName.addItem("H1325");
-    	comboBoxItemName.addItem("H1326");
+    	comboBoxItemName.addItem("1322");
+    	comboBoxItemName.addItem("1323");
+    	comboBoxItemName.addItem("1324");
+    	comboBoxItemName.addItem("1325");
+    	comboBoxItemName.addItem("1326");
     	secondColumn.setCellEditor(new DefaultCellEditor(comboBoxItemName));
     }
     
 
 	public void fillWithData() {
-		model.insertRow(0,new Object[]{"H1322","Apple", "50"});
-		model.insertRow(1,new Object[]{"H1323","Bread", "213"});
-		model.insertRow(2,new Object[]{"H1324","Strawberry", "32"});
-		model.insertRow(3,new Object[]{"H1325","Salat", "43"});
-		model.insertRow(4,new Object[]{"H1326","Retek", "2111"});
+		model.insertRow(0,new Object[]{"1322","Apple", "50"});
+		model.insertRow(1,new Object[]{"1323","Bread", "213"});
+		model.insertRow(2,new Object[]{"1324","Strawberry", "32"});
+		model.insertRow(3,new Object[]{"1325","Salat", "43"});
+		model.insertRow(4,new Object[]{"1326","Retek", "2111"});
 	
 		
 		

@@ -9,6 +9,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -16,6 +17,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
+
+import model.Goods;
+import model.Orders;
 
 public class AddItemOrOrderPanel extends JPanel {
 	
@@ -128,7 +132,7 @@ public class AddItemOrOrderPanel extends JPanel {
 
     }        */
 	
-	public void layoutComponentsAddOrder() {
+	public void layoutComponentsAddOrder(ArrayList<Goods> goods) {
 		setPreferredSize(new Dimension(1000,600));
 		
 		ordersColumnNames = new String[] {"Item-ID", "Item-Name", "Ordered quantity"};
@@ -137,7 +141,7 @@ public class AddItemOrOrderPanel extends JPanel {
 		orderTableFlowLayout = new JPanel();
 		
 		ordersTable.fillWithEmptyRows();
-		ordersTable.comboBoxColumnItemID();
+		ordersTable.comboBoxColumnItemID(goods);
 		
 		Cursor cursor = new Cursor(Cursor.HAND_CURSOR);
 		addOrderButton.setCursor(cursor);
@@ -148,6 +152,85 @@ public class AddItemOrOrderPanel extends JPanel {
 		companyNameLabel = new JLabel("Ordered from:");
 		companyNameField = new JTextField(10);
 		orderDatumLabel = new JLabel("Order datum:");
+		orderDatumField = new JTextField(10);
+		
+		orderIDField.setEditable(false);
+		
+		setLayout(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        
+        infoOrderPanel.setPreferredSize(new Dimension(50, 50));
+        
+        
+        FlowLayout OrderPanelLayout = new FlowLayout();
+        infoOrderPanel.setLayout(OrderPanelLayout);
+        infoOrderPanel.add(orderIDLabel);
+        infoOrderPanel.add(orderIDField);
+        infoOrderPanel.add(companyNameLabel);
+        infoOrderPanel.add(companyNameField);
+        infoOrderPanel.add(orderDatumLabel);
+        infoOrderPanel.add(orderDatumField);
+	    Border innerBorderOrder = BorderFactory.createLineBorder(Color.GRAY);
+        Border outerBorderOrder = BorderFactory.createEmptyBorder(5, 5, 5, 5);
+        infoOrderPanel.setBorder(BorderFactory.createCompoundBorder(outerBorderOrder, innerBorderOrder));
+        
+        FlowLayout OrderPanelButtonsLayout = new FlowLayout(FlowLayout.RIGHT);
+        orderTableFlowLayout.setLayout(OrderPanelButtonsLayout);
+        orderTableFlowLayout.add(addOrderButton);
+        
+        Border innerBorderButtons = BorderFactory.createLineBorder(Color.GRAY);
+        Border outerBorderButtons = BorderFactory.createEmptyBorder(5, 5, 5, 5);
+        orderTableFlowLayout.setBorder(BorderFactory.createCompoundBorder(outerBorderButtons, innerBorderButtons));
+        
+        
+        c.gridx = 0;
+        c.gridy = 0;
+        c.gridheight = 1;
+        c.gridwidth = 1;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weighty = 0;
+        c.weightx = 1;
+        add(infoOrderPanel, c);
+        
+        c.gridx = 0;
+        c.gridy = 1;
+        c.gridheight = 1;
+        c.gridwidth = 1;
+        c.fill = GridBagConstraints.BOTH;
+        c.weighty = 4;
+        c.weightx = 1;
+        add(ordersTable, c);
+        
+        c.gridx = 0;
+        c.gridy = 2;
+        c.gridheight = 1;
+        c.gridwidth = 1;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weighty = 0;
+        c.weightx = 1;
+        add(orderTableFlowLayout, c);
+	}
+	
+	public void layoutComponentsAddSellOrder(ArrayList<Goods> goods) {
+		setPreferredSize(new Dimension(1000,600));
+		
+		ordersColumnNames = new String[] {"Item-ID", "Item-Name", "Sold quantity"};
+		ordersTable = new Table(ordersColumnNames, "AddItemOrOrderPanel");
+		addOrderButton = new JButton("Add");
+		orderTableFlowLayout = new JPanel();
+		
+		ordersTable.fillWithEmptyRows();
+		ordersTable.comboBoxColumnItemID(goods);
+		
+		Cursor cursor = new Cursor(Cursor.HAND_CURSOR);
+		addOrderButton.setCursor(cursor);
+		
+		infoOrderPanel = new JPanel();
+		orderIDLabel = new JLabel("Sell order-ID:");
+		orderIDField = new JTextField(10);
+		companyNameLabel = new JLabel("Sold for:");
+		companyNameField = new JTextField(10);
+		orderDatumLabel = new JLabel("Sold datum:");
 		orderDatumField = new JTextField(10);
 		
 		orderIDField.setEditable(false);
@@ -308,6 +391,14 @@ public class AddItemOrOrderPanel extends JPanel {
 
 	public JButton getAddOrderButton() {
 		return addOrderButton;
+	}
+
+	public Table getOrdersTable() {
+		return ordersTable;
+	}
+
+	public JTextField getOrderIDField() {
+		return orderIDField;
 	}
 	
 }
