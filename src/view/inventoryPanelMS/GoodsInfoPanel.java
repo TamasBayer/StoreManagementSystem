@@ -21,9 +21,9 @@ import view.classesForPanels.Table;
 public class GoodsInfoPanel extends JPanel{
 
 	private Table table;
-	private Table p1;
-	private Table p2;
-	private Table p3;
+	private Table buyingOrdersTable;
+	private Table sellingOrdersTable;
+	private Table stocksTable;
 	private JPanel choosedItemPanel;
 	private String[] columnNamesTable;
 	private String[] columnNamesP1;
@@ -48,11 +48,11 @@ public class GoodsInfoPanel extends JPanel{
 		columnNamesTable = new String[] {"Booked", "Ordered", "In warehouse"};
 		table = new Table(columnNamesTable);
 		columnNamesP1 = new String[] {"Number", "Quantity"};
-		p1 = new Table(columnNamesP1);
+		buyingOrdersTable = new Table(columnNamesP1);
 		columnNamesP2 = new String[] {"Number", "Quantity"};
-		p2 = new Table(columnNamesP2);
+		sellingOrdersTable = new Table(columnNamesP2);
 		columnNamesP3 = new String[] {"Stock", "Quantity"};
-		p3 = new Table(columnNamesP3);
+		stocksTable = new Table(columnNamesP3);
 		
 		GridBagLayoutExample();
 	}
@@ -74,27 +74,27 @@ public class GoodsInfoPanel extends JPanel{
 	        Border outerBorderItem = BorderFactory.createEmptyBorder(5, 5, 5, 5);
 	        choosedItemPanel.setBorder(BorderFactory.createCompoundBorder(outerBorderItem, innerBorderItem));
 	        
-	        p1.setPreferredSize(new Dimension(50, 50));
+	        buyingOrdersTable.setPreferredSize(new Dimension(50, 50));
 	        
 	        Border innerBorderP1 = BorderFactory.createTitledBorder("Buying Orders");
 	        Border outerBorderP1 = BorderFactory.createEmptyBorder(5, 5, 5, 5);
-	        p1.setBorder(BorderFactory.createCompoundBorder(outerBorderP1, innerBorderP1));
+	        buyingOrdersTable.setBorder(BorderFactory.createCompoundBorder(outerBorderP1, innerBorderP1));
 
 
 
-	        p2.setPreferredSize(new Dimension(50, 50));
+	        sellingOrdersTable.setPreferredSize(new Dimension(50, 50));
 	  
 	        
 	        Border innerBorderP2 = BorderFactory.createTitledBorder("Selling Orders");
 	        Border outerBorderP2 = BorderFactory.createEmptyBorder(5, 5, 5, 5);
-	        p2.setBorder(BorderFactory.createCompoundBorder(outerBorderP2, innerBorderP2));
+	        sellingOrdersTable.setBorder(BorderFactory.createCompoundBorder(outerBorderP2, innerBorderP2));
 	        
-	        p3.setPreferredSize(new Dimension(100, 200));
+	        stocksTable.setPreferredSize(new Dimension(100, 200));
 	  
 	        
 	        Border innerBorderP3 = BorderFactory.createTitledBorder("Stock");
 	        Border outerBorderP3 = BorderFactory.createEmptyBorder(5, 5, 5, 5);
-	        p3.setBorder(BorderFactory.createCompoundBorder(outerBorderP3, innerBorderP3));
+	        stocksTable.setBorder(BorderFactory.createCompoundBorder(outerBorderP3, innerBorderP3));
 	       
 
 	        table.setPreferredSize(new Dimension(50, 80));
@@ -119,7 +119,7 @@ public class GoodsInfoPanel extends JPanel{
 	        c.gridwidth = 1;
 	        c.weightx = 1;
 	        c.weighty = 1;
-	        add(p1, c);
+	        add(buyingOrdersTable, c);
       
 	        c.gridx = 1;
 	        c.gridy = 1;
@@ -127,7 +127,7 @@ public class GoodsInfoPanel extends JPanel{
 	        c.weightx = 1;
 	        c.fill = GridBagConstraints.BOTH;
 	        c.gridwidth = 1;
-	        add(p2, c);
+	        add(sellingOrdersTable, c);
 
 	        c.gridx = 0;
 	        c.gridy = 2;
@@ -145,7 +145,7 @@ public class GoodsInfoPanel extends JPanel{
 	        c.fill = GridBagConstraints.HORIZONTAL;
 	        c.weighty = 0;
 	        c.weightx = 1;
-	        add(p3, c);
+	        add(stocksTable, c);
 
 	    }
 }

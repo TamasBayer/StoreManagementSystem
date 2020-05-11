@@ -36,6 +36,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
 import model.Goods;
+import model.OrderedGoods;
 import model.Users;
 import view.MainFrame;
 import view.classesForPanels.AddItemOrOrderPanel;
@@ -154,8 +155,8 @@ public class InventoryPanel extends JPanel {
 	}
     
     public ArrayList<Goods> getAllGoods(){
-       // String sql = "SELECT Goods.itemID, Goods.itemName, SUM (Inventory.itemQuantity) AS QuantityInWarehause FROM Goods, Inventory WHERE Goods.itemID=Inventory.itemID GROUP BY Goods.itemID, Goods.itemName";
-    	String sql = "SELECT * FROM Goods";
+        String sql = "SELECT Goods.itemID, Goods.itemName, SUM (Inventory.itemQuantity) AS QuantityInWarehause FROM Goods, Inventory WHERE Goods.itemID=Inventory.itemID GROUP BY Goods.itemID, Goods.itemName";
+    
     	ArrayList<Goods> goods = null;
         loadCreateStatement();
         try {
@@ -163,9 +164,21 @@ public class InventoryPanel extends JPanel {
             goods = new ArrayList<>();
 
         while (rs.next()){
+        	Goods actualItem = new Goods(rs.getInt("itemID"), rs.getString("itemName"), rs.getInt("QuantityInWarehause"));
+        	goods.add(actualItem);
+            }
+        
+    	sql = "SELECT * FROM Goods WHERE itemID NOT IN(SELECT itemID FROM Inventory)";
+    	
+    	
+    	rs = createStatement.executeQuery(sql);
+    	
+    	while (rs.next()){
         	Goods actualItem = new Goods(rs.getInt("itemID"), rs.getString("itemName"), 0);
         	goods.add(actualItem);
             }
+        
+        
         } catch (SQLException ex) {
             System.out.println("Error with getAllGoods");
             System.out.println(" "+ex);
@@ -380,6 +393,43 @@ public class InventoryPanel extends JPanel {
 	         }
 	      });
     }
+    
+    public void newOrdersInfoPanelTable() {
+    	jTable.addMouseListener(new MouseAdapter() {
+	        public void mouseClicked(MouseEvent e) {
+	           if (e.getClickCount() == 2) {
+	        	   infoPanelOrderIDField = infoPanel.getOrderIDField();
+	        	   infoPanelCompanyNField = infoPanel.getCompanyNameField();
+	        	   infoPanelOrderDField = infoPanel.getOrderDatumField();
+	        	   
+	        	   int row = jTable.getSelectedRow();
+	          
+	        	   int orderID = Integer.parseInt(table.getModel().getValueAt(row, 0).toString());
+	        	   
+	        	   infoPanelOrderIDField.setText(table.getModel().getValueAt(row, 0).toString());
+	        	   infoPanelCompanyNField.setText(table.getModel().getValueAt(row, 1).toString());
+	        	   infoPanelOrderDField.setText(table.getModel().getValueAt(row, 2).toString());
+	        	   
+	        	   for (int i = infoPanelTable.getModel().getRowCount() - 1; i > -1; i--) {
+	        		   infoPanelTable.getModel().removeRow(i);
+	       	     }
+	       	        
+	       		ArrayList<OrderedGoods> list = getOrderedItems(orderID);
+	       	       Object rowData[] = new Object[4];
+	       	       for(int i = 0; i < list.size(); i++ ){
+	       	           rowData[0] = list.get(i).getOrderedItemID();
+	       	           rowData[1] = list.get(i).getOrderedItemName();
+	       	           rowData[2] = list.get(i).getOrderedItemQuantity();
+	       	           rowData[3] = list.get(i).getShippedQuantity();
+	       	           
+	       	           infoPanelTable.getModel().addRow(rowData);
+	       	           }; 
+	              
+	              
+	           }
+	        }
+	     });
+	}
     
     
 }

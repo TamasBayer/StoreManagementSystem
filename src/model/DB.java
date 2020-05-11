@@ -86,7 +86,20 @@ public class DB {
             System.out.println("Valami baj van az User hozzáadásakor");
             System.out.println(""+ex);
         }
-}
+    }
+    
+    public void addStock(StockNames user){
+        try {
+              String sql = "INSERT INTO StockNames VALUES (?)";
+              PreparedStatement preparedStatement = conn.prepareStatement(sql);
+              preparedStatement.setString(1, user.getStockName());
+
+              preparedStatement.execute();
+        } catch (SQLException ex) {
+            System.out.println("Valami baj van a Stock hozzáadásakor");
+            System.out.println(""+ex);
+        }
+    }
     
     
     public Connection getConn() {

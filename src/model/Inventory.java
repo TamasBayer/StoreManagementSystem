@@ -2,12 +2,21 @@ package model;
 
 public class Inventory {
 
+	private String StockInOrOut;
 	private String stockName;
 	private int itemID;
 	private String itemName;
 	private int itemQuantityInStock;
 	
 	public Inventory(String sName, int iID, String iName, int iQuantityInStock) {
+		this.stockName = sName;
+		this.itemID = iID;
+		this.itemName = iName;
+		this.itemQuantityInStock = iQuantityInStock;
+	}
+	
+	public Inventory(String SInOrOut, String sName, int iID, String iName, int iQuantityInStock) {
+		this.StockInOrOut = SInOrOut;
 		this.stockName = sName;
 		this.itemID = iID;
 		this.itemName = iName;
@@ -44,6 +53,14 @@ public class Inventory {
 
 	public void setItemQuantityInStock(int itemQuantityInStock) {
 		this.itemQuantityInStock = itemQuantityInStock;
+	}
+
+	public String getStockInOrOut() {
+		return StockInOrOut;
+	}
+
+	public void setStockInOrOut(String stockInOrOut) {
+		StockInOrOut = stockInOrOut;
 	}
 
 	

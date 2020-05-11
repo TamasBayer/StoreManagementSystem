@@ -23,6 +23,7 @@ import javax.swing.table.TableRowSorter;
 
 import model.Goods;
 import model.Orders;
+import model.StockNames;
 
 public class Table extends JPanel{
 
@@ -157,7 +158,7 @@ public class Table extends JPanel{
     	firstColumn.setCellEditor(new DefaultCellEditor(comboBox));
     }
     
-    public void comboBoxColumnInOutPanel() {
+    public void comboBoxColumnInOutPanel(ArrayList<Goods> goods, ArrayList<StockNames> stocks) {
     	TableColumn firstColumn = table.getColumnModel().getColumn(0);
 
     	
@@ -170,13 +171,23 @@ public class Table extends JPanel{
     	TableColumn secondColumn = table.getColumnModel().getColumn(1);
     	
     	JComboBox comboBoxItemName = new JComboBox();
+
     	comboBoxItemName.addItem("");
-    	comboBoxItemName.addItem("1322");
-    	comboBoxItemName.addItem("1323");
-    	comboBoxItemName.addItem("1324");
-    	comboBoxItemName.addItem("1325");
-    	comboBoxItemName.addItem("1326");
+    	for(int i=0; i < goods.size(); i++) {
+    		comboBoxItemName.addItem(goods.get(i).getItemID());
+    	}
     	secondColumn.setCellEditor(new DefaultCellEditor(comboBoxItemName));
+    	
+    	TableColumn lastColumn = table.getColumnModel().getColumn(4);
+    	
+    	JComboBox comboBoxStockNames = new JComboBox();
+    	
+    	comboBoxStockNames.addItem("");
+    	for(int i=0; i < stocks.size(); i++) {
+    		comboBoxStockNames.addItem(stocks.get(i).getStockName());
+    	}
+    	lastColumn.setCellEditor(new DefaultCellEditor(comboBoxStockNames));
+    	
     }
     
 
@@ -192,6 +203,11 @@ public class Table extends JPanel{
 	}
 	
 	public void fillWithEmptyRows() {
+		
+		for (int i = model.getRowCount() - 1; i > -1; i--) {
+			model.removeRow(i);
+	     }
+		
 		model.insertRow(0,new Object[]{"","",""});
 		model.insertRow(1,new Object[]{"","",""});
 		model.insertRow(2,new Object[]{"","",""});
@@ -278,10 +294,10 @@ public class Table extends JPanel{
                 		table.setCursor(cursor);
             		}
             	} else if(panelNames == "StockInOutPanel") {
-            		if(table.columnAtPoint(pt) > 2) {
+            		if(table.columnAtPoint(pt) > 2 && table.columnAtPoint(pt) < 4 ) {
             			Cursor cursor = new Cursor(Cursor.TEXT_CURSOR);
                 		table.setCursor(cursor);
-            		} else if(table.columnAtPoint(pt) < 2){
+            		} else if(table.columnAtPoint(pt) < 2 || table.columnAtPoint(pt) == 4){
             			Cursor cursor = new Cursor(Cursor.HAND_CURSOR);
                 		table.setCursor(cursor);
             		} else {
