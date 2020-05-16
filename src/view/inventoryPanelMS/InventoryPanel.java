@@ -36,7 +36,9 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
 import model.Goods;
+import model.Inventory;
 import model.OrderedGoods;
+import model.SoldGoods;
 import model.Users;
 import view.MainFrame;
 import view.classesForPanels.AddItemOrOrderPanel;
@@ -55,6 +57,12 @@ public class InventoryPanel extends JPanel {
     private JComboBox searchCombo;
     private TableRowSorter<DefaultTableModel> rowSorter; 
     private GoodsInfoPanel gIPanel;
+    private JTextField gIPanelItemIDField;
+    private JTextField gIPanelItemNameField;
+    private Table gIPanelBuyingTable;
+    private Table gIPanelstockTable;
+    private Table gIPanelSellingTable;
+    private Table gIPanelQuantityTable;
     
     private JPanel topButtonsPanel;
     private JButton addItemBtn;
@@ -121,6 +129,8 @@ public class InventoryPanel extends JPanel {
         add(searchInventory);
         add(table);
         
+        jTable = table.getTable();
+        
         table.newInformationFrameIfClicked(gIPanel);
         
         addItemButtonPressed();
@@ -131,7 +141,9 @@ public class InventoryPanel extends JPanel {
         
         search();
         
-        jTable = table.getTable();
+        newOrdersInfoPanelTable();
+        
+        
         
 	}
     
@@ -398,38 +410,180 @@ public class InventoryPanel extends JPanel {
     	jTable.addMouseListener(new MouseAdapter() {
 	        public void mouseClicked(MouseEvent e) {
 	           if (e.getClickCount() == 2) {
-	        	   infoPanelOrderIDField = infoPanel.getOrderIDField();
-	        	   infoPanelCompanyNField = infoPanel.getCompanyNameField();
-	        	   infoPanelOrderDField = infoPanel.getOrderDatumField();
+	        	   gIPanelItemIDField = gIPanel.getItemIDTextField();
+	        	   gIPanelItemNameField = gIPanel.getItemNameTextField();
+	        	   gIPanelBuyingTable = gIPanel.getBuyingOrdersTable();
+	        	   gIPanelstockTable = gIPanel.getStocksTable();
+	        	   gIPanelSellingTable = gIPanel.getSellingOrdersTable();
+	        	   gIPanelQuantityTable = gIPanel.getQuantityTable();
 	        	   
 	        	   int row = jTable.getSelectedRow();
 	          
-	        	   int orderID = Integer.parseInt(table.getModel().getValueAt(row, 0).toString());
 	        	   
-	        	   infoPanelOrderIDField.setText(table.getModel().getValueAt(row, 0).toString());
-	        	   infoPanelCompanyNField.setText(table.getModel().getValueAt(row, 1).toString());
-	        	   infoPanelOrderDField.setText(table.getModel().getValueAt(row, 2).toString());
+	        	   gIPanelItemIDField.setText(table.getModel().getValueAt(row, 0).toString());
+	        	   gIPanelItemNameField.setText(table.getModel().getValueAt(row, 1).toString());
 	        	   
-	        	   for (int i = infoPanelTable.getModel().getRowCount() - 1; i > -1; i--) {
-	        		   infoPanelTable.getModel().removeRow(i);
-	       	     }
+	        	   gIPanelBuyingTable.deleteRows();
+	        	   gIPanelstockTable.deleteRows();
+	        	   gIPanelSellingTable.deleteRows();
+	        	   gIPanelQuantityTable.deleteRows();
+
 	       	        
-	       		ArrayList<OrderedGoods> list = getOrderedItems(orderID);
-	       	       Object rowData[] = new Object[4];
-	       	       for(int i = 0; i < list.size(); i++ ){
-	       	           rowData[0] = list.get(i).getOrderedItemID();
-	       	           rowData[1] = list.get(i).getOrderedItemName();
-	       	           rowData[2] = list.get(i).getOrderedItemQuantity();
-	       	           rowData[3] = list.get(i).getShippedQuantity();
+	       		ArrayList<Inventory> listStock = getStocksQuantity(table.getModel().getValueAt(row, 0).toString());
+	       	       Object rowDataStock[] = new Object[2];
+	       	       for(int i = 0; i < listStock.size(); i++ ){
+	       	    	rowDataStock[0] = listStock.get(i).getStockName();
+	       	    	rowDataStock[1] = listStock.get(i).getItemQuantityInStock();
+
 	       	           
-	       	           infoPanelTable.getModel().addRow(rowData);
+	       	           gIPanelstockTable.getModel().addRow(rowDataStock);
 	       	           }; 
+	       	           
+	       	        
 	              
+	       	    ArrayList<OrderedGoods> listOrdered = getItemFromOrderedGoods(table.getModel().getValueAt(row, 0).toString());
+		       	       Object rowDataOrdered[] = new Object[2];
+		       	       for(int i = 0; i < listOrdered.size(); i++ ){
+		       	    	rowDataOrdered[0] = listOrdered.get(i).getOrderGoodsID();
+		       	    	rowDataOrdered[1] = listOrdered.get(i).getOrderedItemQuantity();
+
+		       	           
+		       	    	gIPanelBuyingTable.getModel().addRow(rowDataOrdered);
+		       	           }; 
+		       	           
+       	        ArrayList<SoldGoods> listSold = getItemFromSellOrders(table.getModel().getValueAt(row, 0).toString());
+	       	       Object rowDataSold[] = new Object[2];
+	       	       for(int i = 0; i < listSold.size(); i++ ){
+	       	    	rowDataSold[0] = listSold.get(i).getSellOrderGoodsID();
+	       	    	rowDataSold[1] = listSold.get(i).getSoldItemQuantity();
+
+	       	           
+	       	    	gIPanelSellingTable.getModel().addRow(rowDataSold);
+	       	           }; 
+	       	           
+       	        ArrayList<Integer> listQuantity = getAllQuantity(table.getModel().getValueAt(row, 0).toString());
+	       	       Object rowDataQuantity[] = new Object[3];
+
+	       	       rowDataQuantity[0] = listQuantity.get(0);
+	       	       rowDataQuantity[1] = listQuantity.get(1);
+	       	       rowDataQuantity[2] = listQuantity.get(2);
+
+	       	           
+	       	    		gIPanelQuantityTable.getModel().addRow(rowDataQuantity);
+	       	            
 	              
 	           }
 	        }
 	     });
 	}
+    
+    public ArrayList<Inventory> getStocksQuantity(String itemID){
+    	String sql = "SELECT stockName, itemQuantity FROM Inventory WHERE itemID = "+ itemID +"";
+    	
+    	ArrayList<Inventory> inventory = null;
+        loadCreateStatement();
+        try {
+            ResultSet rs = createStatement.executeQuery(sql);
+            inventory = new ArrayList<>();
+
+        while (rs.next()){
+        	Inventory actualItem = new Inventory(rs.getString("stockName"), 0, "", rs.getInt("itemQuantity"));
+        	inventory.add(actualItem);
+            }
+
+        
+        } catch (SQLException ex) {
+            System.out.println("Error with getStocksQuantity");
+            System.out.println(" "+ex);
+            }    
+        
+         return inventory;
+}
+    public ArrayList<OrderedGoods> getItemFromOrderedGoods(String itemID){
+    	String sql = "SELECT orderID, orderedQuantity FROM OrderedGoods WHERE orderedItemID = "+ itemID +"";
+    	
+    	ArrayList<OrderedGoods> orderedItem = null;
+        loadCreateStatement();
+        try {
+            ResultSet rs = createStatement.executeQuery(sql);
+            orderedItem = new ArrayList<>();
+
+        while (rs.next()){
+        	OrderedGoods actualItem = new OrderedGoods(rs.getInt("orderID"), 0, "", rs.getInt("orderedQuantity"), 0);
+        	orderedItem.add(actualItem);
+            }
+
+        
+        } catch (SQLException ex) {
+            System.out.println("Error with getItemFromOrderedGoods");
+            System.out.println(" "+ex);
+            }    
+        
+         return orderedItem;
+}
+    
+    public ArrayList<SoldGoods> getItemFromSellOrders(String itemID){
+    	String sql = "SELECT soldItemID, soldQuantity FROM SoldGoods WHERE soldItemID = "+ itemID +"";
+    	
+    	ArrayList<SoldGoods> soldItem = null;
+        loadCreateStatement();
+        try {
+            ResultSet rs = createStatement.executeQuery(sql);
+            soldItem = new ArrayList<>();
+
+        while (rs.next()){
+        	SoldGoods actualItem = new SoldGoods(rs.getInt("soldItemID"), 0, "", rs.getInt("soldQuantity"), 0);
+        	soldItem.add(actualItem);
+            }
+
+        
+        } catch (SQLException ex) {
+            System.out.println("Error with getItemFromSellOrders");
+            System.out.println(" "+ex);
+            }    
+        
+         return soldItem;
+}
+    public ArrayList<Integer> getAllQuantity(String itemID) {
+    	
+    	ArrayList<Integer> quantity = new ArrayList<Integer>();
+        loadCreateStatement();
+        String sql;
+    	try {
+    		sql = "SELECT SUM(soldQuantity) AS soldQuantitySUM FROM SoldGoods WHERE soldItemID = "+ itemID +"";
+            
+            ResultSet rs = createStatement.executeQuery(sql);
+
+        while (rs.next()){
+        	quantity.add(rs.getInt("soldQuantitySUM"));
+            }
+        
+	        sql = "SELECT SUM(orderedQuantity) AS orderedQuantitySUM FROM OrderedGoods WHERE orderedItemID = "+ itemID +"";
+	        
+	        rs = createStatement.executeQuery(sql);
+
+	    while (rs.next()){
+	    	quantity.add(rs.getInt("orderedQuantitySUM"));
+        }
+	    
+		    sql = "SELECT SUM(itemQuantity) AS quantityInWarehaus FROM Inventory WHERE itemID = "+ itemID +"";
+	        
+	        rs = createStatement.executeQuery(sql);
+	
+	    while (rs.next()){
+	    	quantity.add(rs.getInt("quantityInWarehaus"));
+    }
+           
+            
+            
+            
+      } catch (SQLException ex) {
+          System.out.println("Valami baj van az Item megváltoztatásakor");
+          System.out.println(""+ex);
+      }
+    	
+    	return quantity;
+    }
     
     
 }

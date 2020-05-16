@@ -20,7 +20,7 @@ import view.classesForPanels.Table;
 
 public class GoodsInfoPanel extends JPanel{
 
-	private Table table;
+	private Table quantityTable;
 	private Table buyingOrdersTable;
 	private Table sellingOrdersTable;
 	private Table stocksTable;
@@ -46,7 +46,7 @@ public class GoodsInfoPanel extends JPanel{
 		itemIDTextField.setEditable(false);
 		itemNameTextField.setEditable(false);
 		columnNamesTable = new String[] {"Booked", "Ordered", "In warehouse"};
-		table = new Table(columnNamesTable);
+		quantityTable = new Table(columnNamesTable);
 		columnNamesP1 = new String[] {"Number", "Quantity"};
 		buyingOrdersTable = new Table(columnNamesP1);
 		columnNamesP2 = new String[] {"Number", "Quantity"};
@@ -97,11 +97,11 @@ public class GoodsInfoPanel extends JPanel{
 	        stocksTable.setBorder(BorderFactory.createCompoundBorder(outerBorderP3, innerBorderP3));
 	       
 
-	        table.setPreferredSize(new Dimension(50, 80));
+	        quantityTable.setPreferredSize(new Dimension(50, 80));
 
 	        Border innerBorderTable = BorderFactory.createTitledBorder("Quantity");
 	        Border outerBorderTable = BorderFactory.createEmptyBorder(5, 5, 5, 5);
-	        table.setBorder(BorderFactory.createCompoundBorder(outerBorderTable, innerBorderTable));
+	        quantityTable.setBorder(BorderFactory.createCompoundBorder(outerBorderTable, innerBorderTable));
 	        
 
 	        c.gridx = 0;
@@ -136,7 +136,7 @@ public class GoodsInfoPanel extends JPanel{
 	        c.fill = GridBagConstraints.HORIZONTAL;
 	        c.weighty = 0;
 	        c.weightx = 1;
-	        add(table, c);
+	        add(quantityTable, c);
 	        
 	        c.gridx = 0;
 	        c.gridy = 3;
@@ -148,6 +148,32 @@ public class GoodsInfoPanel extends JPanel{
 	        add(stocksTable, c);
 
 	    }
+
+	public JTextField getItemIDTextField() {
+		return itemIDTextField;
+	}
+
+	public JTextField getItemNameTextField() {
+		return itemNameTextField;
+	}
+
+	public Table getQuantityTable() {
+		return quantityTable;
+	}
+
+	public Table getBuyingOrdersTable() {
+		return buyingOrdersTable;
+	}
+
+	public Table getSellingOrdersTable() {
+		return sellingOrdersTable;
+	}
+
+	public Table getStocksTable() {
+		return stocksTable;
+	}
+	
+	
 }
 	 
 

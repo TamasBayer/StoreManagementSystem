@@ -316,6 +316,12 @@ public class Table extends JPanel{
         });
 	}
 	
+	public void deleteRows() {
+		for (int i = model.getRowCount() - 1; i > -1; i--) {
+			model.removeRow(i);
+	     }
+	}
+	
 
     public TableRowSorter<DefaultTableModel> getRowSorter() {
 		return rowSorter;
