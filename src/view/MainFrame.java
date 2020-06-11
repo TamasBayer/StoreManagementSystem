@@ -66,7 +66,7 @@ public class MainFrame extends JFrame {
         stockSystemBtn = appChooserPanel.getStockSystemButton();
         
         tabbedPaneMainSystem = new TabbedPaneMainSystem(conn);
-        tabbedPaneStockSystem = new TabbedPaneStockSystem();
+        tabbedPaneStockSystem = new TabbedPaneStockSystem(conn);
         
         
         setLayout(new BorderLayout());

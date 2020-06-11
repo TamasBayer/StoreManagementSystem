@@ -70,7 +70,5 @@ public class TabbedPaneMainSystem extends JPanel {
         
 	}
 	
-	public void setConn(Connection conn) {
-		this.conn = conn;
-	}
+
 }
