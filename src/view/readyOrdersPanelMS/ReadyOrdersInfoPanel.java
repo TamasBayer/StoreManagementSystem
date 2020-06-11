@@ -92,4 +92,22 @@ public class ReadyOrdersInfoPanel extends JPanel{
         c.weightx = 1;
         add(ordersTable, c);
 	}
+	
+	public JTextField getOrderIDField() {
+		return orderIDField;
+	}
+
+	public JTextField getCompanyNameField() {
+		return companyNameField;
+	}
+
+	public JTextField getOrderDatumField() {
+		return orderDatumField;
+	}
+
+	public Table getOrdersTable() {
+		return ordersTable;
+	}
+
+
 }

@@ -2,6 +2,8 @@ package view.readyOrdersPanelMS;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,6 +14,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
@@ -36,6 +39,12 @@ public class ReadyOrdersPanel extends JPanel{
     private JComboBox searchCombo;
     private TableRowSorter<DefaultTableModel> rowSorter; 
     private ReadyOrdersInfoPanel infoPanel;
+    private Table infoPanelTable;
+    private JTextField infoPanelOrderIDField;
+    private JTextField infoPanelCompanyNField;
+    private JTextField infoPanelOrderDField;
+    
+    private JTable jTable;
     
     private Connection conn;
     private Statement createStatement = null;
@@ -52,6 +61,7 @@ public class ReadyOrdersPanel extends JPanel{
         searchCombo = searchReadyOrders.getSearchCombo();
         
         infoPanel = new ReadyOrdersInfoPanel();
+        infoPanelTable = infoPanel.getOrdersTable();
           
         Border innerBorder = BorderFactory.createLineBorder(Color.GRAY);
         Border outerBorder = BorderFactory.createEmptyBorder(5, 5, 5, 5);
@@ -63,8 +73,9 @@ public class ReadyOrdersPanel extends JPanel{
         add(table, BorderLayout.CENTER);
         
         table.newInformationFrameIfClicked(infoPanel);
+        jTable = table.getTable();
         
-        
+        newOrdersInfoPanelTable();
     }
     
     public void setConn(Connection conn) {
@@ -141,4 +152,50 @@ public class ReadyOrdersPanel extends JPanel{
 	           table.getModel().addRow(rowData);
 	           }; 
 	    }
+    
+    public void newOrdersInfoPanelTable() {
+    	jTable.addMouseListener(new MouseAdapter() {
+	        public void mouseClicked(MouseEvent e) {
+	           if (e.getClickCount() == 2) {
+	        	   infoPanelOrderIDField = infoPanel.getOrderIDField();
+	        	   infoPanelCompanyNField = infoPanel.getCompanyNameField();
+	        	   infoPanelOrderDField = infoPanel.getOrderDatumField();
+	        	   
+	        	   
+	        	   
+	        	   
+	        	   int row = jTable.getSelectedRow();
+	          
+	        	   int orderID = Integer.parseInt(table.getModel().getValueAt(row, 0).toString());
+	        	   
+	        	   infoPanelOrderIDField.setText(table.getModel().getValueAt(row, 0).toString());
+	        	   infoPanelCompanyNField.setText(table.getModel().getValueAt(row, 1).toString());
+	        	   infoPanelOrderDField.setText(table.getModel().getValueAt(row, 2).toString());
+	        	   
+	        	   
+	        	   fillInfoPanelTable(orderID);
+	              
+	           }
+	        }
+	     });
+	}
+    
+    public void fillInfoPanelTable(int orderID) {
+    	
+
+    	for (int i = infoPanelTable.getModel().getRowCount() - 1; i > -1; i--) {
+ 		   infoPanelTable.getModel().removeRow(i);
+	     }
+	        
+		ArrayList<OrderedGoods> list = getOrderedItems(orderID);
+	       Object rowData[] = new Object[4];
+	       for(int i = 0; i < list.size(); i++ ){
+	           rowData[0] = list.get(i).getOrderedItemID();
+	           rowData[1] = list.get(i).getOrderedItemName();
+	           rowData[2] = list.get(i).getOrderedItemQuantity();
+	           rowData[3] = list.get(i).getShippedQuantity();
+	           
+	           infoPanelTable.getModel().addRow(rowData);
+	           }; 
+    }
 }
