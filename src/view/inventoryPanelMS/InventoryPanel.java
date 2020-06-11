@@ -518,7 +518,7 @@ public class InventoryPanel extends JPanel {
          return inventory;
 }
     public ArrayList<OrderedGoods> getItemFromOrderedGoods(String itemID){
-    	String sql = "SELECT orderID, orderedQuantity FROM OrderedGoods WHERE orderedItemID = "+ itemID +"";
+    	String sql = "SELECT orderID, orderedQuantity, shippedQuantity FROM OrderedGoods WHERE orderedItemID = "+ itemID +" AND shippedQuantity < orderedQuantity";
     	
     	ArrayList<OrderedGoods> orderedItem = null;
         loadCreateStatement();
@@ -527,7 +527,7 @@ public class InventoryPanel extends JPanel {
             orderedItem = new ArrayList<>();
 
         while (rs.next()){
-        	OrderedGoods actualItem = new OrderedGoods(rs.getInt("orderID"), 0, "", rs.getInt("orderedQuantity"), 0);
+        	OrderedGoods actualItem = new OrderedGoods(rs.getInt("orderID"), 0, "", rs.getInt("orderedQuantity") - rs.getInt("shippedQuantity"), 0);
         	orderedItem.add(actualItem);
             }
 
@@ -541,7 +541,7 @@ public class InventoryPanel extends JPanel {
 }
     
     public ArrayList<SoldGoods> getItemFromSellOrders(String itemID){
-    	String sql = "SELECT soldItemID, soldQuantity FROM SoldGoods WHERE soldItemID = "+ itemID +"";
+    	String sql = "SELECT sellOrderID, soldQuantity FROM SoldGoods WHERE soldItemID = "+ itemID +" AND pickedQuantity < soldQuantity";
     	
     	ArrayList<SoldGoods> soldItem = null;
         loadCreateStatement();
@@ -550,7 +550,7 @@ public class InventoryPanel extends JPanel {
             soldItem = new ArrayList<>();
 
         while (rs.next()){
-        	SoldGoods actualItem = new SoldGoods(rs.getInt("soldItemID"), 0, "", rs.getInt("soldQuantity"), 0);
+        	SoldGoods actualItem = new SoldGoods(rs.getInt("sellOrderID"), 0, "", rs.getInt("soldQuantity"), 0);
         	soldItem.add(actualItem);
             }
 
@@ -568,20 +568,20 @@ public class InventoryPanel extends JPanel {
         loadCreateStatement();
         String sql;
     	try {
-    		sql = "SELECT SUM(soldQuantity) AS soldQuantitySUM FROM SoldGoods WHERE soldItemID = "+ itemID +"";
+    		sql = "SELECT SUM(soldQuantity) AS soldQuantitySUM, SUM(pickedQuantity) AS pickedQuantitySUM FROM SoldGoods WHERE soldItemID = "+ itemID +" AND pickedQuantity < soldQuantity";
             
             ResultSet rs = createStatement.executeQuery(sql);
 
         while (rs.next()){
-        	quantity.add(rs.getInt("soldQuantitySUM"));
+        	quantity.add(rs.getInt("soldQuantitySUM") - rs.getInt("pickedQuantitySUM"));
             }
         
-	        sql = "SELECT SUM(orderedQuantity) AS orderedQuantitySUM FROM OrderedGoods WHERE orderedItemID = "+ itemID +"";
+	        sql = "SELECT SUM(orderedQuantity) AS orderedQuantitySUM, SUM(shippedQuantity) AS shippedQuantitySUM FROM OrderedGoods WHERE orderedItemID = "+ itemID +" AND shippedQuantity < orderedQuantity";
 	        
 	        rs = createStatement.executeQuery(sql);
 
 	    while (rs.next()){
-	    	quantity.add(rs.getInt("orderedQuantitySUM"));
+	    	quantity.add(rs.getInt("orderedQuantitySUM") - rs.getInt("shippedQuantitySUM"));
         }
 	    
 		    sql = "SELECT SUM(itemQuantity) AS quantityInWarehaus FROM Inventory WHERE itemID = "+ itemID +"";
