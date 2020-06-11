@@ -131,6 +131,19 @@ public class Table extends JPanel{
       
    }
     
+    public void comboBoxColumnStockNames(ArrayList<StockNames> stockNames) {
+    	TableColumn lastColumn = table.getColumnModel().getColumn(5);
+    	
+    	JComboBox comboBox = new JComboBox();
+    	comboBox.addItem("");
+    	for(int i=0; i < stockNames.size(); i++) {
+    		comboBox.addItem(stockNames.get(i).getStockName());
+    	}
+    	
+    	
+    	lastColumn.setCellEditor(new DefaultCellEditor(comboBox));
+    }
+    
     
     public void comboBoxColumnItemID(ArrayList<Goods> goods) {
     	TableColumn firstColumn = table.getColumnModel().getColumn(0);
@@ -333,6 +346,10 @@ public class Table extends JPanel{
 
 	public JTable getTable() {
 		return table;
+	}
+
+	public JFrame getFrame() {
+		return frame;
 	}
 	
 	

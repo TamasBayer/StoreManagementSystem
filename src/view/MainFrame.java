@@ -22,6 +22,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
 import model.DB;
+import model.StockNames;
 import model.Users;
 
 public class MainFrame extends JFrame {
@@ -55,6 +56,7 @@ public class MainFrame extends JFrame {
 				
 			db = new DB();
 			conn = db.getConn();
+			
 		
         loginPanel = new LoginPanel();
         loginBtn = loginPanel.getLoginButton();

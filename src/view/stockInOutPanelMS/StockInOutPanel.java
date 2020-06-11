@@ -129,8 +129,7 @@ public class StockInOutPanel extends JPanel {
 	}
 	
 	public ArrayList<StockNames> getAllStocks(){
-        // String sql = "SELECT Goods.itemID, Goods.itemName, SUM (Inventory.itemQuantity) AS QuantityInWarehause FROM Goods, Inventory WHERE Goods.itemID=Inventory.itemID GROUP BY Goods.itemID, Goods.itemName";
-     	String sql = "SELECT * FROM StockNames";
+       String sql = "SELECT * FROM StockNames";
      	ArrayList<StockNames> stocks = null;
          loadCreateStatement();
          try {

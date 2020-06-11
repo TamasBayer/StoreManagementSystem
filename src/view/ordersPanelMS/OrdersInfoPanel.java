@@ -138,5 +138,10 @@ public class OrdersInfoPanel extends JPanel {
 	public Table getOrdersTable() {
 		return ordersTable;
 	}
+
+	public JButton getBookButton() {
+		return bookButton;
+	}
+	
 	
 }

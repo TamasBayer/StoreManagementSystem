@@ -353,7 +353,7 @@ public class InventoryPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
             	
             	int action = JOptionPane.showConfirmDialog(InventoryPanel.this,
-                        "Do you really want to delete this Item?",
+                        "Do you really want to delete this Item? It will delete from Stock and from Orders also",
                         "ComfirmExit", JOptionPane.OK_CANCEL_OPTION);
             	if(action == JOptionPane.OK_OPTION && jTable.getSelectionModel().isSelectionEmpty() == false) {
             		
@@ -363,10 +363,28 @@ public class InventoryPanel extends JPanel {
                     int idToInt = Integer.parseInt(table.getModel().getValueAt(row, 0).toString());
                     table.getModel().removeRow(row);
                     try {
-                        String sql = "DELETE FROM Goods WHERE itemID = " + idToInt + "";
+                    	String sql = "DELETE FROM Inventory WHERE itemID = " + idToInt + "";
                         PreparedStatement preparedStatement = conn.prepareStatement(sql);
 
                         preparedStatement.execute();
+                        
+                        sql = "DELETE FROM SoldGoods WHERE soldItemID = " + idToInt + "";
+                        preparedStatement = conn.prepareStatement(sql);
+
+                        preparedStatement.execute();
+                        
+                        sql = "DELETE FROM OrderedGoods WHERE orderedItemID = " + idToInt + "";
+                        preparedStatement = conn.prepareStatement(sql);
+
+                        preparedStatement.execute();
+                        
+                        
+                        sql = "DELETE FROM Goods WHERE itemID = " + idToInt + "";
+                        preparedStatement = conn.prepareStatement(sql);
+
+                        preparedStatement.execute();
+                        
+                        
                         
                   } catch (SQLException ex) {
                       System.out.println("Valami baj van az Item törlésekor");

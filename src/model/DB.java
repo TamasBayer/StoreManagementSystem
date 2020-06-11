@@ -56,10 +56,10 @@ public class DB {
                     createStatement.execute("CREATE TABLE Users(userName varchar(20) PRIMARY KEY, userPassword varchar(20))");
                     createStatement.execute("CREATE TABLE Goods(itemID INT not null primary key GENERATED ALWAYS AS IDENTITY (START WITH 1000, INCREMENT BY 1), itemName varchar(20))");
                     createStatement.execute("CREATE TABLE SellOrders(sellOrderID INT not null primary key GENERATED ALWAYS AS IDENTITY (START WITH 300000, INCREMENT BY 1), soldFor varchar(20), sellOrderDatum varchar(20))");
-                    createStatement.execute("CREATE TABLE SoldGoods(sellOrderID int REFERENCES SellOrders(sellOrderID), soldItemID int REFERENCES Goods(itemID), itemName varchar(20), soldQuantity int NOT NULL, pickedQuantity int)");
+                    createStatement.execute("CREATE TABLE SoldGoods(sellOrderID int, soldItemID int REFERENCES Goods(itemID), itemName varchar(20), soldQuantity int NOT NULL, pickedQuantity int)");
                     createStatement.execute("CREATE TABLE ReadySellOrders(sellOrderID int PRIMARY KEY, soldFor varchar(20), sellOrderDatum varchar(20))");
                     createStatement.execute("CREATE TABLE Orders(orderID INT not null primary key GENERATED ALWAYS AS IDENTITY (START WITH 200000, INCREMENT BY 1), orderedFrom varchar(20), orderDatum varchar(20))");
-                    createStatement.execute("CREATE TABLE OrderedGoods(orderID int REFERENCES Orders(orderID), orderedItemID int REFERENCES Goods(itemID), itemName varchar(20), orderedQuantity int NOT NULL, shippedQuantity int)");
+                    createStatement.execute("CREATE TABLE OrderedGoods(orderID int, orderedItemID int REFERENCES Goods(itemID), itemName varchar(20), orderedQuantity int NOT NULL, shippedQuantity int)");
                     createStatement.execute("CREATE TABLE ReadyOrders(orderID int PRIMARY KEY, orderedFrom varchar(20), orderDatum varchar(20))");
                     
                     //// Create Stocks Tables ////

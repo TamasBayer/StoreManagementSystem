@@ -39,6 +39,7 @@ import javax.swing.table.TableRowSorter;
 import model.Goods;
 import model.OrderedGoods;
 import model.Orders;
+import model.StockNames;
 import view.classesForPanels.AddItemOrOrderPanel;
 import view.classesForPanels.SearchPanel;
 import view.classesForPanels.Table;
@@ -61,6 +62,7 @@ public class OrdersPanel extends JPanel{
     private JTextField infoPanelOrderIDField;
     private JTextField infoPanelCompanyNField;
     private JTextField infoPanelOrderDField;
+    private JButton bookButton;
     
     private JPanel topButtonsPanel;
     private JButton addOrderBtn;
@@ -100,6 +102,7 @@ public class OrdersPanel extends JPanel{
         
         infoPanel = new OrdersInfoPanel();
         infoPanelTable = infoPanel.getOrdersTable();
+        bookButton = infoPanel.getBookButton();
         
         
         topButtonsPanel = new JPanel();
@@ -143,6 +146,7 @@ public class OrdersPanel extends JPanel{
         editOrderButtonPressed();
         deleteButtonPressed();
         newOrdersInfoPanelTable();
+        bookButtonPressed();
         search();
     }
     
@@ -204,6 +208,26 @@ public class OrdersPanel extends JPanel{
           return orderedGoods;
  }
     
+    public ArrayList<StockNames> getAllStocks(){
+      String sql = "SELECT * FROM StockNames";
+     	ArrayList<StockNames> stocks = null;
+         loadCreateStatement();
+         try {
+             ResultSet rs = createStatement.executeQuery(sql);
+             stocks = new ArrayList<>();
+
+         while (rs.next()){
+        	 StockNames actualItem = new StockNames(rs.getString("stockName"));
+         	stocks.add(actualItem);
+             }
+         } catch (SQLException ex) {
+             System.out.println("Error with getAllGoods");
+             System.out.println(" "+ex);
+             }    
+         
+          return stocks;
+	}
+    
     public void newOrdersInfoPanelTable() {
     	jTable.addMouseListener(new MouseAdapter() {
 	        public void mouseClicked(MouseEvent e) {
@@ -211,6 +235,9 @@ public class OrdersPanel extends JPanel{
 	        	   infoPanelOrderIDField = infoPanel.getOrderIDField();
 	        	   infoPanelCompanyNField = infoPanel.getCompanyNameField();
 	        	   infoPanelOrderDField = infoPanel.getOrderDatumField();
+	        	   
+	        	   
+	        	   
 	        	   
 	        	   int row = jTable.getSelectedRow();
 	          
@@ -220,26 +247,178 @@ public class OrdersPanel extends JPanel{
 	        	   infoPanelCompanyNField.setText(table.getModel().getValueAt(row, 1).toString());
 	        	   infoPanelOrderDField.setText(table.getModel().getValueAt(row, 2).toString());
 	        	   
-	        	   for (int i = infoPanelTable.getModel().getRowCount() - 1; i > -1; i--) {
-	        		   infoPanelTable.getModel().removeRow(i);
-	       	     }
-	       	        
-	       		ArrayList<OrderedGoods> list = getOrderedItems(orderID);
-	       	       Object rowData[] = new Object[4];
-	       	       for(int i = 0; i < list.size(); i++ ){
-	       	           rowData[0] = list.get(i).getOrderedItemID();
-	       	           rowData[1] = list.get(i).getOrderedItemName();
-	       	           rowData[2] = list.get(i).getOrderedItemQuantity();
-	       	           rowData[3] = list.get(i).getShippedQuantity();
-	       	           
-	       	           infoPanelTable.getModel().addRow(rowData);
-	       	           }; 
-	              
+	        	   
+	        	   fillInfoPanelTable(orderID);
 	              
 	           }
 	        }
 	     });
 	}
+    
+    public void fillInfoPanelTable(int orderID) {
+    	
+    	infoPanelTable.comboBoxColumnStockNames(getAllStocks());
+    	
+    	
+    	for (int i = infoPanelTable.getModel().getRowCount() - 1; i > -1; i--) {
+ 		   infoPanelTable.getModel().removeRow(i);
+	     }
+	        
+		ArrayList<OrderedGoods> list = getOrderedItems(orderID);
+	       Object rowData[] = new Object[4];
+	       for(int i = 0; i < list.size(); i++ ){
+	           rowData[0] = list.get(i).getOrderedItemID();
+	           rowData[1] = list.get(i).getOrderedItemName();
+	           rowData[2] = list.get(i).getOrderedItemQuantity();
+	           rowData[3] = list.get(i).getShippedQuantity();
+	           
+	           infoPanelTable.getModel().addRow(rowData);
+	           }; 
+    }
+    
+    public void bookButtonPressed(){
+    	bookButton.addActionListener(new ActionListener(){
+
+            
+            public void actionPerformed(ActionEvent e) {
+            	
+            	if (infoPanelTable.getTable().isEditing())
+            		infoPanelTable.getTable().getCellEditor().stopCellEditing();
+            	int orderID = Integer.parseInt(infoPanelOrderIDField.getText());
+            	int itemID = 0;
+            	String itemName = "";
+            	int orderedQuantity = 0;
+            	int alreadyDeliveredQuantity = 0;
+            	int currentDelivered = 0;
+            	int currentAndAlreadyDeliveredQuantity;
+            	String stockName = "";
+            	
+            	ArrayList<Integer> orderedQuantityArray;
+            	ArrayList<Integer> deliveredQuantityArray;
+            	
+            	JFrame infoFrame = table.getFrame();
+            	
+            	int orderedQuantityIsDelivered = 0;
+            	
+            	String regex = "\\d+";
+            	
+            	String sql;
+            	
+            	for (int i = 0; i < infoPanelTable.getModel().getRowCount(); i++) {
+	        		   if(infoPanelTable.getModel().getValueAt(i, 4) != null && infoPanelTable.getModel().getValueAt(i, 4).toString().matches(regex)) {
+	        			   if(infoPanelTable.getModel().getValueAt(i, 5) != null && infoPanelTable.getModel().getValueAt(i, 5).toString() != "") {	        				   
+	        				   itemID = Integer.parseInt(infoPanelTable.getModel().getValueAt(i, 0).toString());
+	        				   itemName = infoPanelTable.getModel().getValueAt(i, 1).toString();
+	        				   orderedQuantity = Integer.parseInt(infoPanelTable.getModel().getValueAt(i, 2).toString());
+		        			   alreadyDeliveredQuantity = Integer.parseInt(infoPanelTable.getModel().getValueAt(i, 3).toString());
+		        			   currentDelivered = Integer.parseInt(infoPanelTable.getModel().getValueAt(i, 4).toString());
+		        			   stockName = infoPanelTable.getModel().getValueAt(i, 5).toString();
+		        			   
+		        			   currentAndAlreadyDeliveredQuantity = currentDelivered + alreadyDeliveredQuantity;
+		        			   
+		        			   if(currentAndAlreadyDeliveredQuantity <= orderedQuantity) {
+		        				   try {
+		        					   sql = "UPDATE OrderedGoods SET shippedQuantity="+ currentAndAlreadyDeliveredQuantity +" WHERE orderID="+ infoPanelOrderIDField.getText() +" AND orderedItemID="+ infoPanelTable.getModel().getValueAt(i, 0).toString() +"";
+				                       PreparedStatement preparedStatement = conn.prepareStatement(sql);
+				
+				                       preparedStatement.execute();
+				                       
+				                       loadCreateStatement();
+						               	sql = "SELECT itemQuantity FROM Inventory WHERE stockName = '"+ stockName +"' AND itemID = "+ itemID +"";
+						                ResultSet rs = createStatement.executeQuery(sql);
+
+						                if (rs.next()) {
+						                	int newQuantity = rs.getInt("itemQuantity") + currentDelivered;
+						                	sql = "UPDATE Inventory SET itemQuantity="+ newQuantity +" WHERE stockName = '"+ stockName +"' AND itemID = "+ itemID +"";
+						                    preparedStatement = conn.prepareStatement(sql);
+						
+						                    preparedStatement.execute();
+						                    
+						                } else {
+						                	sql = "INSERT INTO Inventory VALUES ('"+ stockName +"', "+ itemID +", '"+ itemName +"', "+ currentDelivered +")";
+						                    preparedStatement = conn.prepareStatement(sql);
+						
+						                    preparedStatement.execute();
+						                }
+				                       
+				                       			                      
+				                        
+		        				   } catch (SQLException ex) {
+					                   System.out.println("Error with insert current delivered quantity");
+					                   System.out.println(" "+ex);
+					                   break;
+					                   } 
+
+		        				   try {
+						               	sql = "SELECT orderedQuantity, shippedQuantity FROM OrderedGoods WHERE orderID="+ orderID +"";
+						                ResultSet rs = createStatement.executeQuery(sql);
+						                
+						                orderedQuantityArray = new ArrayList<Integer>();
+						                deliveredQuantityArray = new ArrayList<Integer>();
+
+						                while (rs.next()) {
+						                	orderedQuantityArray.add(rs.getInt("orderedQuantity"));
+						                	deliveredQuantityArray.add(rs.getInt("shippedQuantity"));
+						                }
+						                
+						                for(int item=0; item < orderedQuantityArray.size(); item++) {
+						                	
+						                	
+						                	
+						                	if(Integer.parseInt(orderedQuantityArray.get(item).toString()) == Integer.parseInt(deliveredQuantityArray.get(item).toString())) {
+						                		orderedQuantityIsDelivered++;
+						                	}
+						                } 
+						                if(orderedQuantityArray.size() == orderedQuantityIsDelivered) {
+						                	sql = "SELECT * FROM Orders WHERE orderID="+ orderID +"";
+							                rs = createStatement.executeQuery(sql);
+
+							                if (rs.next()) {
+							                	Orders readyOrder = new Orders(rs.getInt("orderID"), rs.getString("orderedFrom"), rs.getString("orderDatum"));
+							                    
+							                	sql = "DELETE FROM Orders WHERE orderID = "+ orderID +"";
+							                	PreparedStatement preparedStatement = conn.prepareStatement(sql);
+						
+							                	preparedStatement.execute();
+							                	
+							                	sql = "INSERT INTO ReadyOrders (orderID, orderedFrom, orderDatum) VALUES (" + readyOrder.getOrderID() +", '" + readyOrder.getOrderedFrom() +"', '" + readyOrder.getOrderDatum() +"')";
+							                	preparedStatement = conn.prepareStatement(sql);
+						
+							                	preparedStatement.execute();
+							                	
+							                	
+							                	fillTableWithData();
+							                	infoFrame.dispose();
+							                	infoFrame = null;
+							                }
+							                	
+							                
+						                } else {
+						                	infoPanelTable.getTable().setValueAt("", i, 4);
+						                	infoPanelTable.getTable().setValueAt(currentAndAlreadyDeliveredQuantity, i, 3);
+						                	
+						                }
+
+						               } catch (SQLException ex) {
+						                   System.out.println("Error with getOrders quantity");
+						                   System.out.println(" "+ex);
+						                   } 
+		        			    
+		        			   } else {
+		        				   System.out.println("Current delivered quantity is more than orderd quantity");
+		        				   break;
+		        			   }
+	        			   } else {
+	        				   System.out.println("Please select a Stock");
+	        				   break;
+	        			   }
+	        			   
+	        		   } 
+	       	     }
+            	
+           }
+     });
+   }
     
     public void fillTableWithData(){
 		
