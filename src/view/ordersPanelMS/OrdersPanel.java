@@ -293,6 +293,8 @@ public class OrdersPanel extends JPanel{
             	int currentAndAlreadyDeliveredQuantity;
             	String stockName = "";
             	
+            	Boolean breakHapend = false;
+            	
             	ArrayList<Integer> orderedQuantityArray;
             	ArrayList<Integer> deliveredQuantityArray;
             	
@@ -341,80 +343,83 @@ public class OrdersPanel extends JPanel{
 						                    preparedStatement.execute();
 						                }
 				                       
-				                       			                      
+						                infoPanelTable.getTable().setValueAt("", i, 4);
+					                	infoPanelTable.getTable().setValueAt(currentAndAlreadyDeliveredQuantity, i, 3);		                      
 				                        
 		        				   } catch (SQLException ex) {
 					                   System.out.println("Error with insert current delivered quantity");
 					                   System.out.println(" "+ex);
+					                   breakHapend = true;
 					                   break;
 					                   } 
 
-		        				   try {
-						               	sql = "SELECT orderedQuantity, shippedQuantity FROM OrderedGoods WHERE orderID="+ orderID +"";
-						                ResultSet rs = createStatement.executeQuery(sql);
-						                
-						                orderedQuantityArray = new ArrayList<Integer>();
-						                deliveredQuantityArray = new ArrayList<Integer>();
-
-						                while (rs.next()) {
-						                	orderedQuantityArray.add(rs.getInt("orderedQuantity"));
-						                	deliveredQuantityArray.add(rs.getInt("shippedQuantity"));
-						                }
-						                
-						                for(int item=0; item < orderedQuantityArray.size(); item++) {
-						                	
-						                	
-						                	
-						                	if(Integer.parseInt(orderedQuantityArray.get(item).toString()) == Integer.parseInt(deliveredQuantityArray.get(item).toString())) {
-						                		orderedQuantityIsDelivered++;
-						                	}
-						                } 
-						                if(orderedQuantityArray.size() == orderedQuantityIsDelivered) {
-						                	sql = "SELECT * FROM Orders WHERE orderID="+ orderID +"";
-							                rs = createStatement.executeQuery(sql);
-
-							                if (rs.next()) {
-							                	Orders readyOrder = new Orders(rs.getInt("orderID"), rs.getString("orderedFrom"), rs.getString("orderDatum"));
-							                    
-							                	sql = "DELETE FROM Orders WHERE orderID = "+ orderID +"";
-							                	PreparedStatement preparedStatement = conn.prepareStatement(sql);
-						
-							                	preparedStatement.execute();
-							                	
-							                	sql = "INSERT INTO ReadyOrders (orderID, orderedFrom, orderDatum) VALUES (" + readyOrder.getOrderID() +", '" + readyOrder.getOrderedFrom() +"', '" + readyOrder.getOrderDatum() +"')";
-							                	preparedStatement = conn.prepareStatement(sql);
-						
-							                	preparedStatement.execute();
-							                	
-							                	
-							                	fillTableWithData();
-							                	infoFrame.dispose();
-							                	infoFrame = null;
-							                }
-							                	
-							                
-						                } else {
-						                	infoPanelTable.getTable().setValueAt("", i, 4);
-						                	infoPanelTable.getTable().setValueAt(currentAndAlreadyDeliveredQuantity, i, 3);
-						                	
-						                }
-
-						               } catch (SQLException ex) {
-						                   System.out.println("Error with getOrders quantity");
-						                   System.out.println(" "+ex);
-						                   } 
+		        				   
 		        			    
 		        			   } else {
 		        				   System.out.println("Current delivered quantity is more than orderd quantity");
+		        				   breakHapend = true;
 		        				   break;
 		        			   }
 	        			   } else {
 	        				   System.out.println("Please select a Stock");
+	        				   breakHapend = true;
 	        				   break;
 	        			   }
 	        			   
 	        		   } 
 	       	     }
+            	
+            	if(breakHapend == false) {
+            		
+            	
+            	try {
+	               	sql = "SELECT orderedQuantity, shippedQuantity FROM OrderedGoods WHERE orderID="+ orderID +"";
+	                ResultSet rs = createStatement.executeQuery(sql);
+	                
+	                orderedQuantityArray = new ArrayList<Integer>();
+	                deliveredQuantityArray = new ArrayList<Integer>();
+
+	                while (rs.next()) {
+	                	orderedQuantityArray.add(rs.getInt("orderedQuantity"));
+	                	deliveredQuantityArray.add(rs.getInt("shippedQuantity"));
+	                }
+	                
+	                for(int item=0; item < orderedQuantityArray.size(); item++) {
+	                	
+	                	if(Integer.parseInt(orderedQuantityArray.get(item).toString()) == Integer.parseInt(deliveredQuantityArray.get(item).toString())) {
+	                		orderedQuantityIsDelivered++;
+	                	}
+	                } 
+	                if(orderedQuantityArray.size() == orderedQuantityIsDelivered) {
+	                	sql = "SELECT * FROM Orders WHERE orderID="+ orderID +"";
+		                rs = createStatement.executeQuery(sql);
+
+		                if (rs.next()) {
+		                	Orders readyOrder = new Orders(rs.getInt("orderID"), rs.getString("orderedFrom"), rs.getString("orderDatum"));
+		                    
+		                	sql = "DELETE FROM Orders WHERE orderID = "+ orderID +"";
+		                	PreparedStatement preparedStatement = conn.prepareStatement(sql);
+	
+		                	preparedStatement.execute();
+		                	
+		                	sql = "INSERT INTO ReadyOrders (orderID, orderedFrom, orderDatum) VALUES (" + readyOrder.getOrderID() +", '" + readyOrder.getOrderedFrom() +"', '" + readyOrder.getOrderDatum() +"')";
+		                	preparedStatement = conn.prepareStatement(sql);
+	
+		                	preparedStatement.execute();
+		                	
+		                	
+		                	fillTableWithData();
+		                	infoFrame.dispose();
+		                	infoFrame = null;
+		                }
+		                	
+	                } 
+
+	               } catch (SQLException ex) {
+	                   System.out.println("Error with getOrders quantity");
+	                   System.out.println(" "+ex);
+	                   } 
+            	}
             	
            }
      });
