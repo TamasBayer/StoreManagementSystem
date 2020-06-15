@@ -53,6 +53,9 @@ public class TabbedPaneStockSystem extends JPanel{
         sPanel.fillTableWithData();
         
         sCPanel.setConn(conn);
+        
+        oPPanel.setConn(conn);
+        oPPanel.setAllSellOrderButton();
 	}
 	
 }
