@@ -8,6 +8,8 @@ import java.sql.Statement;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import view.inventoryPanelMS.InventoryPanel;
 import view.ordersPanelMS.OrdersPanel;
@@ -62,15 +64,42 @@ public class TabbedPaneMainSystem extends JPanel {
         sOPanel.setConn(conn);
         sOPanel.fillTableWithData();
         
-        sIOPanel.setConn(conn);
-        sIOPanel.fillTableWithEmptyRows();
-        
         rOPanel.setConn(conn);
         rOPanel.fillTableWithData();
         
         rSOPanel.setConn(conn);
         rSOPanel.fillTableWithData();
+        
+        sIOPanel.setConn(conn);
+        sIOPanel.fillTableWithEmptyRows();
+        
+        pane.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent evt) {
+              JTabbedPane pane = (JTabbedPane) evt.getSource();
+
+              int sel = pane.getSelectedIndex();
+              
+              switch(sel) {
+              	case 0:
+              		iPanel.fillTableWithData();
+              		break;
+              	case 1:
+              		oPanel.fillTableWithData();
+              		break;
+              	case 2:
+              		sOPanel.fillTableWithData();
+              		break;
+              	case 3:
+              		rOPanel.fillTableWithData();
+              		break;
+              	case 4:
+              		rSOPanel.fillTableWithData();
+              		break;
+              }
+            }
+          });
 	}
+	
 	
 
 }
