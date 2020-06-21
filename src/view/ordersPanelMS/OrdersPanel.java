@@ -43,9 +43,6 @@ import model.StockNames;
 import view.classesForPanels.AddItemOrOrderPanel;
 import view.classesForPanels.SearchPanel;
 import view.classesForPanels.Table;
-import view.inventoryPanelMS.InventoryPanel;
-import view.inventoryPanelMS.InventoryTable;
-import view.inventoryPanelMS.SearchInventory;
 
 public class OrdersPanel extends JPanel{
 

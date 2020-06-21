@@ -24,9 +24,6 @@ import model.OrderedGoods;
 import model.Orders;
 import view.classesForPanels.SearchPanel;
 import view.classesForPanels.Table;
-import view.ordersPanelMS.OrdersTable;
-import view.ordersPanelMS.SearchOrders;
-import view.sellOrdersPanelMS.SellOrdersInfoPanel;
 
 public class ReadyOrdersPanel extends JPanel{
 	

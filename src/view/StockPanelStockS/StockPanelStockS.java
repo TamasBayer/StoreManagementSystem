@@ -22,7 +22,6 @@ import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
-import model.Goods;
 import model.Inventory;
 import view.classesForPanels.SearchPanel;
 import view.classesForPanels.Table;

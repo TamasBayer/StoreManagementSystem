@@ -37,18 +37,11 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
 import model.Goods;
-import model.OrderedGoods;
-import model.Orders;
 import model.SellOrders;
 import model.SoldGoods;
 import view.classesForPanels.AddItemOrOrderPanel;
 import view.classesForPanels.SearchPanel;
 import view.classesForPanels.Table;
-import view.inventoryPanelMS.InventoryPanel;
-import view.ordersPanelMS.OrdersInfoPanel;
-import view.ordersPanelMS.OrdersPanel;
-import view.ordersPanelMS.OrdersTable;
-import view.ordersPanelMS.SearchOrders;
 
 public class SellOrdersPanel extends JPanel{
 

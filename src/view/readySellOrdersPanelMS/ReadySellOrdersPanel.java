@@ -20,15 +20,11 @@ import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
-import model.OrderedGoods;
-import model.Orders;
 import model.SellOrders;
 import model.SoldGoods;
 import view.classesForPanels.SearchPanel;
 import view.classesForPanels.Table;
-import view.sellOrdersPanelMS.SearchSellOrders;
-import view.sellOrdersPanelMS.SellOrdersInfoPanel;
-import view.sellOrdersPanelMS.SellOrdersTable;
+
 
 public class ReadySellOrdersPanel extends JPanel{
 	
