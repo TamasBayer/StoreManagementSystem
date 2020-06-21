@@ -2,6 +2,7 @@ package view;
 
 import java.awt.BorderLayout;
 import java.awt.ComponentOrientation;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Toolkit;
@@ -214,6 +215,13 @@ public class MainFrame extends JFrame {
         JMenuItem changeApp = new JMenuItem("Change App");
         JMenuItem logout = new JMenuItem("Logout");
         JMenuItem exit = new JMenuItem("Exit");
+        
+        Cursor cursor = new Cursor(Cursor.HAND_CURSOR);
+        menu.setCursor(cursor);
+        openStockManager.setCursor(cursor);
+        changeApp.setCursor(cursor);
+        logout.setCursor(cursor);
+        exit.setCursor(cursor);
         
         if(choosedPanel == 1) {
         	menu.add(openStockManager);

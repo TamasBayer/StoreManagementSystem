@@ -317,6 +317,17 @@ public class Table extends JPanel{
             			Cursor cursor = new Cursor(Cursor.DEFAULT_CURSOR);
                 		table.setCursor(cursor);
             		}
+            	} else if(panelNames == "AddItemOrOrderPanel") {
+            		if(table.columnAtPoint(pt) == 2) {
+            			Cursor cursor = new Cursor(Cursor.TEXT_CURSOR);
+                		table.setCursor(cursor);
+            		} else if(table.columnAtPoint(pt) == 0){
+            			Cursor cursor = new Cursor(Cursor.HAND_CURSOR);
+                		table.setCursor(cursor);
+            		} else {
+            			Cursor cursor = new Cursor(Cursor.DEFAULT_CURSOR);
+                		table.setCursor(cursor);
+            		}
             	} else if(panelNames == "Default") {
                 		Cursor cursor = new Cursor(Cursor.DEFAULT_CURSOR);
                 		table.setCursor(cursor);
