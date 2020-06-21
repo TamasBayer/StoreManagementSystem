@@ -45,6 +45,8 @@ public class MainFrame extends JFrame {
 	
 	private Connection conn;
 	private Statement createStatement = null;
+	
+	private String userName;
 
     public MainFrame(){
         
@@ -107,6 +109,7 @@ public class MainFrame extends JFrame {
     	
     	if(textFieldData != null) {
     		String sql = "SELECT userPassword FROM Users WHERE userName='"+ textFieldData[0] +"'";
+    		userName = textFieldData[0];
     		try {
             	loadCreateStatement();
                 ResultSet rs = createStatement.executeQuery(sql);
@@ -210,7 +213,7 @@ public class MainFrame extends JFrame {
         
                 
         
-        JMenu menu = new JMenu("Tamás Bayer");
+        JMenu menu = new JMenu(userName);
         JMenuItem openStockManager = new JMenuItem("Open Stock Manager");
         JMenuItem changeApp = new JMenuItem("Change App");
         JMenuItem logout = new JMenuItem("Logout");
