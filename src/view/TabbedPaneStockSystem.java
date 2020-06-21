@@ -6,6 +6,8 @@ import java.sql.Connection;
 
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import view.StockControlPanelStockS.StockControlPanelStockS;
 import view.StockPanelStockS.StockPanelStockS;
@@ -56,6 +58,26 @@ public class TabbedPaneStockSystem extends JPanel{
         
         oPPanel.setConn(conn);
         oPPanel.setAllSellOrderButton();
+        
+        pane.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent evt) {
+              JTabbedPane pane = (JTabbedPane) evt.getSource();
+
+              int sel = pane.getSelectedIndex();
+              
+              switch(sel) {
+              	case 0:
+              		iPanel.fillTableWithData();
+              		break;
+              	case 1:
+              		sPanel.fillTableWithData();
+              		break;
+              	case 3:
+              		oPPanel.setAllSellOrderButton();
+              		break;
+              }
+            }
+          });
 	}
 	
 }
