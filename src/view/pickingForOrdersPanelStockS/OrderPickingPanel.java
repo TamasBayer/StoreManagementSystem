@@ -158,7 +158,7 @@ public class OrderPickingPanel extends JPanel {
                         		itemNumberToSetAllSellOrder = 0;
                         	}
                         	setSellOrderTextFields(soldGoods.get(itemNumberToSetAllSellOrder).getSoldItemID(), soldGoods.get(itemNumberToSetAllSellOrder).getSoldItemName(), soldGoods.get(itemNumberToSetAllSellOrder).getSoldItemQuantity(), soldGoods.size(), itemNumberToSetAllSellOrder);
-                        	
+                        	clearTextFieldsContent();
                        }
                  });
                 	
@@ -172,7 +172,7 @@ public class OrderPickingPanel extends JPanel {
                         		itemNumberToSetAllSellOrder = soldGoods.size()-1;
                         	}
                         	setSellOrderTextFields(soldGoods.get(itemNumberToSetAllSellOrder).getSoldItemID(), soldGoods.get(itemNumberToSetAllSellOrder).getSoldItemName(), soldGoods.get(itemNumberToSetAllSellOrder).getSoldItemQuantity(), soldGoods.size(), itemNumberToSetAllSellOrder);
-                        	
+                        	clearTextFieldsContent();
                        }
                  });
                }
@@ -614,7 +614,18 @@ public class OrderPickingPanel extends JPanel {
                  
                  clearTextFieldsContent();
                  
+                 System.out.println(itemNumberToSetAllSellOrder);
+                 System.out.println(soldGoods.size());
+                 
+                 
+                 
+                 
                  soldGoods = getOrderedItemsIfNotPickedAlready(Integer.parseInt(buttonText));
+                 
+                 if(soldGoods.size() == itemNumberToSetAllSellOrder) {
+                	 itemNumberToSetAllSellOrder--;
+                	 System.out.println(itemNumberToSetAllSellOrder);
+                 }
                  
                  if(soldGoods.size() == 0) {
                 	 readySellOrder = getSellOrder(buttonText);
