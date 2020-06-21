@@ -21,8 +21,8 @@ public class ReadySellOrdersInfoPanel extends JPanel{
 	private JPanel choosedSellOrderPanel;
 	private JLabel sellOrderIDLabel;
 	private JTextField sellOrderIDField;
-	private JLabel companyNameLabel;
-	private JTextField companyNameField;
+	private JLabel soldForLabel;
+	private JTextField soldForField;
 	private JLabel sellOrderDatumLabel;
 	private JTextField sellOrderDatumField;
 	
@@ -41,13 +41,13 @@ public class ReadySellOrdersInfoPanel extends JPanel{
 		choosedSellOrderPanel = new JPanel();
 		sellOrderIDLabel = new JLabel("Sell Order-ID:");
 		sellOrderIDField = new JTextField(10);
-		companyNameLabel = new JLabel("Sold for:");
-		companyNameField = new JTextField(10);
+		soldForLabel = new JLabel("Sold for:");
+		soldForField = new JTextField(10);
 		sellOrderDatumLabel = new JLabel("Sold datum:");
 		sellOrderDatumField = new JTextField(10);
 		
 		sellOrderIDField.setEditable(false);
-		companyNameField.setEditable(false);
+		soldForField.setEditable(false);
 		sellOrderDatumField.setEditable(false);
 		
 		GridBagLayout();
@@ -64,8 +64,8 @@ public class ReadySellOrdersInfoPanel extends JPanel{
         choosedSellOrderPanel.setLayout(OrderPanelLayout);
         choosedSellOrderPanel.add(sellOrderIDLabel);
         choosedSellOrderPanel.add(sellOrderIDField);
-        choosedSellOrderPanel.add(companyNameLabel);
-        choosedSellOrderPanel.add(companyNameField);
+        choosedSellOrderPanel.add(soldForLabel);
+        choosedSellOrderPanel.add(soldForField);
         choosedSellOrderPanel.add(sellOrderDatumLabel);
         choosedSellOrderPanel.add(sellOrderDatumField);
 	    Border innerBorderOrder = BorderFactory.createLineBorder(Color.GRAY);
@@ -91,4 +91,22 @@ public class ReadySellOrdersInfoPanel extends JPanel{
         c.weightx = 1;
         add(sellOrdersTable, c);
 	}
+
+	public JTextField getSellOrderIDField() {
+		return sellOrderIDField;
+	}
+
+	public JTextField getSoldForField() {
+		return soldForField;
+	}
+
+	public JTextField getSellOrderDatumField() {
+		return sellOrderDatumField;
+	}
+
+	public Table getSellOrdersTable() {
+		return sellOrdersTable;
+	}
+	
+	
 }
