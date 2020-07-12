@@ -38,7 +38,6 @@ public class DB {
                 System.out.println("Error with createStatement");
                 System.out.println(" "+ex);
             }
-            
         }
             
             try {
@@ -48,7 +47,6 @@ public class DB {
                 System.out.println(" "+ex);
             }
             
-           
             
             try {
                 ResultSet rs = dbmd.getTables(null, "APP", "INVENTORY", null);
@@ -62,7 +60,7 @@ public class DB {
                     createStatement.execute("CREATE TABLE OrderedGoods(orderID int, orderedItemID int REFERENCES Goods(itemID), itemName varchar(20), orderedQuantity int NOT NULL, shippedQuantity int)");
                     createStatement.execute("CREATE TABLE ReadyOrders(orderID int PRIMARY KEY, orderedFrom varchar(20), orderDatum varchar(20))");
                     
-                    //// Create Stocks Tables ////
+                    //// Create Stock Tables ////
                     createStatement.execute("CREATE TABLE StockNames(stockName varchar(10) PRIMARY KEY)");
                     createStatement.execute("CREATE TABLE Inventory(stockName varchar(10) REFERENCES StockNames(stockName), itemID int REFERENCES Goods(itemID), itemName varchar(20), itemQuantity int)");
                     
@@ -71,7 +69,6 @@ public class DB {
                 System.out.println("Error with resultTable");
                 System.out.println(" "+ex); 
             }
-            
        }
     
     public void addUser(Users user){
@@ -88,11 +85,11 @@ public class DB {
         }
     }
     
-    public void addStock(StockNames user){
+    public void addStock(StockNames sName){
         try {
               String sql = "INSERT INTO StockNames VALUES (?)";
               PreparedStatement preparedStatement = conn.prepareStatement(sql);
-              preparedStatement.setString(1, user.getStockName());
+              preparedStatement.setString(1, sName.getStockName());
 
               preparedStatement.execute();
         } catch (SQLException ex) {
@@ -101,29 +98,7 @@ public class DB {
         }
     }
     
-    
     public Connection getConn() {
 		return conn;
 	}
-    
-    
-    
-    public ArrayList<Goods> getAllGoods(){
-        String sql = "SELECT Goods.itemID, Goods.itemName, SUM (Inventory.itemQuantity) AS QuantityInWarehause FROM Goods, Inventory WHERE Goods.itemID=Inventory.itemID GROUP BY Goods.itemID, Goods.itemName";
-        ArrayList<Goods> goods = null;
-        try {
-            ResultSet rs = createStatement.executeQuery(sql);
-            goods = new ArrayList<>();
-
-        while (rs.next()){
-        	Goods actualItem = new Goods(rs.getInt("itemID"), rs.getString("itemName"), rs.getInt("QuantityInWarehause"));
-        	goods.add(actualItem);
-            }
-        } catch (SQLException ex) {
-            System.out.println("Error with getAllGoods");
-            System.out.println(" "+ex);
-            }    
-
-         return goods;
-}
 }

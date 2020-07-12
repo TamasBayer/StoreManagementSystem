@@ -38,21 +38,8 @@ public class AppChooserPanel extends JPanel{
         stockSystemButton.setCursor(cursor);
     }
     
-    
-    
-    public JButton getMainSystemButton() {
-		return mainSystemButton;
-	}
 
-
-
-	public JButton getStockSystemButton() {
-		return stockSystemButton;
-	}
-
-
-
-	public void layoutComponents(){
+	private void layoutComponents(){
         setLayout(new GridBagLayout());
         
         GridBagConstraints gc = new GridBagConstraints();
@@ -76,5 +63,14 @@ public class AppChooserPanel extends JPanel{
         gc.anchor = GridBagConstraints.LINE_START;
         add(stockSystemButton, gc);
     }
+	
+	public JButton getMainSystemButton() {
+		return mainSystemButton;
+	}
+
+
+	public JButton getStockSystemButton() {
+		return stockSystemButton;
+	}
         
 }

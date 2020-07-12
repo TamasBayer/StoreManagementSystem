@@ -2,6 +2,10 @@ package view.readyOrdersPanelMS;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Connection;
@@ -16,6 +20,7 @@ import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.RowFilter;
 import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
@@ -72,27 +77,92 @@ public class ReadyOrdersPanel extends JPanel{
         table.newInformationFrameIfClicked(infoPanel);
         jTable = table.getTable();
         
+        search();
         newOrdersInfoPanelTable();
     }
     
-    public void setConn(Connection conn) {
-		this.conn = conn;
+    public void newOrdersInfoPanelTable() {
+    	jTable.addMouseListener(new MouseAdapter() {
+	        public void mouseClicked(MouseEvent e) {
+	           if (e.getClickCount() == 2) {
+	        	   infoPanelOrderIDField = infoPanel.getOrderIDField();
+	        	   infoPanelCompanyNField = infoPanel.getCompanyNameField();
+	        	   infoPanelOrderDField = infoPanel.getOrderDatumField();
+	        	   
+	        	   int row = jTable.getSelectedRow();
+	          
+	        	   int orderID = Integer.parseInt(table.getModel().getValueAt(row, 0).toString());
+	        	   
+	        	   infoPanelOrderIDField.setText(table.getModel().getValueAt(row, 0).toString());
+	        	   infoPanelCompanyNField.setText(table.getModel().getValueAt(row, 1).toString());
+	        	   infoPanelOrderDField.setText(table.getModel().getValueAt(row, 2).toString());
+	        	   
+	        	   fillInfoPanelTable(orderID);
+	           }
+	        }
+	     });
 	}
     
-    public void loadCreateStatement() {
+    private void search() {
+    	
+    	searchButton.addActionListener(new ActionListener (){
+            
+            public void actionPerformed(ActionEvent e) {
+                String text = searchField.getText();
 
+                if (text.trim().length() == 0) {
+                    rowSorter.setRowFilter(null);
+                } else {
+                    rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text, searchCombo.getSelectedIndex()));
+                }
+                    
+            }
+            
+        });
+    	
+    	searchField.addKeyListener(new KeyAdapter() {
+	         public void keyPressed(KeyEvent e) {
+	             if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+	               searchButton.doClick();
+	            }
+	         }
+	      });
+    }
+    
+    public void fillTableWithData(){
 		
-		if (conn != null && createStatement == null){
-	        try {
-	             createStatement = conn.createStatement();
-	        } catch (SQLException ex) {
-	            System.out.println("Error with createStatement");
-	            System.out.println(" "+ex);
-
-	        }
-		}
+		for (int i = table.getModel().getRowCount() - 1; i > -1; i--) {
+			table.getModel().removeRow(i);
+	     }
 	        
-	}
+		ArrayList<Orders> list = getAllOrders();
+	       Object rowData[] = new Object[3];
+	       for(int i = 0; i < list.size(); i++ ){
+	           rowData[0] = list.get(i).getOrderID();
+	           rowData[1] = list.get(i).getOrderedFrom();
+	           rowData[2] = list.get(i).getOrderDatum();
+	           
+	           table.getModel().addRow(rowData);
+	           }; 
+	    }
+    
+    public void fillInfoPanelTable(int orderID) {
+    	
+    	for (int i = infoPanelTable.getModel().getRowCount() - 1; i > -1; i--) {
+ 		   infoPanelTable.getModel().removeRow(i);
+	     }
+	        
+		ArrayList<OrderedGoods> list = getOrderedItems(orderID);
+	       Object rowData[] = new Object[4];
+	       for(int i = 0; i < list.size(); i++ ){
+	           rowData[0] = list.get(i).getOrderedItemID();
+	           rowData[1] = list.get(i).getOrderedItemName();
+	           rowData[2] = list.get(i).getOrderedItemQuantity();
+	           rowData[3] = list.get(i).getShippedQuantity();
+	           
+	           infoPanelTable.getModel().addRow(rowData);
+	           }; 
+    }
     
     public ArrayList<Orders> getAllOrders(){
      	String sql = "SELECT * FROM ReadyOrders";
@@ -129,70 +199,23 @@ public class ReadyOrdersPanel extends JPanel{
              System.out.println("Error with getAllOrders");
              System.out.println(" "+ex);
              }    
-         
           return orderedGoods;
  }
     
-    public void fillTableWithData(){
+    public void loadCreateStatement() {
+
 		
-		for (int i = table.getModel().getRowCount() - 1; i > -1; i--) {
-			table.getModel().removeRow(i);
-	     }
-	        
-		ArrayList<Orders> list = getAllOrders();
-	       Object rowData[] = new Object[3];
-	       for(int i = 0; i < list.size(); i++ ){
-	           rowData[0] = list.get(i).getOrderID();
-	           rowData[1] = list.get(i).getOrderedFrom();
-	           rowData[2] = list.get(i).getOrderDatum();
-	           
-	           table.getModel().addRow(rowData);
-	           }; 
-	    }
-    
-    public void newOrdersInfoPanelTable() {
-    	jTable.addMouseListener(new MouseAdapter() {
-	        public void mouseClicked(MouseEvent e) {
-	           if (e.getClickCount() == 2) {
-	        	   infoPanelOrderIDField = infoPanel.getOrderIDField();
-	        	   infoPanelCompanyNField = infoPanel.getCompanyNameField();
-	        	   infoPanelOrderDField = infoPanel.getOrderDatumField();
-	        	   
-	        	   
-	        	   
-	        	   
-	        	   int row = jTable.getSelectedRow();
-	          
-	        	   int orderID = Integer.parseInt(table.getModel().getValueAt(row, 0).toString());
-	        	   
-	        	   infoPanelOrderIDField.setText(table.getModel().getValueAt(row, 0).toString());
-	        	   infoPanelCompanyNField.setText(table.getModel().getValueAt(row, 1).toString());
-	        	   infoPanelOrderDField.setText(table.getModel().getValueAt(row, 2).toString());
-	        	   
-	        	   
-	        	   fillInfoPanelTable(orderID);
-	              
-	           }
+		if (conn != null && createStatement == null){
+	        try {
+	             createStatement = conn.createStatement();
+	        } catch (SQLException ex) {
+	            System.out.println("Error with createStatement");
+	            System.out.println(" "+ex);
 	        }
-	     });
+		}
 	}
     
-    public void fillInfoPanelTable(int orderID) {
-    	
-
-    	for (int i = infoPanelTable.getModel().getRowCount() - 1; i > -1; i--) {
- 		   infoPanelTable.getModel().removeRow(i);
-	     }
-	        
-		ArrayList<OrderedGoods> list = getOrderedItems(orderID);
-	       Object rowData[] = new Object[4];
-	       for(int i = 0; i < list.size(); i++ ){
-	           rowData[0] = list.get(i).getOrderedItemID();
-	           rowData[1] = list.get(i).getOrderedItemName();
-	           rowData[2] = list.get(i).getOrderedItemQuantity();
-	           rowData[3] = list.get(i).getShippedQuantity();
-	           
-	           infoPanelTable.getModel().addRow(rowData);
-	           }; 
-    }
+    public void setConn(Connection conn) {
+		this.conn = conn;
+	}
 }

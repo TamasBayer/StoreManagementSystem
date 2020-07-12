@@ -3,9 +3,7 @@ package view;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.sql.Connection;
-import java.sql.Statement;
 
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
@@ -40,7 +38,7 @@ public class TabbedPaneMainSystem extends JPanel {
 		rSOPanel = new ReadySellOrdersPanel();
 		sIOPanel = new StockInOutPanel();
 
-        // Creates a JTabbedPane with tabs at the bottom.
+		
         JTabbedPane pane = new JTabbedPane(JTabbedPane.LEFT);
         pane.addTab("Inventory", iPanel);
         pane.addTab("Orders", oPanel);
@@ -73,6 +71,8 @@ public class TabbedPaneMainSystem extends JPanel {
         sIOPanel.setConn(conn);
         sIOPanel.fillTableWithEmptyRows();
         
+        ////////add change Listener to refresh the tables////////
+        
         pane.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent evt) {
               JTabbedPane pane = (JTabbedPane) evt.getSource();
@@ -95,11 +95,10 @@ public class TabbedPaneMainSystem extends JPanel {
               	case 4:
               		rSOPanel.fillTableWithData();
               		break;
+              	case 5:
+              		sIOPanel.fillComboBox();
               }
             }
           });
 	}
-	
-	
-
 }

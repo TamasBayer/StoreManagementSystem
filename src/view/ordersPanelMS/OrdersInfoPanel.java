@@ -6,7 +6,6 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -32,7 +31,6 @@ public class OrdersInfoPanel extends JPanel {
 	private Table ordersTable;
 	private String[] ordersColumnNames;
 	private JButton bookButton;
-	private JButton editButton;
 	
 	
 	public OrdersInfoPanel() {
@@ -41,13 +39,11 @@ public class OrdersInfoPanel extends JPanel {
 		ordersColumnNames = new String[] {"Item-ID", "Item name", "Ordered quantity", "Already in storage", "Current deliverd quantity", "Stock"};
 		ordersTable = new Table(ordersColumnNames, "OrdersInfoPanel");
 		bookButton = new JButton("Book");
-		editButton = new JButton("Edit Order");
 		orderTableFlowLayout = new JPanel();
 		
 		
 		Cursor cursor = new Cursor(Cursor.HAND_CURSOR);
 		bookButton.setCursor(cursor);
-		editButton.setCursor(cursor);
 		
 		choosedOrderPanel = new JPanel();
 		orderIDLabel = new JLabel("Order-ID:");
@@ -63,7 +59,6 @@ public class OrdersInfoPanel extends JPanel {
 		
 		GridBagLayout();
 		
-		ordersTable.comboBoxColumnItemID();
 	}
 	
 	private void GridBagLayout() {   
@@ -88,7 +83,6 @@ public class OrdersInfoPanel extends JPanel {
         FlowLayout OrderPanelButtonsLayout = new FlowLayout();
         orderTableFlowLayout.setLayout(OrderPanelButtonsLayout);
         orderTableFlowLayout.add(bookButton);
-  //      orderTableFlowLayout.add(editButton);
         
         Border innerBorderButtons = BorderFactory.createLineBorder(Color.GRAY);
         Border outerBorderButtons = BorderFactory.createEmptyBorder(5, 5, 5, 5);

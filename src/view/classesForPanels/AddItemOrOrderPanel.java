@@ -7,8 +7,6 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -19,7 +17,6 @@ import javax.swing.JTextField;
 import javax.swing.border.Border;
 
 import model.Goods;
-import model.Orders;
 
 public class AddItemOrOrderPanel extends JPanel {
 	
@@ -53,18 +50,18 @@ public class AddItemOrOrderPanel extends JPanel {
 		newItemNameField = new JTextField(10);
 		addItemButton = new JButton("Add");
 		
-//		addButtonPressed();
-		
 		newItemIDField.setEditable(false);
+		
+		cursor = new Cursor(Cursor.HAND_CURSOR);
+        addItemButton.setCursor(cursor);
+        
+        //////// Set Layout ////////
 		
 		setPreferredSize(new Dimension(300, 200));
         Border innerBorder = BorderFactory.createLineBorder(Color.GRAY);
         Border outerBorder = BorderFactory.createEmptyBorder(5, 5, 5, 5);
         setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
         
-        cursor = new Cursor(Cursor.HAND_CURSOR);
-        addItemButton.setCursor(cursor);
-		
         setLayout(new GridBagLayout());
         
         GridBagConstraints gc = new GridBagConstraints();
@@ -120,25 +117,26 @@ public class AddItemOrOrderPanel extends JPanel {
         
      }
 	
-/*	public void addButtonPressed(){
-		addItemButton.addActionListener(new ActionListener(){
-
-            
-            public void actionPerformed(ActionEvent e) {
-                
-            	newItemNameField.setText(null);
-            }
-        });
-
-    }        */
-	
-	public void layoutComponentsAddOrder(ArrayList<Goods> goods) {
+	public void layoutComponentsAddOrder(ArrayList<Goods> goods, Boolean sellOrderOrNot) {
 		setPreferredSize(new Dimension(1000,600));
 		
-		ordersColumnNames = new String[] {"Item-ID", "Item-Name", "Ordered quantity"};
+		if(sellOrderOrNot) {
+			ordersColumnNames = new String[] {"Item-ID", "Item-Name", "Sold quantity"};
+			orderIDLabel = new JLabel("Sell order-ID:");
+			companyNameLabel = new JLabel("Sold for:");
+			orderDatumLabel = new JLabel("Sell Order datum:");
+		} else {
+			ordersColumnNames = new String[] {"Item-ID", "Item-Name", "Ordered quantity"};
+			orderIDLabel = new JLabel("Order-ID:");
+			companyNameLabel = new JLabel("Ordered from:");
+			orderDatumLabel = new JLabel("Order datum:");
+		}
+		
 		ordersTable = new Table(ordersColumnNames, "AddItemOrOrderPanel");
+		orderIDField = new JTextField(10);
+		companyNameField = new JTextField(10);
+		orderDatumField = new JTextField(10);
 		addOrderButton = new JButton("Add");
-		orderTableFlowLayout = new JPanel();
 		
 		ordersTable.fillWithEmptyRows();
 		ordersTable.comboBoxColumnItemID(goods);
@@ -146,21 +144,17 @@ public class AddItemOrOrderPanel extends JPanel {
 		Cursor cursor = new Cursor(Cursor.HAND_CURSOR);
 		addOrderButton.setCursor(cursor);
 		
-		infoOrderPanel = new JPanel();
-		orderIDLabel = new JLabel("Order-ID:");
-		orderIDField = new JTextField(10);
-		companyNameLabel = new JLabel("Ordered from:");
-		companyNameField = new JTextField(10);
-		orderDatumLabel = new JLabel("Order datum:");
-		orderDatumField = new JTextField(10);
-		
 		orderIDField.setEditable(false);
+		
+		//////// Set layout ////////
 		
 		setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
         
+        infoOrderPanel = new JPanel();
         infoOrderPanel.setPreferredSize(new Dimension(50, 50));
         
+        orderTableFlowLayout = new JPanel();
         
         FlowLayout OrderPanelLayout = new FlowLayout();
         infoOrderPanel.setLayout(OrderPanelLayout);
@@ -211,164 +205,6 @@ public class AddItemOrOrderPanel extends JPanel {
         add(orderTableFlowLayout, c);
 	}
 	
-	public void layoutComponentsAddSellOrder(ArrayList<Goods> goods) {
-		setPreferredSize(new Dimension(1000,600));
-		
-		ordersColumnNames = new String[] {"Item-ID", "Item-Name", "Sold quantity"};
-		ordersTable = new Table(ordersColumnNames, "AddItemOrOrderPanel");
-		addOrderButton = new JButton("Add");
-		orderTableFlowLayout = new JPanel();
-		
-		ordersTable.fillWithEmptyRows();
-		ordersTable.comboBoxColumnItemID(goods);
-		
-		Cursor cursor = new Cursor(Cursor.HAND_CURSOR);
-		addOrderButton.setCursor(cursor);
-		
-		infoOrderPanel = new JPanel();
-		orderIDLabel = new JLabel("Sell order-ID:");
-		orderIDField = new JTextField(10);
-		companyNameLabel = new JLabel("Sold for:");
-		companyNameField = new JTextField(10);
-		orderDatumLabel = new JLabel("Sold datum:");
-		orderDatumField = new JTextField(10);
-		
-		orderIDField.setEditable(false);
-		
-		setLayout(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
-        
-        infoOrderPanel.setPreferredSize(new Dimension(50, 50));
-        
-        
-        FlowLayout OrderPanelLayout = new FlowLayout();
-        infoOrderPanel.setLayout(OrderPanelLayout);
-        infoOrderPanel.add(orderIDLabel);
-        infoOrderPanel.add(orderIDField);
-        infoOrderPanel.add(companyNameLabel);
-        infoOrderPanel.add(companyNameField);
-        infoOrderPanel.add(orderDatumLabel);
-        infoOrderPanel.add(orderDatumField);
-	    Border innerBorderOrder = BorderFactory.createLineBorder(Color.GRAY);
-        Border outerBorderOrder = BorderFactory.createEmptyBorder(5, 5, 5, 5);
-        infoOrderPanel.setBorder(BorderFactory.createCompoundBorder(outerBorderOrder, innerBorderOrder));
-        
-        FlowLayout OrderPanelButtonsLayout = new FlowLayout(FlowLayout.RIGHT);
-        orderTableFlowLayout.setLayout(OrderPanelButtonsLayout);
-        orderTableFlowLayout.add(addOrderButton);
-        
-        Border innerBorderButtons = BorderFactory.createLineBorder(Color.GRAY);
-        Border outerBorderButtons = BorderFactory.createEmptyBorder(5, 5, 5, 5);
-        orderTableFlowLayout.setBorder(BorderFactory.createCompoundBorder(outerBorderButtons, innerBorderButtons));
-        
-        
-        c.gridx = 0;
-        c.gridy = 0;
-        c.gridheight = 1;
-        c.gridwidth = 1;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.weighty = 0;
-        c.weightx = 1;
-        add(infoOrderPanel, c);
-        
-        c.gridx = 0;
-        c.gridy = 1;
-        c.gridheight = 1;
-        c.gridwidth = 1;
-        c.fill = GridBagConstraints.BOTH;
-        c.weighty = 4;
-        c.weightx = 1;
-        add(ordersTable, c);
-        
-        c.gridx = 0;
-        c.gridy = 2;
-        c.gridheight = 1;
-        c.gridwidth = 1;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.weighty = 0;
-        c.weightx = 1;
-        add(orderTableFlowLayout, c);
-	}
-	
-	public void layoutComponentsAddSellOrder() {
-		setPreferredSize(new Dimension(1000,600));
-		
-		ordersColumnNames = new String[] {"Item-ID", "Item-Name", "Sold quantity"};
-		ordersTable = new Table(ordersColumnNames, "AddItemOrOrderPanel");
-		addOrderButton = new JButton("Add");
-		orderTableFlowLayout = new JPanel();
-		
-		ordersTable.fillWithEmptyRows();
-		ordersTable.comboBoxColumnItemID();
-		
-		Cursor cursor = new Cursor(Cursor.HAND_CURSOR);
-		addOrderButton.setCursor(cursor);
-		
-		infoOrderPanel = new JPanel();
-		orderIDLabel = new JLabel("Sell order-ID:");
-		orderIDField = new JTextField(10);
-		companyNameLabel = new JLabel("Sold for:");
-		companyNameField = new JTextField(10);
-		orderDatumLabel = new JLabel("Sold datum:");
-		orderDatumField = new JTextField(10);
-		
-		orderIDField.setEditable(false);
-		
-		setLayout(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
-        
-        infoOrderPanel.setPreferredSize(new Dimension(50, 50));
-        
-        
-        FlowLayout OrderPanelLayout = new FlowLayout();
-        infoOrderPanel.setLayout(OrderPanelLayout);
-        infoOrderPanel.add(orderIDLabel);
-        infoOrderPanel.add(orderIDField);
-        infoOrderPanel.add(companyNameLabel);
-        infoOrderPanel.add(companyNameField);
-        infoOrderPanel.add(orderDatumLabel);
-        infoOrderPanel.add(orderDatumField);
-	    Border innerBorderOrder = BorderFactory.createLineBorder(Color.GRAY);
-        Border outerBorderOrder = BorderFactory.createEmptyBorder(5, 5, 5, 5);
-        infoOrderPanel.setBorder(BorderFactory.createCompoundBorder(outerBorderOrder, innerBorderOrder));
-        
-        FlowLayout OrderPanelButtonsLayout = new FlowLayout(FlowLayout.RIGHT);
-        orderTableFlowLayout.setLayout(OrderPanelButtonsLayout);
-        orderTableFlowLayout.add(addOrderButton);
-        
-        Border innerBorderButtons = BorderFactory.createLineBorder(Color.GRAY);
-        Border outerBorderButtons = BorderFactory.createEmptyBorder(5, 5, 5, 5);
-        orderTableFlowLayout.setBorder(BorderFactory.createCompoundBorder(outerBorderButtons, innerBorderButtons));
-        
-        
-        c.gridx = 0;
-        c.gridy = 0;
-        c.gridheight = 1;
-        c.gridwidth = 1;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.weighty = 0;
-        c.weightx = 1;
-        add(infoOrderPanel, c);
-        
-        c.gridx = 0;
-        c.gridy = 1;
-        c.gridheight = 1;
-        c.gridwidth = 1;
-        c.fill = GridBagConstraints.BOTH;
-        c.weighty = 4;
-        c.weightx = 1;
-        add(ordersTable, c);
-        
-        c.gridx = 0;
-        c.gridy = 2;
-        c.gridheight = 1;
-        c.gridwidth = 1;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.weighty = 0;
-        c.weightx = 1;
-        add(orderTableFlowLayout, c);
-	}
-
 	public JTextField getNewItemIDField() {
 		return newItemIDField;
 	}

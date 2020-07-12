@@ -2,6 +2,10 @@ package view.readySellOrdersPanelMS;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Connection;
@@ -16,6 +20,7 @@ import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.RowFilter;
 import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
@@ -74,26 +79,91 @@ public class ReadySellOrdersPanel extends JPanel{
         jTable = table.getTable();
         
         newOrdersInfoPanelTable();
+        search();
     }
     
-    public void setConn(Connection conn) {
-		this.conn = conn;
+    private void search() {
+    	
+    	searchButton.addActionListener(new ActionListener (){
+            
+            public void actionPerformed(ActionEvent e) {
+                String text = searchField.getText();
+
+                if (text.trim().length() == 0) {
+                    rowSorter.setRowFilter(null);
+                } else {
+                    rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text, searchCombo.getSelectedIndex()));
+                }
+                    
+            }
+            
+        });
+    	
+    	searchField.addKeyListener(new KeyAdapter() {
+	         public void keyPressed(KeyEvent e) {
+	             if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+	               searchButton.doClick();
+	            }
+	         }
+	      });
+    }
+    
+    public void newOrdersInfoPanelTable() {
+    	jTable.addMouseListener(new MouseAdapter() {
+	        public void mouseClicked(MouseEvent e) {
+	           if (e.getClickCount() == 2) {
+	        	   infoPanelOrderIDField = infoPanel.getSellOrderIDField();
+	        	   infoPanelSoldForField = infoPanel.getSoldForField();
+	        	   infoPanelSellOrderDField = infoPanel.getSellOrderDatumField();
+	        	   
+	        	   int row = jTable.getSelectedRow();
+	          
+	        	   int orderID = Integer.parseInt(table.getModel().getValueAt(row, 0).toString());
+	        	   
+	        	   infoPanelOrderIDField.setText(table.getModel().getValueAt(row, 0).toString());
+	        	   infoPanelSoldForField.setText(table.getModel().getValueAt(row, 1).toString());
+	        	   infoPanelSellOrderDField.setText(table.getModel().getValueAt(row, 2).toString());
+	        	   
+	        	   fillInfoPanelTable(orderID);
+	           }
+	        }
+	     });
 	}
     
-    public void loadCreateStatement() {
-
+    public void fillTableWithData(){
 		
-		if (conn != null && createStatement == null){
-	        try {
-	             createStatement = conn.createStatement();
-	        } catch (SQLException ex) {
-	            System.out.println("Error with createStatement");
-	            System.out.println(" "+ex);
-
-	        }
-		}
+		for (int i = table.getModel().getRowCount() - 1; i > -1; i--) {
+			table.getModel().removeRow(i);
+	     }
 	        
-	}
+		ArrayList<SellOrders> list = getAllOrders();
+	       Object rowData[] = new Object[3];
+	       for(int i = 0; i < list.size(); i++ ){
+	           rowData[0] = list.get(i).getSellOrderID();
+	           rowData[1] = list.get(i).getSoldFor();
+	           rowData[2] = list.get(i).getSellOrderDatum();
+	           
+	           table.getModel().addRow(rowData);
+	           }; 
+	    }
+    
+    private void fillInfoPanelTable(int orderID) {
+
+    	for (int i = infoPanelTable.getModel().getRowCount() - 1; i > -1; i--) {
+ 		   infoPanelTable.getModel().removeRow(i);
+	     }
+	        
+		ArrayList<SoldGoods> list = getSoldItems(orderID);
+	       Object rowData[] = new Object[4];
+	       for(int i = 0; i < list.size(); i++ ){
+	           rowData[0] = list.get(i).getSoldItemID();
+	           rowData[1] = list.get(i).getSoldItemName();
+	           rowData[2] = list.get(i).getSoldItemQuantity();
+	           rowData[3] = list.get(i).getPickedQuantity();
+	           
+	           infoPanelTable.getModel().addRow(rowData);
+	           }; 
+    }
     
     public ArrayList<SellOrders> getAllOrders(){
      	String sql = "SELECT * FROM ReadySellOrders";
@@ -134,66 +204,19 @@ public class ReadySellOrdersPanel extends JPanel{
           return soldGoods;
  }
     
-    public void fillTableWithData(){
-		
-		for (int i = table.getModel().getRowCount() - 1; i > -1; i--) {
-			table.getModel().removeRow(i);
-	     }
-	        
-		ArrayList<SellOrders> list = getAllOrders();
-	       Object rowData[] = new Object[3];
-	       for(int i = 0; i < list.size(); i++ ){
-	           rowData[0] = list.get(i).getSellOrderID();
-	           rowData[1] = list.get(i).getSoldFor();
-	           rowData[2] = list.get(i).getSellOrderDatum();
-	           
-	           table.getModel().addRow(rowData);
-	           }; 
-	    }
-    
-    public void newOrdersInfoPanelTable() {
-    	jTable.addMouseListener(new MouseAdapter() {
-	        public void mouseClicked(MouseEvent e) {
-	           if (e.getClickCount() == 2) {
-	        	   infoPanelOrderIDField = infoPanel.getSellOrderIDField();
-	        	   infoPanelSoldForField = infoPanel.getSoldForField();
-	        	   infoPanelSellOrderDField = infoPanel.getSellOrderDatumField();
-	        	   
-	        	   
-	        	   
-	        	   
-	        	   int row = jTable.getSelectedRow();
-	          
-	        	   int orderID = Integer.parseInt(table.getModel().getValueAt(row, 0).toString());
-	        	   
-	        	   infoPanelOrderIDField.setText(table.getModel().getValueAt(row, 0).toString());
-	        	   infoPanelSoldForField.setText(table.getModel().getValueAt(row, 1).toString());
-	        	   infoPanelSellOrderDField.setText(table.getModel().getValueAt(row, 2).toString());
-	        	   
-	        	   
-	        	   fillInfoPanelTable(orderID);
-	              
-	           }
+    public void loadCreateStatement() {
+
+		if (conn != null && createStatement == null){
+	        try {
+	             createStatement = conn.createStatement();
+	        } catch (SQLException ex) {
+	            System.out.println("Error with createStatement");
+	            System.out.println(" "+ex);
 	        }
-	     });
+		}
 	}
     
-    private void fillInfoPanelTable(int orderID) {
-    	
-
-    	for (int i = infoPanelTable.getModel().getRowCount() - 1; i > -1; i--) {
- 		   infoPanelTable.getModel().removeRow(i);
-	     }
-	        
-		ArrayList<SoldGoods> list = getSoldItems(orderID);
-	       Object rowData[] = new Object[4];
-	       for(int i = 0; i < list.size(); i++ ){
-	           rowData[0] = list.get(i).getSoldItemID();
-	           rowData[1] = list.get(i).getSoldItemName();
-	           rowData[2] = list.get(i).getSoldItemQuantity();
-	           rowData[3] = list.get(i).getPickedQuantity();
-	           
-	           infoPanelTable.getModel().addRow(rowData);
-	           }; 
-    }
+    public void setConn(Connection conn) {
+		this.conn = conn;
+	}
 }

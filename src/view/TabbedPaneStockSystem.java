@@ -33,7 +33,7 @@ public class TabbedPaneStockSystem extends JPanel{
 		sCPanel = new StockControlPanelStockS();
 		oPPanel = new OrderPickingPanel();
 		
-        // Creates a JTabbedPane with tabs at the bottom.
+		
         JTabbedPane pane = new JTabbedPane();
         pane.addTab("Inventory", iPanel);
         pane.addTab("Stock", sPanel);
@@ -59,6 +59,8 @@ public class TabbedPaneStockSystem extends JPanel{
         oPPanel.setConn(conn);
         oPPanel.setAllSellOrderButton();
         
+        ////////add change Listener to refresh the tables////////
+        
         pane.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent evt) {
               JTabbedPane pane = (JTabbedPane) evt.getSource();
@@ -79,5 +81,4 @@ public class TabbedPaneStockSystem extends JPanel{
             }
           });
 	}
-	
 }

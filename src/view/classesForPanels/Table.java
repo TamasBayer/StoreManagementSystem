@@ -5,10 +5,9 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 import javax.swing.DefaultCellEditor;
@@ -22,7 +21,6 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 
 import model.Goods;
-import model.Orders;
 import model.StockNames;
 
 public class Table extends JPanel{
@@ -31,6 +29,10 @@ public class Table extends JPanel{
 	private TableRowSorter<DefaultTableModel> rowSorter;
 	private DefaultTableModel model;
 	JFrame frame = null;
+	
+	private Cursor defaultCursor;
+	private Cursor handCursor;
+	private Cursor textCursor;
 	
 	public Table(String[] colNames){
     	
@@ -62,8 +64,12 @@ public class Table extends JPanel{
        
        add(new JScrollPane(table), BorderLayout.CENTER);
        
+       defaultCursor = new Cursor(Cursor.DEFAULT_CURSOR);
+       handCursor = new Cursor(Cursor.HAND_CURSOR);
+       textCursor = new Cursor(Cursor.TEXT_CURSOR);
        
        differentCursor("");
+       removeHeadersMouseListener();
       
    }
     
@@ -126,8 +132,12 @@ public class Table extends JPanel{
        
        add(new JScrollPane(table), BorderLayout.CENTER);
        
+       defaultCursor = new Cursor(Cursor.DEFAULT_CURSOR);
+       handCursor = new Cursor(Cursor.HAND_CURSOR);
+       textCursor = new Cursor(Cursor.TEXT_CURSOR);
        
        differentCursor(panelNames);
+       removeHeadersMouseListener();
       
    }
     
@@ -158,22 +168,11 @@ public class Table extends JPanel{
     	firstColumn.setCellEditor(new DefaultCellEditor(comboBox));
     }
     
-    public void comboBoxColumnItemID() {
-    	TableColumn firstColumn = table.getColumnModel().getColumn(0);
-    	
-    	JComboBox comboBox = new JComboBox();
-    	comboBox.addItem("");
-    	comboBox.addItem("1005");
-    	comboBox.addItem("1323");
-    	comboBox.addItem("1324");
-    	comboBox.addItem("1325");
-    	comboBox.addItem("1326");
-    	firstColumn.setCellEditor(new DefaultCellEditor(comboBox));
-    }
     
     public void comboBoxColumnInOutPanel(ArrayList<Goods> goods, ArrayList<StockNames> stocks) {
     	TableColumn firstColumn = table.getColumnModel().getColumn(0);
 
+    	////////// Adding In/Out to comboBox //////////
     	
     	JComboBox comboBoxInOut = new JComboBox();
     	comboBoxInOut.addItem("");
@@ -181,18 +180,20 @@ public class Table extends JPanel{
     	comboBoxInOut.addItem("Out");
     	firstColumn.setCellEditor(new DefaultCellEditor(comboBoxInOut));
     	
-    	TableColumn secondColumn = table.getColumnModel().getColumn(1);
+    	//////////Adding ItemIDs to comboBox //////////
     	
-    	JComboBox comboBoxItemName = new JComboBox();
+    	TableColumn secondColumn = table.getColumnModel().getColumn(1);
+    	JComboBox comboBoxItemID = new JComboBox();
 
-    	comboBoxItemName.addItem("");
+    	comboBoxItemID.addItem("");
     	for(int i=0; i < goods.size(); i++) {
-    		comboBoxItemName.addItem(goods.get(i).getItemID());
+    		comboBoxItemID.addItem(goods.get(i).getItemID());
     	}
-    	secondColumn.setCellEditor(new DefaultCellEditor(comboBoxItemName));
+    	secondColumn.setCellEditor(new DefaultCellEditor(comboBoxItemID));
+    	
+    	//////////Adding Stocks to comboBox //////////
     	
     	TableColumn lastColumn = table.getColumnModel().getColumn(4);
-    	
     	JComboBox comboBoxStockNames = new JComboBox();
     	
     	comboBoxStockNames.addItem("");
@@ -202,18 +203,6 @@ public class Table extends JPanel{
     	lastColumn.setCellEditor(new DefaultCellEditor(comboBoxStockNames));
     	
     }
-    
-
-	public void fillWithData() {
-		model.insertRow(0,new Object[]{"1322","Apple", "50"});
-		model.insertRow(1,new Object[]{"1323","Bread", "213"});
-		model.insertRow(2,new Object[]{"1324","Strawberry", "32"});
-		model.insertRow(3,new Object[]{"1325","Salat", "43"});
-		model.insertRow(4,new Object[]{"1326","Retek", "2111"});
-	
-		
-		
-	}
 	
 	public void fillWithEmptyRows() {
 		
@@ -221,37 +210,20 @@ public class Table extends JPanel{
 			model.removeRow(i);
 	     }
 		
-		model.insertRow(0,new Object[]{"","",""});
-		model.insertRow(1,new Object[]{"","",""});
-		model.insertRow(2,new Object[]{"","",""});
-		model.insertRow(3,new Object[]{"","",""});
-		model.insertRow(4,new Object[]{"","",""});
-		model.insertRow(5,new Object[]{"","",""});
-		model.insertRow(6,new Object[]{"","",""});
-		model.insertRow(7,new Object[]{"","",""});
-		model.insertRow(8,new Object[]{"","",""});
-		model.insertRow(9,new Object[]{"","",""});
-		model.insertRow(10,new Object[]{"","",""});
-		model.insertRow(11,new Object[]{"","",""});
-		model.insertRow(12,new Object[]{"","",""});
-		model.insertRow(13,new Object[]{"","",""});
-		model.insertRow(14,new Object[]{"","",""});
-		model.insertRow(15,new Object[]{"","",""});
-		model.insertRow(16,new Object[]{"","",""});
-		model.insertRow(17,new Object[]{"","",""});
-		model.insertRow(18,new Object[]{"","",""});
-		model.insertRow(19,new Object[]{"","",""});
-		model.insertRow(20,new Object[]{"","",""});
-		model.insertRow(21,new Object[]{"","",""});
-		model.insertRow(22,new Object[]{"","",""});
-		model.insertRow(23,new Object[]{"","",""});
-		model.insertRow(24,new Object[]{"","",""});
-		model.insertRow(25,new Object[]{"","",""});
-		model.insertRow(26,new Object[]{"","",""});
-		model.insertRow(27,new Object[]{"","",""});
-		model.insertRow(28,new Object[]{"","",""});
-		model.insertRow(29,new Object[]{"","",""});
-		model.insertRow(30,new Object[]{"","",""});
+		for(int rows = 0; rows < 31; rows++) {
+			model.insertRow(rows,new Object[]{"","",""});
+		}
+	}
+	
+	public void fillWithEmptyRowsStockInOut() {
+		
+		for (int i = model.getRowCount() - 1; i > -1; i--) {
+			model.removeRow(i);
+	     }
+		
+		for(int rows = 0; rows < 31; rows++) {
+			model.insertRow(rows,new Object[]{"","","","",""});
+		}
 	}
 	
 	public void newInformationFrameIfClicked(JPanel infoPanel) {
@@ -259,8 +231,6 @@ public class Table extends JPanel{
 	        public void mouseClicked(MouseEvent e) {
 	           if (e.getClickCount() == 2) {
 
-	        	   
-	              
 	              if (frame == null) {
 		        	   
 		              frame = new JFrame();
@@ -299,45 +269,44 @@ public class Table extends JPanel{
             	Point pt = e.getPoint();
             	
             	if(panelNames == "OrdersInfoPanel") {
-            		if(table.columnAtPoint(pt) > 3) {
-            			Cursor cursor = new Cursor(Cursor.TEXT_CURSOR);
-                		table.setCursor(cursor);
+            		if(table.columnAtPoint(pt) == 4) {
+                		table.setCursor(textCursor);
+            		} else if(table.columnAtPoint(pt) == 5){
+                		table.setCursor(handCursor);
             		} else {
-            			Cursor cursor = new Cursor(Cursor.DEFAULT_CURSOR);
-                		table.setCursor(cursor);
+                		table.setCursor(defaultCursor);
             		}
             	} else if(panelNames == "StockInOutPanel") {
             		if(table.columnAtPoint(pt) > 2 && table.columnAtPoint(pt) < 4 ) {
-            			Cursor cursor = new Cursor(Cursor.TEXT_CURSOR);
-                		table.setCursor(cursor);
+                		table.setCursor(textCursor);
             		} else if(table.columnAtPoint(pt) < 2 || table.columnAtPoint(pt) == 4){
-            			Cursor cursor = new Cursor(Cursor.HAND_CURSOR);
-                		table.setCursor(cursor);
+                		table.setCursor(handCursor);
             		} else {
-            			Cursor cursor = new Cursor(Cursor.DEFAULT_CURSOR);
-                		table.setCursor(cursor);
+                		table.setCursor(defaultCursor);
             		}
             	} else if(panelNames == "AddItemOrOrderPanel") {
             		if(table.columnAtPoint(pt) == 2) {
-            			Cursor cursor = new Cursor(Cursor.TEXT_CURSOR);
-                		table.setCursor(cursor);
+                		table.setCursor(textCursor);
             		} else if(table.columnAtPoint(pt) == 0){
-            			Cursor cursor = new Cursor(Cursor.HAND_CURSOR);
-                		table.setCursor(cursor);
+                		table.setCursor(handCursor);
             		} else {
-            			Cursor cursor = new Cursor(Cursor.DEFAULT_CURSOR);
-                		table.setCursor(cursor);
+                		table.setCursor(defaultCursor);
             		}
             	} else if(panelNames == "Default") {
-                		Cursor cursor = new Cursor(Cursor.DEFAULT_CURSOR);
-                		table.setCursor(cursor);
+                		table.setCursor(defaultCursor);
             	} else {
-            		Cursor cursor = new Cursor(Cursor.HAND_CURSOR);
-                    table.setCursor(cursor);
+                    table.setCursor(handCursor);
             	}
             	
             }
         });
+	}
+	
+	public void removeHeadersMouseListener() {
+		
+		for(MouseListener listener : table.getTableHeader().getMouseListeners()){
+	        table.getTableHeader().removeMouseListener(listener);
+	    }
 	}
 	
 	public void deleteRows() {
@@ -346,7 +315,6 @@ public class Table extends JPanel{
 	     }
 	}
 	
-
     public TableRowSorter<DefaultTableModel> getRowSorter() {
 		return rowSorter;
 	}
@@ -362,7 +330,4 @@ public class Table extends JPanel{
 	public JFrame getFrame() {
 		return frame;
 	}
-	
-	
-	
 }

@@ -17,16 +17,15 @@ import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JLabel;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
 import model.Goods;
 import model.Inventory;
-import model.OrderedGoods;
 import model.StockNames;
 import view.classesForPanels.Table;
 
@@ -36,6 +35,8 @@ public class StockInOutPanel extends JPanel {
 	private Table ordersTable;
 	private String[] ordersColumnNames;
 	private JButton bookButton;
+	
+	private JFrame warningMessageFrame;
 	
 	private Connection conn;
     private Statement createStatement = null;
@@ -49,16 +50,19 @@ public class StockInOutPanel extends JPanel {
 		bookButton = new JButton("Book");
 		orderTableFlowLayout = new JPanel();
 		
+		warningMessageFrame = new JFrame();
+		
 		AutoFillItemName();
 		bookButtonPressed();
-		
 		
 		Cursor cursor = new Cursor(Cursor.HAND_CURSOR);
 		bookButton.setCursor(cursor);
 		
+		
+		//////// Set Layout ////////
+		
 		setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
-        
         
         FlowLayout OrderPanelButtonsLayout = new FlowLayout(FlowLayout.RIGHT);
         orderTableFlowLayout.setLayout(OrderPanelButtonsLayout);
@@ -88,112 +92,9 @@ public class StockInOutPanel extends JPanel {
         add(orderTableFlowLayout, c);
 	}
 	
-	public void setConn(Connection conn) {
-		this.conn = conn;
-	}
-    
-    public void loadCreateStatement() {
-
-		
-		if (conn != null && createStatement == null){
-	        try {
-	             createStatement = conn.createStatement();
-	        } catch (SQLException ex) {
-	            System.out.println("Error with createStatement");
-	            System.out.println(" "+ex);
-
-	        }
-		}
-	        
-	}
 	
-	public ArrayList<Goods> getAllGoods(){
-        // String sql = "SELECT Goods.itemID, Goods.itemName, SUM (Inventory.itemQuantity) AS QuantityInWarehause FROM Goods, Inventory WHERE Goods.itemID=Inventory.itemID GROUP BY Goods.itemID, Goods.itemName";
-     	String sql = "SELECT * FROM Goods";
-     	ArrayList<Goods> goods = null;
-         loadCreateStatement();
-         try {
-             ResultSet rs = createStatement.executeQuery(sql);
-             goods = new ArrayList<>();
-
-         while (rs.next()){
-         	Goods actualItem = new Goods(rs.getInt("itemID"), rs.getString("itemName"), 0);
-         	goods.add(actualItem);
-             }
-         } catch (SQLException ex) {
-             System.out.println("Error with getAllGoods");
-             System.out.println(" "+ex);
-             }    
-         
-          return goods;
-	}
-	
-	public ArrayList<StockNames> getAllStocks(){
-       String sql = "SELECT * FROM StockNames";
-     	ArrayList<StockNames> stocks = null;
-         loadCreateStatement();
-         try {
-             ResultSet rs = createStatement.executeQuery(sql);
-             stocks = new ArrayList<>();
-
-         while (rs.next()){
-        	 StockNames actualItem = new StockNames(rs.getString("stockName"));
-         	stocks.add(actualItem);
-             }
-         } catch (SQLException ex) {
-             System.out.println("Error with getAllGoods");
-             System.out.println(" "+ex);
-             }    
-         
-          return stocks;
-	}
-	
-	public void fillTableWithEmptyRows() {
-		ordersTable.fillWithEmptyRows();
-		ordersTable.comboBoxColumnInOutPanel(getAllGoods(), getAllStocks());
-	}
-    
-	public void AutoFillItemName() {
-		ordersTable.getModel().addTableModelListener(new TableModelListener() {
-        public void tableChanged(TableModelEvent e) {
-            int row = e.getFirstRow();
-            int column = e.getColumn();
-            if (e.getType() == TableModelEvent.UPDATE && column == 1) {
-            	
-               
-               
-               String itemID = ordersTable.getModel().getValueAt(row, 1).toString();
-               
-            if(itemID != "") {
-            	 String sql = "SELECT itemName FROM Goods WHERE itemID="+ Integer.parseInt(itemID) +"";
-		       		try {
-		               	loadCreateStatement();
-		                ResultSet rs = createStatement.executeQuery(sql);
-
-		                if (rs.next()) {
-		                	ordersTable.getTable().setValueAt(rs.getString("itemName"), row, 2);
-		                    
-		                }
-		                
-		                   
-		              
-		               } catch (SQLException ex) {
-		                   System.out.println("Error with setItemName");
-		                   System.out.println(" "+ex);
-		                   } 
-            } else {
-            	ordersTable.getTable().setValueAt("", row, 2);
-            }
-               
-        }
-    }
-
-		});
-	}
-	
-	public void bookButtonPressed(){
+	private void bookButtonPressed(){
 		bookButton.addActionListener(new ActionListener(){
-
             
             public void actionPerformed(ActionEvent e) {
             
@@ -213,7 +114,6 @@ public class StockInOutPanel extends JPanel {
 	        	int newQuantity = 0;
 	        	
 	        	
-	        	
 	        	Boolean alreadyInArray = false;
 	        	
 	        	String regex = "\\d+";
@@ -223,49 +123,45 @@ public class StockInOutPanel extends JPanel {
             	for(int row=0; row < 31; row++) {
                 	
             		if(ordersTable.getModel().getValueAt(row, 0).toString() != "" && ordersTable.getModel().getValueAt(row, 1).toString() != "") {
-                		if(ordersTable.getModel().getValueAt(row, 3).toString().matches(regex)) {
+                		
+            			if(ordersTable.getModel().getValueAt(row, 3).toString().matches(regex)) {
+                			
                 			if(ordersTable.getModel().getValueAt(row, 4).toString() != "") {
+                			
                 			stockInOrOut = ordersTable.getModel().getValueAt(row, 0).toString();
                 			stockName = ordersTable.getModel().getValueAt(row, 4).toString();
                 			itemID = Integer.parseInt(ordersTable.getModel().getValueAt(row, 1).toString());
             	        	itemName = ordersTable.getModel().getValueAt(row, 1).toString();
             	        	newItemQuantity = Integer.parseInt(ordersTable.getModel().getValueAt(row, 3).toString());
 
-            	        	System.out.println("lefutok 1");
             	        	alreadyInArray = false;
             	        	
             	        	for(Inventory inventory : inventoryArray) {
-            	        	    if(inventory!=null && itemID == inventory.getItemID()) {
+            	        	    if(inventory!=null && itemID == inventory.getItemID() && stockInOrOut == inventory.getStockInOrOut()) {
             	        	    	
             	        	    	inventory.setItemQuantityInStock(inventory.getItemQuantityInStock() + newItemQuantity);
             	        	    	alreadyInArray = true;
-            	        	    	System.out.println("lefutok 2");
             	        	        break;
             	        	    } 
             	        	}
             	        	if(alreadyInArray == false) {
             	        		Inventory actualInventory = new Inventory(stockInOrOut, stockName, itemID, itemName, newItemQuantity);
             	        		inventoryArray.add(actualInventory);
-                        		System.out.println("lefutok 3");
             	        		}
             	        		
                 			} else {
-                				System.out.println("Stock Name missing");
+                				JOptionPane.showMessageDialog(warningMessageFrame, "Stock Name missing", "Missing", JOptionPane.WARNING_MESSAGE);
                     			missingError = 1;
                     			row = 31;
                 			}
                     		
                 		} else {
-                			System.out.println("Item quantity missing or not a positive number");
+            				JOptionPane.showMessageDialog(warningMessageFrame, "Item quantity missing or not a positive number", "Missing", JOptionPane.WARNING_MESSAGE);
                 			missingError = 1;
                 			row = 31;
                 		}
-            	        	
-                	} 
-                		
-                	
-                	
-                    	
+                	} else {
+                	}
                 }
             	
             	if(missingError == 0) {
@@ -277,8 +173,6 @@ public class StockInOutPanel extends JPanel {
                     	   
                     	   String sql = "SELECT * FROM Inventory WHERE stockName='"+ inventoryArray.get(i).getStockName() +"' AND itemID="+ inventoryArray.get(i).getItemID() +"";
 	                        ResultSet rs = createStatement.executeQuery(sql);
-	                        
-	                        System.out.println("Lefut inOut 1");
 	                        
 	                        if (rs.next()) {
 	                        	oldQuantity = rs.getInt("itemQuantity");
@@ -293,11 +187,8 @@ public class StockInOutPanel extends JPanel {
                     				
                     				ordersTable.fillWithEmptyRows();
 	                        	
-                    				System.out.println("Lefut inOut IN");
 	                        	} else {
 	                        			newQuantity = oldQuantity - inventoryArray.get(i).getItemQuantityInStock();
-	                        			
-	                        			System.out.println("Lefut inOut out");
 	                        			
 	                        			if(newQuantity > 0) {
 	                        				sql = "UPDATE Inventory SET itemQuantity="+ newQuantity +" WHERE stockName='"+ inventoryArray.get(i).getStockName() +"' AND itemID="+ inventoryArray.get(i).getItemID() +"";
@@ -312,7 +203,7 @@ public class StockInOutPanel extends JPanel {
 	                        				
 	                        				ordersTable.fillWithEmptyRows();
 	                        			} else if(newQuantity < 0) {
-	                        				System.out.println("Out quantity is more than the quantity in Stock");
+	                        				JOptionPane.showMessageDialog(warningMessageFrame, "Out quantity is more than the quantity in Stock", "Missing", JOptionPane.WARNING_MESSAGE);
 	                        			}
 	                        		}
 	                        	} else if(inventoryArray.get(i).getStockInOrOut() == "In"){
@@ -329,27 +220,114 @@ public class StockInOutPanel extends JPanel {
 	    	                        
 	    	                        ordersTable.fillWithEmptyRows();
 	    	                        
-	    	                        System.out.println("Lefut inOut insert");
 	                        	} else {
-	                        		System.out.println("Item in this Stock is not found");
+	                				JOptionPane.showMessageDialog(warningMessageFrame, "Item in this Stock is not found", "Not found", JOptionPane.WARNING_MESSAGE);
+
 	                        	}
-                        	
-                        	
 						} catch (SQLException ex) {
-		                      System.out.println("Valami baj a in out közben");
+		                      System.out.println("Error with in/out");
 		                      System.out.println(""+ex);
 		                  }
-                        
                     }
-                    
-                    
-            	} else {
-            		System.out.println("Please add min one item to the Order");
             	}
-            	
-                        		
 		}   	
-           
      });
    }
+	
+	public void fillTableWithEmptyRows() {
+		ordersTable.fillWithEmptyRowsStockInOut();
+		ordersTable.comboBoxColumnInOutPanel(getAllGoods(), getAllStocks());
+	}
+	
+	public void fillComboBox() {
+		ordersTable.comboBoxColumnInOutPanel(getAllGoods(), getAllStocks());
+	}
+    
+	private void AutoFillItemName() {
+		ordersTable.getModel().addTableModelListener(new TableModelListener() {
+        public void tableChanged(TableModelEvent e) {
+            int row = e.getFirstRow();
+            int column = e.getColumn();
+            if (e.getType() == TableModelEvent.UPDATE && column == 1) {
+            	
+               String itemID = ordersTable.getModel().getValueAt(row, 1).toString();
+               
+            if(itemID != "") {
+            	 String sql = "SELECT itemName FROM Goods WHERE itemID="+ Integer.parseInt(itemID) +"";
+		       		try {
+		               	loadCreateStatement();
+		                ResultSet rs = createStatement.executeQuery(sql);
+
+		                if (rs.next()) {
+		                	ordersTable.getTable().setValueAt(rs.getString("itemName"), row, 2);
+		                    
+		                }
+		                
+		               } catch (SQLException ex) {
+		                   System.out.println("Error with setItemName");
+		                   System.out.println(" "+ex);
+		                   } 
+            } else {
+            	ordersTable.getTable().setValueAt("", row, 2);
+            }
+        }
+    }
+		});
+	}
+	
+	private ArrayList<Goods> getAllGoods(){
+     	String sql = "SELECT * FROM Goods";
+     	ArrayList<Goods> goods = null;
+         loadCreateStatement();
+         try {
+             ResultSet rs = createStatement.executeQuery(sql);
+             goods = new ArrayList<>();
+
+         while (rs.next()){
+         	Goods actualItem = new Goods(rs.getInt("itemID"), rs.getString("itemName"), 0);
+         	goods.add(actualItem);
+             }
+         } catch (SQLException ex) {
+             System.out.println("Error with getAllGoods");
+             System.out.println(" "+ex);
+             }    
+         
+          return goods;
+	}
+	
+	private ArrayList<StockNames> getAllStocks(){
+       String sql = "SELECT * FROM StockNames";
+     	ArrayList<StockNames> stocks = null;
+         loadCreateStatement();
+         try {
+             ResultSet rs = createStatement.executeQuery(sql);
+             stocks = new ArrayList<>();
+
+         while (rs.next()){
+        	 StockNames actualItem = new StockNames(rs.getString("stockName"));
+         	stocks.add(actualItem);
+             }
+         } catch (SQLException ex) {
+             System.out.println("Error with getAllGoods");
+             System.out.println(" "+ex);
+             }    
+         
+          return stocks;
+	}
+	
+	private void loadCreateStatement() {
+		
+		if (conn != null && createStatement == null){
+	        try {
+	             createStatement = conn.createStatement();
+	        } catch (SQLException ex) {
+	            System.out.println("Error with createStatement");
+	            System.out.println(" "+ex);
+	        }
+		}
+	}
+    
+    public void setConn(Connection conn) {
+		this.conn = conn;
+	}
 }

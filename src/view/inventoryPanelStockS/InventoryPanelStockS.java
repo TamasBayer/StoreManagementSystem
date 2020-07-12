@@ -64,26 +64,37 @@ public class InventoryPanelStockS extends JPanel {
         search();
     }
     
-    public void loadCreateStatement() {
+    private void search() {
+    	
+    	searchButton.addActionListener(new ActionListener (){
+            
+            public void actionPerformed(ActionEvent e) {
+                String text = searchField.getText();
 
-		
-		if (conn != null && createStatement == null){
-	        try {
-	             createStatement = conn.createStatement();
-	        } catch (SQLException ex) {
-	            System.out.println("Error with createStatement");
-	            System.out.println(" "+ex);
 
-	        }
-		}
-	        
-	}
+                if (text.trim().length() == 0) {
+                    rowSorter.setRowFilter(null);
+                } else {
+                    rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text, searchCombo.getSelectedIndex()));
+                }
+            }
+        });
+    	
+    	searchField.addKeyListener(new KeyAdapter() {
+	         public void keyPressed(KeyEvent e) {
+	             if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+	               searchButton.doClick();
+	            }
+	         }
+	      });
+    }
     
     public ArrayList<Goods> getAllGoods(){
         String sql = "SELECT Goods.itemID, Goods.itemName, SUM (Inventory.itemQuantity) AS QuantityInWarehause FROM Goods, Inventory WHERE Goods.itemID=Inventory.itemID GROUP BY Goods.itemID, Goods.itemName";
-        ArrayList<Goods> goods = null;
+    
+    	ArrayList<Goods> goods = null;
+        loadCreateStatement();
         try {
-        	loadCreateStatement();
             ResultSet rs = createStatement.executeQuery(sql);
             goods = new ArrayList<>();
 
@@ -91,11 +102,19 @@ public class InventoryPanelStockS extends JPanel {
         	Goods actualItem = new Goods(rs.getInt("itemID"), rs.getString("itemName"), rs.getInt("QuantityInWarehause"));
         	goods.add(actualItem);
             }
+        
+    	sql = "SELECT * FROM Goods WHERE itemID NOT IN(SELECT itemID FROM Inventory)";
+    	
+    	rs = createStatement.executeQuery(sql);
+    	
+    	while (rs.next()){
+        	Goods actualItem = new Goods(rs.getInt("itemID"), rs.getString("itemName"), 0);
+        	goods.add(actualItem);
+            }
         } catch (SQLException ex) {
             System.out.println("Error with getAllGoods");
             System.out.println(" "+ex);
             }    
-
          return goods;
 }
     
@@ -116,32 +135,17 @@ public class InventoryPanelStockS extends JPanel {
 	           }; 
 	    }
     
-    private void search() {
-    	
-    	searchButton.addActionListener(new ActionListener (){
-            
-            public void actionPerformed(ActionEvent e) {
-                String text = searchField.getText();
+    public void loadCreateStatement() {
 
-
-                if (text.trim().length() == 0) {
-                    rowSorter.setRowFilter(null);
-                } else {
-                    rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text, searchCombo.getSelectedIndex()));
-                }
-                    
-            }
-            
-        });
-    	
-    	searchField.addKeyListener(new KeyAdapter() {
-	         public void keyPressed(KeyEvent e) {
-	             if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-	               searchButton.doClick();
-	            }
-	         }
-	      });
-    }
+		if (conn != null && createStatement == null){
+	        try {
+	             createStatement = conn.createStatement();
+	        } catch (SQLException ex) {
+	            System.out.println("Error with createStatement");
+	            System.out.println(" "+ex);
+	        }
+		}
+	}
     
 	public void setConn(Connection conn) {
 		this.conn = conn;

@@ -66,7 +66,7 @@ public class ControlPaneStockS extends JPanel{
 	        return textFields;
 	    } 
 	    
-	     public void layoutComponents(){
+	    private void layoutComponents(){
 	        setLayout(new GridBagLayout());
 	        
 	        GridBagConstraints gc = new GridBagConstraints();

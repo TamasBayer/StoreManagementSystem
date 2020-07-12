@@ -1,14 +1,12 @@
 package view.sellOrdersPanelMS;
 
 import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
 import javax.swing.BorderFactory;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -29,8 +27,6 @@ public class SellOrdersInfoPanel extends JPanel{
 	
 	private Table sellOrdersTable;
 	private String[] sellOrdersColumnNames;
-	private JButton bookButton;
-	private JButton editButton;
 	
 	
 	public SellOrdersInfoPanel() {
@@ -38,15 +34,7 @@ public class SellOrdersInfoPanel extends JPanel{
 		
 		sellOrdersColumnNames = new String[] {"Item-ID", "Item name", "Sold quantity", "Already picked quantity"};
 		sellOrdersTable = new Table(sellOrdersColumnNames, "Default");
-		bookButton = new JButton("");
-		editButton = new JButton("Edit Order");
 		sellOrderTableFlowLayout = new JPanel();
-		
-		sellOrdersTable.fillWithData();
-		
-		Cursor cursor = new Cursor(Cursor.HAND_CURSOR);
-		bookButton.setCursor(cursor);
-		editButton.setCursor(cursor);
 		
 		choosedSellOrderPanel = new JPanel();
 		sellOrderIDLabel = new JLabel("Sell Order-ID:");
@@ -69,7 +57,6 @@ public class SellOrdersInfoPanel extends JPanel{
         
         choosedSellOrderPanel.setPreferredSize(new Dimension(50, 50));
         
-        
         FlowLayout OrderPanelLayout = new FlowLayout();
         choosedSellOrderPanel.setLayout(OrderPanelLayout);
         choosedSellOrderPanel.add(sellOrderIDLabel);
@@ -84,8 +71,6 @@ public class SellOrdersInfoPanel extends JPanel{
         
         FlowLayout OrderPanelButtonsLayout = new FlowLayout();
         sellOrderTableFlowLayout.setLayout(OrderPanelButtonsLayout);
-     //   sellOrderTableFlowLayout.add(bookButton);
-     //   sellOrderTableFlowLayout.add(editButton);
         
         Border innerBorderButtons = BorderFactory.createLineBorder(Color.GRAY);
         Border outerBorderButtons = BorderFactory.createEmptyBorder(5, 5, 5, 5);
@@ -100,16 +85,7 @@ public class SellOrdersInfoPanel extends JPanel{
         c.weighty = 0;
         c.weightx = 1;
         add(choosedSellOrderPanel, c);
- /*       
-        c.gridx = 0;
-        c.gridy = 1;
-        c.gridheight = 1;
-        c.gridwidth = 1;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.weighty = 0;
-        c.weightx = 1;
-        add(sellOrderTableFlowLayout, c);
-*/        
+    
         c.gridx = 0;
         c.gridy = 1;
         c.gridheight = 1;

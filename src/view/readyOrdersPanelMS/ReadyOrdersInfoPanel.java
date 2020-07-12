@@ -1,14 +1,12 @@
 package view.readyOrdersPanelMS;
 
 import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
 import javax.swing.BorderFactory;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -35,8 +33,6 @@ public class ReadyOrdersInfoPanel extends JPanel{
 		
 		ordersColumnNames = new String[] {"Item-ID", "Item name", "Ordered quantity"};
 		ordersTable = new Table(ordersColumnNames, "Default");
-		
-		ordersTable.fillWithData();
 		
 		
 		choosedOrderPanel = new JPanel();

@@ -1,14 +1,12 @@
 package view.readySellOrdersPanelMS;
 
 import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
 import javax.swing.BorderFactory;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -36,7 +34,6 @@ public class ReadySellOrdersInfoPanel extends JPanel{
 		sellOrdersColumnNames = new String[] {"Item-ID", "Item name", "Sold quantity"};
 		sellOrdersTable = new Table(sellOrdersColumnNames, "Default");
 		
-		sellOrdersTable.fillWithData();
 		
 		choosedSellOrderPanel = new JPanel();
 		sellOrderIDLabel = new JLabel("Sell Order-ID:");

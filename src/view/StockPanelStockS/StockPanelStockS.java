@@ -64,22 +64,49 @@ public class StockPanelStockS extends JPanel{
         search();
     }
     
-    public void loadCreateStatement() {
+    private void search() {
+    	
+    	searchButton.addActionListener(new ActionListener (){
+            
+            public void actionPerformed(ActionEvent e) {
+                String text = searchField.getText();
 
-		
-		if (conn != null && createStatement == null){
-	        try {
-	             createStatement = conn.createStatement();
-	        } catch (SQLException ex) {
-	            System.out.println("Error with createStatement");
-	            System.out.println(" "+ex);
-
-	        }
-		}
-	        
-	}
+                if (text.trim().length() == 0) {
+                    rowSorter.setRowFilter(null);
+                } else {
+                    rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text, searchCombo.getSelectedIndex()));
+                }
+            }
+        });
+    	
+    	searchField.addKeyListener(new KeyAdapter() {
+	         public void keyPressed(KeyEvent e) {
+	             if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+	               searchButton.doClick();
+	            }
+	         }
+	      });
+    }
     
-    public ArrayList<Inventory> getStocksQuantity(){
+    public void fillTableWithData(){
+		
+		for (int i = table.getModel().getRowCount() - 1; i > -1; i--) {
+			table.getModel().removeRow(i);
+	     }
+	        
+		ArrayList<Inventory> list = getStocksQuantity();
+	       Object rowData[] = new Object[4];
+	       for(int i = 0; i < list.size(); i++ ){
+	           rowData[0] = list.get(i).getStockName();
+	           rowData[1] = list.get(i).getItemID();
+	           rowData[2] = list.get(i).getItemName();
+	           rowData[3] = list.get(i).getItemQuantityInStock();
+	           
+	           table.getModel().addRow(rowData);
+	           }; 
+	    }
+    
+    private ArrayList<Inventory> getStocksQuantity(){
     	String sql = "SELECT * FROM Inventory";
     	
     	ArrayList<Inventory> inventory = null;
@@ -102,50 +129,18 @@ public class StockPanelStockS extends JPanel{
          return inventory;
 }
     
-    public void fillTableWithData(){
-		
-		for (int i = table.getModel().getRowCount() - 1; i > -1; i--) {
-			table.getModel().removeRow(i);
-	     }
-	        
-		ArrayList<Inventory> list = getStocksQuantity();
-	       Object rowData[] = new Object[4];
-	       for(int i = 0; i < list.size(); i++ ){
-	           rowData[0] = list.get(i).getStockName();
-	           rowData[1] = list.get(i).getItemID();
-	           rowData[2] = list.get(i).getItemName();
-	           rowData[3] = list.get(i).getItemQuantityInStock();
-	           
-	           table.getModel().addRow(rowData);
-	           }; 
-	    }
     
-    private void search() {
-    	
-    	searchButton.addActionListener(new ActionListener (){
-            
-            public void actionPerformed(ActionEvent e) {
-                String text = searchField.getText();
+    private void loadCreateStatement() {
 
-
-                if (text.trim().length() == 0) {
-                    rowSorter.setRowFilter(null);
-                } else {
-                    rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text, searchCombo.getSelectedIndex()));
-                }
-                    
-            }
-            
-        });
-    	
-    	searchField.addKeyListener(new KeyAdapter() {
-	         public void keyPressed(KeyEvent e) {
-	             if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-	               searchButton.doClick();
-	            }
-	         }
-	      });
-    }
+		if (conn != null && createStatement == null){
+	        try {
+	             createStatement = conn.createStatement();
+	        } catch (SQLException ex) {
+	            System.out.println("Error with createStatement");
+	            System.out.println(" "+ex);
+	        }
+		}
+	}
     
     public void setConn(Connection conn) {
 		this.conn = conn;

@@ -1,7 +1,6 @@
 package view;
 
 import java.awt.BorderLayout;
-import java.awt.ComponentOrientation;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Point;
@@ -12,7 +11,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -23,8 +21,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
 import model.DB;
-import model.StockNames;
-import model.Users;
 
 public class MainFrame extends JFrame {
     
@@ -33,20 +29,18 @@ public class MainFrame extends JFrame {
 	private AppChooserPanel appChooserPanel;
 	private JButton mainSystemBtn;
 	private JButton stockSystemBtn;
-	
 	private TabbedPaneMainSystem tabbedPaneMainSystem;
 	private TabbedPaneStockSystem tabbedPaneStockSystem;
 	
-	private JFrame testFrame;
-	
+	private JFrame menubarStockSystemFrame;
 	private int choosedPanel;
+	private String userName;
+	private JFrame warningMessageFrame;
+	private Cursor cursor;
 	
 	private DB db;
-	
 	private Connection conn;
 	private Statement createStatement = null;
-	
-	private String userName;
 
     public MainFrame(){
         
@@ -54,23 +48,19 @@ public class MainFrame extends JFrame {
         
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setVisible(true);
-        
-		////////////Set DB Connection for all Panel ////////////
 				
-			db = new DB();
-			conn = db.getConn();
-			
+		db = new DB();
+		conn = db.getConn();
 		
         loginPanel = new LoginPanel();
-        loginBtn = loginPanel.getLoginButton();
-        
+        loginBtn = loginPanel.getLoginButton();      
         appChooserPanel = new AppChooserPanel();
         mainSystemBtn = appChooserPanel.getMainSystemButton();
-        stockSystemBtn = appChooserPanel.getStockSystemButton();
-        
+        stockSystemBtn = appChooserPanel.getStockSystemButton();   
         tabbedPaneMainSystem = new TabbedPaneMainSystem(conn);
         tabbedPaneStockSystem = new TabbedPaneStockSystem(conn);
-        
+              
+        warningMessageFrame = new JFrame();
         
         setLayout(new BorderLayout());
 
@@ -85,59 +75,11 @@ public class MainFrame extends JFrame {
         mainSystemBtnPressed();
         stockSystemBtnPressed();
         
+       
+        
     }
     
-    public void loadCreateStatement() {
-
-		
-		if (conn != null && createStatement == null){
-	        try {
-	             createStatement = conn.createStatement();
-	        } catch (SQLException ex) {
-	            System.out.println("Error with createStatement");
-	            System.out.println(" "+ex);
-
-	        }
-		}
-	        
-	}
-    
-    private Boolean checkUser(){
-    	String[] textFieldData = loginPanel.getTextFields();
-    	
-    	String userPassword = "";
-    	
-    	if(textFieldData != null) {
-    		String sql = "SELECT userPassword FROM Users WHERE userName='"+ textFieldData[0] +"'";
-    		userName = textFieldData[0];
-    		try {
-            	loadCreateStatement();
-                ResultSet rs = createStatement.executeQuery(sql);
-                
-                if (rs.next()) {
-                	userPassword = rs.getString("userPassword");
-                    
-                }
-                
-                
-                if(userPassword.equals(textFieldData[1])) {
-                	return true;
-                } else {
-                	System.out.println("Incorrect password or user name");
-                }
-           
-            } catch (SQLException ex) {
-                System.out.println("Error with login");
-                System.out.println(" "+ex);
-                }    
-    	} else {
-    		System.out.println("Please give your user name and password");
-    	}
-        
-        return false;
-}
-    
-    public void loginButtonPressed(){
+    private void loginButtonPressed(){
     	loginBtn.addActionListener(new ActionListener(){
 
             
@@ -155,21 +97,17 @@ public class MainFrame extends JFrame {
                     
                     loginPanel.clearTextFields();
             	}
-            	
-                
             }
         });
-
     }
     
-    public void mainSystemBtnPressed(){
+    private void mainSystemBtnPressed(){
     	mainSystemBtn.addActionListener(new ActionListener(){
 
             
             public void actionPerformed(ActionEvent e) {
                 
             	remove(appChooserPanel);
-            	
             	
             	add(tabbedPaneMainSystem, BorderLayout.CENTER);
                 pack();
@@ -182,17 +120,14 @@ public class MainFrame extends JFrame {
                 setJMenuBar(createMenuBar());
             }
         });
-
     }
     
-    public void stockSystemBtnPressed(){
+    private void stockSystemBtnPressed(){
     	stockSystemBtn.addActionListener(new ActionListener(){
-
             
             public void actionPerformed(ActionEvent e) {
                 
             	remove(appChooserPanel);
-            	
             	
             	add(tabbedPaneStockSystem, BorderLayout.CENTER);
                 pack();
@@ -205,13 +140,43 @@ public class MainFrame extends JFrame {
                 setJMenuBar(createMenuBar());
             }
         });
-
     }
+    
+    private Boolean checkUser(){
+    	String[] textFieldData = loginPanel.getTextFields();
+    	
+    	String userPassword = "";
+    	
+    	if(textFieldData != null) {
+    		String sql = "SELECT userPassword FROM Users WHERE userName='"+ textFieldData[0] +"'";
+    		userName = textFieldData[0];
+    		try {
+            	loadCreateStatement();
+                ResultSet rs = createStatement.executeQuery(sql);
+                
+                if (rs.next()) {
+                	userPassword = rs.getString("userPassword");
+                }
+                
+                if(userPassword.equals(textFieldData[1])) {
+                	return true;
+                } else {
+                	System.out.println();
+                	JOptionPane.showMessageDialog(warningMessageFrame, "Incorrect password or user name", "Incorrect", JOptionPane.WARNING_MESSAGE);
+                }
+           
+            } catch (SQLException ex) {
+                System.out.println("Error with login");
+                System.out.println(" "+ex);
+                }    
+    	} else {
+    		JOptionPane.showMessageDialog(warningMessageFrame, "Please give your user name and password", "Missing", JOptionPane.WARNING_MESSAGE);
+    	}
+        return false;
+}
     
     private  JMenuBar createMenuBar(){
         JMenuBar menuBar = new JMenuBar();
-        
-                
         
         JMenu menu = new JMenu(userName);
         JMenuItem openStockManager = new JMenuItem("Open Stock Manager");
@@ -219,7 +184,7 @@ public class MainFrame extends JFrame {
         JMenuItem logout = new JMenuItem("Logout");
         JMenuItem exit = new JMenuItem("Exit");
         
-        Cursor cursor = new Cursor(Cursor.HAND_CURSOR);
+        cursor = new Cursor(Cursor.HAND_CURSOR);
         menu.setCursor(cursor);
         openStockManager.setCursor(cursor);
         changeApp.setCursor(cursor);
@@ -241,35 +206,33 @@ public class MainFrame extends JFrame {
         openStockManager.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent ev){
                
-                    
-                    if (testFrame == null) {
+                    if (menubarStockSystemFrame == null) {
  		        	   
-                      testFrame = new JFrame();
+                      menubarStockSystemFrame = new JFrame();
   		              
-                      testFrame.setLayout(new BorderLayout());
+                      menubarStockSystemFrame.setLayout(new BorderLayout());
 
-                      testFrame.add(tabbedPaneStockSystem, BorderLayout.CENTER);
-                      testFrame.setVisible(true);
-                      testFrame.setDefaultCloseOperation(testFrame.DISPOSE_ON_CLOSE);
-                      testFrame.setResizable(true);
-                      testFrame.pack();
+                      menubarStockSystemFrame.add(tabbedPaneStockSystem, BorderLayout.CENTER);
+                      menubarStockSystemFrame.setVisible(true);
+                      menubarStockSystemFrame.setDefaultCloseOperation(menubarStockSystemFrame.DISPOSE_ON_CLOSE);
+                      menubarStockSystemFrame.setResizable(true);
+                      menubarStockSystemFrame.pack();
   		              
   		              Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
   		              Point middle = new Point(screenSize.width / 2, screenSize.height / 2);
-  		              Point newLocation = new Point(middle.x - (testFrame.getWidth() / 2), 
-  		                                            middle.y - (testFrame.getHeight() / 2));
-  		            testFrame.setLocation(newLocation);
+  		              Point newLocation = new Point(middle.x - (menubarStockSystemFrame.getWidth() / 2), 
+  		                                            middle.y - (menubarStockSystemFrame.getHeight() / 2));
+  		            menubarStockSystemFrame.setLocation(newLocation);
   		              
-  		         	testFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+  		         	menubarStockSystemFrame.addWindowListener(new java.awt.event.WindowAdapter() {
   		  			    @Override
   		  			    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-  		  			    	testFrame = null;
+  		  			    	menubarStockSystemFrame = null;
   		  			    }
   		  			});
   	  		    } else {
-  	  		    	testFrame.setVisible(true);
+  	  		    	menubarStockSystemFrame.setVisible(true);
   	  		    }
-                
             }
         });
         
@@ -289,12 +252,9 @@ public class MainFrame extends JFrame {
                     setLocationRelativeTo(null);
                     setResizable(false);
                     
-                    if(testFrame != null) {
-                    	testFrame.dispose();
+                    if(menubarStockSystemFrame != null) {
+                    	menubarStockSystemFrame.dispose();
                     }
-                    
-                
-                
             }
         });
         
@@ -319,10 +279,9 @@ public class MainFrame extends JFrame {
                     setLocationRelativeTo(null);
                     setResizable(false);
                     
-                    if(testFrame != null) {
-                    	testFrame.dispose();
+                    if(menubarStockSystemFrame != null) {
+                    	menubarStockSystemFrame.dispose();
                     }
-                    
                 }
             }
         });
@@ -331,14 +290,25 @@ public class MainFrame extends JFrame {
             public void actionPerformed(ActionEvent ev){
                 
                 int action = JOptionPane.showConfirmDialog(MainFrame.this,
-                              "Do you really want to exit the application?",
+                              "Do you really want to exit from the application?",
                               "ComfirmExit", JOptionPane.OK_CANCEL_OPTION);
                 if(action == JOptionPane.OK_OPTION){
                 System.exit(0);
                 }
             }
         });
-        
         return menuBar;
     }
+    
+    private void loadCreateStatement() {
+
+		if (conn != null && createStatement == null){
+	        try {
+	             createStatement = conn.createStatement();
+	        } catch (SQLException ex) {
+	            System.out.println("Error with createStatement");
+	            System.out.println(" "+ex);
+	        }
+		}
+	}
 }

@@ -12,7 +12,6 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,9 +19,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -30,16 +27,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableRowSorter;
 
 import model.Inventory;
-import model.OrderedGoods;
-import model.Orders;
 import model.SellOrders;
 import model.SoldGoods;
-import model.StockNames;
-import view.classesForPanels.SearchPanel;
 import view.classesForPanels.Table;
 
 public class OrderPickingPanel extends JPanel {
@@ -47,9 +38,7 @@ public class OrderPickingPanel extends JPanel {
 	
 	private JPanel buttonPanel;
     private JScrollPane scrollPane;
-    private Connection conn;
-    private Statement createStatement = null;
-    
+
     private JPanel ordersPanel;
     private JPanel orderControlPanel;
     private JLabel itemIDLabel;
@@ -79,16 +68,15 @@ public class OrderPickingPanel extends JPanel {
     private FlowLayout backBtnFlowL;
     
     private JButton button;
-    
     private Cursor cursor;
-    
-    private JFrame frame;
-    
+    private JFrame warningMessageFrame;
     private int itemNumberToSetAllSellOrder;
-    
     private String buttonText;
     
     private ArrayList<SoldGoods> soldGoods;
+    
+    private Connection conn;
+    private Statement createStatement = null;
     
     public OrderPickingPanel() {
 			
@@ -97,14 +85,14 @@ public class OrderPickingPanel extends JPanel {
         buttonPanel.setLayout(new GridLayout(0,3,10,10));
         
         JFrame frame = new JFrame();
+        warningMessageFrame = new JFrame();
         
         int itemNumberToSetAllSellOrder = 0;
-        
         ArrayList<SoldGoods> soldGoods = new ArrayList<>();
+        
         
         scrollPane = new JScrollPane();
  
-        
         scrollPane.setViewportView(buttonPanel);
         setLayout(new BorderLayout());
         add(scrollPane, BorderLayout.CENTER);
@@ -120,12 +108,8 @@ public class OrderPickingPanel extends JPanel {
             button.setPreferredSize(new Dimension(130, 50));
             button.setText(orderIDs.get(i).toString());
             
-            
-            
             button.addActionListener(new ActionListener(){
 
-            	
-            	
                 public void actionPerformed(ActionEvent e) {
                 	
                 	itemNumberToSetAllSellOrder = 0;
@@ -135,7 +119,6 @@ public class OrderPickingPanel extends JPanel {
              	   JButton b = null;
              	   buttonText = "";
 
- 
              	     b = (JButton)o;
 
              	   if(b != null)
@@ -176,14 +159,11 @@ public class OrderPickingPanel extends JPanel {
                        }
                  });
                }
-                
-                
          });
             
             buttonPanel.add(button);
             cursor = new Cursor(Cursor.HAND_CURSOR);
             button.setCursor(cursor);
-            
         }
     }
     
@@ -246,34 +226,9 @@ public class OrderPickingPanel extends JPanel {
         buttonsPanel.add(bookBtn);
         buttonsPanel.add(orderBackBtn);
         
-        orderBackBtn.addActionListener(new ActionListener(){
-
-            public void actionPerformed(ActionEvent e) {
-            	
-            	remove(ordersPanel);
-                repaint();
-            	add(scrollPane, BorderLayout.CENTER);
-           }
-     });
-        
-        StockBtn.addActionListener(new ActionListener(){
-
-            public void actionPerformed(ActionEvent e) {
-            	
-            	setStockPanel(itemIDField.getText());
-            	remove(ordersPanel);
-                repaint();
-            	add(StockPanel, BorderLayout.CENTER);
-           }
-     });
-        
-        bookBtn.addActionListener(new ActionListener(){
-
-            public void actionPerformed(ActionEvent e) {
-            	
-            	loadTextFieldsToBook();
-           }
-     });
+        ordersPanelBackBtnPressed();
+        ordersPanelStockBtnPressed();
+        ordersPanelBookBtnPressed();
         
         // Control Panel //
         
@@ -367,13 +322,48 @@ public class OrderPickingPanel extends JPanel {
 		orderControlPanel.add(itemBookQuantityFromStockField, gc);
 		
 		
-		
 		ordersPanel.setLayout(new BorderLayout());
 		ordersPanel.add(orderControlPanel, BorderLayout.CENTER);
 		ordersPanel.add(buttonsPanel, BorderLayout.SOUTH);
     }
     
-    public void setStockPanel(String itemID) {
+    private void ordersPanelBackBtnPressed() {
+    	orderBackBtn.addActionListener(new ActionListener(){
+
+            public void actionPerformed(ActionEvent e) {
+            	
+            	remove(ordersPanel);
+                repaint();
+            	add(scrollPane, BorderLayout.CENTER);
+           }
+    	});
+    }
+    
+    private void ordersPanelStockBtnPressed() {
+    	StockBtn.addActionListener(new ActionListener(){
+
+            public void actionPerformed(ActionEvent e) {
+            	
+            	setStockPanel(itemIDField.getText());
+            	remove(ordersPanel);
+                repaint();
+            	add(StockPanel, BorderLayout.CENTER);
+           }
+    	});
+    }
+    
+    private void ordersPanelBookBtnPressed() {
+    	bookBtn.addActionListener(new ActionListener(){
+
+            public void actionPerformed(ActionEvent e) {
+            	
+            	loadTextFieldsToBook();
+           }
+    	});
+    }
+    
+    
+    private void setStockPanel(String itemID) {
     	
     	StockPanel = new JPanel();
     	columnsName = new String[] {"Stock", "Stock quantity"};
@@ -387,63 +377,159 @@ public class OrderPickingPanel extends JPanel {
         
         fillTableWithData(itemID);
         
-		 // FlowLayout //
-        
         backBtnPanel.setLayout(backBtnFlowL);
 	      
         backBtnPanel.setPreferredSize(new Dimension(40,40));
         backBtnPanel.add(stockBackBtn);
         
-        stockBackBtn.addActionListener(new ActionListener(){
-
-            public void actionPerformed(ActionEvent e) {
-            	
-            	remove(StockPanel);
-                repaint();
-            	add(ordersPanel, BorderLayout.CENTER);
-           }
-     });
+        stockPanelBackBtnPressed();
         
         StockPanel.setLayout(new BorderLayout());
         StockPanel.add(stockTable, BorderLayout.CENTER);
         StockPanel.add(backBtnPanel, BorderLayout.SOUTH);
     }
     
-    	public void fillTableWithData(String itemID){
-		
-		for (int i = stockTable.getModel().getRowCount() - 1; i > -1; i--) {
-			stockTable.getModel().removeRow(i);
-	     }
-	        
-		ArrayList<Inventory> listStock = getStocksQuantity(itemID);
-		Object rowDataStock[] = new Object[2];
-	       for(int i = 0; i < listStock.size(); i++ ){
-	    	rowDataStock[0] = listStock.get(i).getStockName();
-	    	rowDataStock[1] = listStock.get(i).getItemQuantityInStock();
-	           
-	           stockTable.getModel().addRow(rowDataStock);
-	           }; 
-	    }
+    private void stockPanelBackBtnPressed() {
+    	stockBackBtn.addActionListener(new ActionListener(){
 
-	public void setConn(Connection conn) {
-		this.conn = conn;
+    	    public void actionPerformed(ActionEvent e) {
+    	            	
+    	            	remove(StockPanel);
+    	                repaint();
+    	            	add(ordersPanel, BorderLayout.CENTER);
+    	           }
+    	     });
+    }
+    
+	public void fillTableWithData(String itemID){
+	
+	for (int i = stockTable.getModel().getRowCount() - 1; i > -1; i--) {
+		stockTable.getModel().removeRow(i);
+     }
+        
+	ArrayList<Inventory> listStock = getStocksQuantity(itemID);
+	Object rowDataStock[] = new Object[2];
+       for(int i = 0; i < listStock.size(); i++ ){
+    	rowDataStock[0] = listStock.get(i).getStockName();
+    	rowDataStock[1] = listStock.get(i).getItemQuantityInStock();
+           
+           stockTable.getModel().addRow(rowDataStock);
+           }; 
+    }
+
+	private void setSellOrderTextFields(int itemID, String itemName, int NQuantity, int itemsNumber, int actualItem) {
+		
+        itemIDField.setText("" + itemID);
+        itemNameField.setText(itemName);
+        itemNeededQuantityField.setText("" + NQuantity);
+
+        allDifferentItemsField.setText(actualItem + 1 + "/" + itemsNumber);
 	}
 	
-	public void loadCreateStatement() {
+	public void bookingItem(String uIID, String uQuantity, String fStock) {
+		int userItemID = Integer.parseInt(uIID);
+		String fromStock = fStock;
+        int userQuantity = Integer.parseInt(uQuantity);
+        
+        int stockIsFound = 0;
+        int realQuantity;
+        int newQuantity;
+        int newPickedQuantity;
+        
+        SellOrders readySellOrder = null;
+        
+        String fromSql = "SELECT itemQuantity FROM Inventory WHERE stockName = '" + fromStock + "' AND itemID = " + userItemID + "";
+        
+        try{
+        	loadCreateStatement();
+            ResultSet rs = createStatement.executeQuery(fromSql);
 
-		
-		if (conn != null && createStatement == null){
-	        try {
-	             createStatement = conn.createStatement();
-	        } catch (SQLException ex) {
-	            System.out.println("Error with createStatement");
-	            System.out.println(" "+ex);
+            if (rs.next()){
+             realQuantity = rs.getInt("itemQuantity");
 
-	        }
-		}
-	        
+             stockIsFound++;
+
+             if(realQuantity >= userQuantity){
+                 newQuantity = realQuantity - userQuantity;
+                 
+                 if (newQuantity > 0){
+                 String StockMinusSql = "UPDATE Inventory SET itemQuantity = " + newQuantity + " WHERE stockName = '" + fromStock + "' AND itemID = " + userItemID +"";
+                 createStatement.executeUpdate(StockMinusSql);
+                 
+                 } else if (newQuantity == 0){
+                 String StockDeleteSql = "DELETE FROM Inventory WHERE stockName = '" + fromStock + "' AND itemID = " + userItemID +"";
+                 createStatement.executeUpdate(StockDeleteSql);    
+
+                 
+                 }
+                 
+                 newPickedQuantity = userQuantity + soldGoods.get(itemNumberToSetAllSellOrder).getPickedQuantity();
+                 
+                 String bookPickedQuantityToOrderSql = "UPDATE SoldGoods SET pickedQuantity = " + newPickedQuantity + " WHERE sellOrderID = " + buttonText + " AND soldItemID = " + userItemID +"";
+                 createStatement.executeUpdate(bookPickedQuantityToOrderSql);
+                 
+                 clearTextFieldsContent();
+                 
+                 soldGoods = getOrderedItemsIfNotPickedAlready(Integer.parseInt(buttonText));
+                 
+                 if(soldGoods.size() == itemNumberToSetAllSellOrder) {
+                	 itemNumberToSetAllSellOrder--;
+                 }
+                 
+                 if(soldGoods.size() == 0) {
+                	 readySellOrder = getSellOrder(buttonText);
+                	 
+                	 String OrderInsertsql = "INSERT INTO ReadySellOrders (SellOrderID, soldFor, SellOrderDatum) VALUES (" + readySellOrder.getSellOrderID() +", '" + readySellOrder.getSoldFor() +"', '" + readySellOrder.getSellOrderDatum() +"')";
+                	 createStatement.executeUpdate(OrderInsertsql); 
+                	 
+                	 String OrderDeleteSql = "DELETE FROM SellOrders WHERE SellOrderID = " + buttonText + "";
+                     createStatement.executeUpdate(OrderDeleteSql); 
+                     
+                     setAllSellOrderButton();
+                     remove(ordersPanel);
+                     repaint();
+                 	add(scrollPane, BorderLayout.CENTER);
+                 } else {
+                	 setSellOrderTextFields(soldGoods.get(itemNumberToSetAllSellOrder).getSoldItemID(), soldGoods.get(itemNumberToSetAllSellOrder).getSoldItemName(), soldGoods.get(itemNumberToSetAllSellOrder).getSoldItemQuantity(), soldGoods.size(), itemNumberToSetAllSellOrder);
+                 }
+             } else{
+                 JOptionPane.showMessageDialog(warningMessageFrame, "This quantity is not available. ", "False quantity", JOptionPane.WARNING_MESSAGE);
+             }
+            }
+
+            if(stockIsFound == 0)
+             JOptionPane.showMessageDialog(warningMessageFrame, "From stock code or Item-ID is not found.", "Missing", JOptionPane.WARNING_MESSAGE);
+
+        } catch (SQLException ex) {
+                System.out.println("Error with booking item");
+                System.out.println(" "+ex);
+                }
 	}
-    
+	
+	public void loadTextFieldsToBook() {
+		
+		String regex = "\\d+";
+		
+		if(itemBookQuantityFromStockField.getText() != null && itemBookQuantityFromStockField.getText().matches(regex)) {
+			if(Integer.parseInt(itemBookQuantityFromStockField.getText()) <= Integer.parseInt(itemNeededQuantityField.getText())) {
+				if(getStockNames().contains(itemStockField.getText())) {
+					bookingItem(itemIDField.getText(), itemBookQuantityFromStockField.getText(), itemStockField.getText());
+				} else {
+					JOptionPane.showMessageDialog(warningMessageFrame, "The stock is not found", "Missing", JOptionPane.WARNING_MESSAGE);
+				}
+			} else {
+				JOptionPane.showMessageDialog(warningMessageFrame, "The user's quantity is more than the needed quantity", "False quantity", JOptionPane.WARNING_MESSAGE);
+			}
+		} else {
+			JOptionPane.showMessageDialog(warningMessageFrame, "The quantity from stock must be a positiv number", "False number", JOptionPane.WARNING_MESSAGE);
+		}
+	}
+	
+	public void clearTextFieldsContent(){
+		itemBookQuantityFromStockField.setText(null);
+		itemStockField.setText(null);
+    }
+	
 	public ArrayList<Integer> getAllSellOrderID(){
     	String sql = "SELECT sellOrderID FROM SellOrders";
     	
@@ -546,8 +632,6 @@ public class OrderPickingPanel extends JPanel {
         	String actualStock = new String(rs.getString("stockName"));
         	stockNames.add(actualStock);
             }
-
-        
         } catch (SQLException ex) {
             System.out.println("Error with getStocksQuantity");
             System.out.println(" "+ex);
@@ -556,136 +640,20 @@ public class OrderPickingPanel extends JPanel {
          return stockNames;
 }
 	
-	private void setSellOrderTextFields(int itemID, String itemName, int NQuantity, int itemsNumber, int actualItem) {
+	public void loadCreateStatement() {
+
 		
-		
-        itemIDField.setText("" + itemID);
-        itemNameField.setText(itemName);
-        itemNeededQuantityField.setText("" + NQuantity);
-
-        allDifferentItemsField.setText(actualItem + 1 + "/" + itemsNumber);
-	}
-	
-	public void bookingItem(String uIID, String uQuantity, String fStock) {
-		int userItemID = Integer.parseInt(uIID);
-		String fromStock = fStock;
-        int userQuantity = Integer.parseInt(uQuantity);
-        
-        int stockIsFound = 0;
-        int realQuantity;
-        int newQuantity;
-        int newPickedQuantity;
-        
-        SellOrders readySellOrder = null;
-        
-        String fromSql = "SELECT itemQuantity FROM Inventory WHERE stockName = '" + fromStock + "' AND itemID = " + userItemID + "";
-        
-        
-        
-        try{
-        	loadCreateStatement();
-            ResultSet rs = createStatement.executeQuery(fromSql);
-
-            if (rs.next()){
-             realQuantity = rs.getInt("itemQuantity");
-
-             stockIsFound++;
-
-             if(realQuantity >= userQuantity){
-                 newQuantity = realQuantity - userQuantity;
-                 
-                 System.out.println(newQuantity);
-
-                 if (newQuantity > 0){
-                 String StockMinusSql = "UPDATE Inventory SET itemQuantity = " + newQuantity + " WHERE stockName = '" + fromStock + "' AND itemID = " + userItemID +"";
-                 createStatement.executeUpdate(StockMinusSql);
-                 
-                 } else if (newQuantity == 0){
-                 String StockDeleteSql = "DELETE FROM Inventory WHERE stockName = '" + fromStock + "' AND itemID = " + userItemID +"";
-                 createStatement.executeUpdate(StockDeleteSql);    
-
-                 
-                 }
-                 
-                 newPickedQuantity = userQuantity + soldGoods.get(itemNumberToSetAllSellOrder).getPickedQuantity();
-                 
-                 String bookPickedQuantityToOrderSql = "UPDATE SoldGoods SET pickedQuantity = " + newPickedQuantity + " WHERE sellOrderID = " + buttonText + " AND soldItemID = " + userItemID +"";
-                 createStatement.executeUpdate(bookPickedQuantityToOrderSql);
-                 
-                 clearTextFieldsContent();
-                 
-                 System.out.println(itemNumberToSetAllSellOrder);
-                 System.out.println(soldGoods.size());
-                 
-                 
-                 
-                 
-                 soldGoods = getOrderedItemsIfNotPickedAlready(Integer.parseInt(buttonText));
-                 
-                 if(soldGoods.size() == itemNumberToSetAllSellOrder) {
-                	 itemNumberToSetAllSellOrder--;
-                	 System.out.println(itemNumberToSetAllSellOrder);
-                 }
-                 
-                 if(soldGoods.size() == 0) {
-                	 readySellOrder = getSellOrder(buttonText);
-                	 
-                	 String OrderInsertsql = "INSERT INTO ReadySellOrders (SellOrderID, soldFor, SellOrderDatum) VALUES (" + readySellOrder.getSellOrderID() +", '" + readySellOrder.getSoldFor() +"', '" + readySellOrder.getSellOrderDatum() +"')";
-                	 createStatement.executeUpdate(OrderInsertsql); 
-                	 
-                	 String OrderDeleteSql = "DELETE FROM SellOrders WHERE SellOrderID = " + buttonText + "";
-                     createStatement.executeUpdate(OrderDeleteSql); 
-                     
-                     setAllSellOrderButton();
-                     remove(ordersPanel);
-                     repaint();
-                 	add(scrollPane, BorderLayout.CENTER);
-                 } else {
-                	 setSellOrderTextFields(soldGoods.get(itemNumberToSetAllSellOrder).getSoldItemID(), soldGoods.get(itemNumberToSetAllSellOrder).getSoldItemName(), soldGoods.get(itemNumberToSetAllSellOrder).getSoldItemQuantity(), soldGoods.size(), itemNumberToSetAllSellOrder);
-                  	
-                 }
-             	
-             	
-             	
-             } else{
-                 JOptionPane.showMessageDialog(frame, "This quantity is not available. ", "Missing", JOptionPane.WARNING_MESSAGE);
-             }
-
-
-            }
-
-            if(stockIsFound == 0)
-             JOptionPane.showMessageDialog(frame, "From stock code or Item-ID is not found.", "Missing", JOptionPane.WARNING_MESSAGE);
-
-        } catch (SQLException ex) {
-                System.out.println("Error with stockControll");
-                System.out.println(" "+ex);
-                }
-	}
-	
-	public void loadTextFieldsToBook() {
-		
-		String regex = "\\d+";
-		
-		if(itemBookQuantityFromStockField.getText() != null && itemBookQuantityFromStockField.getText().matches(regex)) {
-			if(Integer.parseInt(itemBookQuantityFromStockField.getText()) <= Integer.parseInt(itemNeededQuantityField.getText())) {
-				if(getStockNames().contains(itemStockField.getText())) {
-					bookingItem(itemIDField.getText(), itemBookQuantityFromStockField.getText(), itemStockField.getText());
-				} else {
-					System.out.println("The stock is not found");
-				}
-			} else {
-				System.out.println("The user's quantity is more than the needed quantity");
-			}
-			
-		} else {
-			System.out.println("The quantity from stock must be a positiv number");
+		if (conn != null && createStatement == null){
+	        try {
+	             createStatement = conn.createStatement();
+	        } catch (SQLException ex) {
+	            System.out.println("Error with createStatement");
+	            System.out.println(" "+ex);
+	        }
 		}
-		
 	}
 	
-	public void clearTextFieldsContent(){
-		itemBookQuantityFromStockField.setText(null);
-		itemStockField.setText(null);
-    }
+	public void setConn(Connection conn) {
+		this.conn = conn;
+	}
 }
