@@ -131,7 +131,7 @@ public class StockInOutPanel extends JPanel {
                 			stockInOrOut = ordersTable.getModel().getValueAt(row, 0).toString();
                 			stockName = ordersTable.getModel().getValueAt(row, 4).toString();
                 			itemID = Integer.parseInt(ordersTable.getModel().getValueAt(row, 1).toString());
-            	        	itemName = ordersTable.getModel().getValueAt(row, 1).toString();
+            	        	itemName = ordersTable.getModel().getValueAt(row, 2).toString();
             	        	newItemQuantity = Integer.parseInt(ordersTable.getModel().getValueAt(row, 3).toString());
 
             	        	alreadyInArray = false;
