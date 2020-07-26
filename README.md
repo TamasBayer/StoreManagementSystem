@@ -103,3 +103,7 @@ User can click on the "Stock" button, and there can be seen in which storage and
 ![](README%20Images/SSSellOrders3.png)
 
 If all the items are picked, the order will disappear from here and the sell order goes into the Ready sell orders.
+
+### Built with
+
+Java; Swing; JDBC; Derby
